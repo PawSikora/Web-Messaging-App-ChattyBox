@@ -16,22 +16,14 @@ namespace DAL.Repositories.FileMessageRepository
             _context = context;
         }
 
-        public FileMessage CreateFileMessage(string path, string name)
+        public FileMessage CreateFileMessage(string userEmail, string path, string name, int chatId)
         {
-            FileMessage message = new FileMessage
-            {
-                Path = path,
-                Name = name,
-                TimeStamp = DateTime.Now
-            };
-            return message;
+            throw new NotImplementedException();
         }
 
-        public void DeleteFileMessage(string path)
+        public void DeleteFileMessage(string userEmail, string path, string name, int chatId)
         {
-            FileMessage fileMessage = _context.Files.FirstOrDefault(f => f.Path == path) ??
-                                      throw new Exception("Nie ma takiego pliku ");
-            _context.Files.Remove(fileMessage);
+            throw new NotImplementedException();
         }
     }
 }

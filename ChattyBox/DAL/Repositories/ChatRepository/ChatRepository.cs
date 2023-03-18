@@ -22,53 +22,14 @@ namespace DAL.Repositories.ChatRepository
             User user = _context.Users.SingleOrDefault(u => u.Email == email) ?? throw new Exception("Nie znaleziono uzytkownika");
             Chat chat = _context.Chats.SingleOrDefault(c => c.Name == chatName) ?? throw new Exception("Nie znaleziono chatu");
             chat.Updated = DateTime.Now;
-            chat.Users.Add(user);
-
-        }
-
-        public void AddMessage(Message message,string chatName) 
-        {
-            Chat chat = _context.Chats.SingleOrDefault(c => c.Name == chatName) ?? throw new Exception("Nie znaleziono chatu");
-            chat.Updated = DateTime.Now;
-            chat.Messages.Add(message);
+            _context.Users.Add(user);
 
         }
 
         public IEnumerable<User> SortByName(string chatName)
         {
-            IEnumerable<User> sortedUsers = _context.Chats.SingleOrDefault(c => c.Name == chatName).Users.OrderBy(u => u.Username).ToList() ?? throw new Exception("Nie znaleziono chatu");
-            return sortedUsers;
-
-        }
-
-        public void RemoveUser(string email, string chatName) 
-        {
-            try
-            {
-                _context.Chats.SingleOrDefault(c => c.Name == chatName).Users
-                    .Remove(_context.Users.SingleOrDefault(u => u.Email == email));
-
-            }
-            catch
-            {
-                throw new Exception("Blad usuwania uzytkownia z czatu ");
-            }
-            _context.Chats.SingleOrDefault(c => c.Name == chatName).Updated=DateTime.Now;
-            
-
-        }
-
-        public void RemoveMessage(Message message, string chatName) 
-        {
-            try
-            {
-                _context.Chats.SingleOrDefault(c => c.Name == chatName).Messages.Remove(message);
-            }
-            catch
-            {
-                throw new Exception("Blad usuwania wiadomosci z czatu ");
-            }
-            _context.Chats.SingleOrDefault(c => c.Name == chatName).Updated = DateTime.Now;
+            Chat chat = _context.Chats.SingleOrDefault(c => c.Name == chatName) ?? throw new Exception("Nie znaleziono chatu");
+            return chat.Users.OrderBy(u => u.Username);
         }
 
         public Chat CreateChat(string name, User user)
@@ -76,18 +37,17 @@ namespace DAL.Repositories.ChatRepository
             Chat chat = new Chat
             {
                 Name = name,
-                Users = new List<User>{user},
-                Updated = DateTime.Now
-
-
+                Created = DateTime.Now
             };
+
+            _context.Chats.Add(chat);
             return chat;
 
         }
 
         public void DeleteChat(string name)
         {
-            Chat chat = _context.Chats.SingleOrDefault(c => c.Name == name)?? throw new Exception("blad usuwania czatu");
+            Chat chat = _context.Chats.SingleOrDefault(c => c.Name == name) ?? throw new Exception("Blad usuwania czatu");
             _context.Chats.Remove(chat);
         }
     }
