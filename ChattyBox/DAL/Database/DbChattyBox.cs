@@ -14,7 +14,6 @@ namespace DAL.Database
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Chat> Chats { get; set; }
-        
         public DbSet<TextMessage> TextMessages { get; set; }
         public DbSet<FileMessage> FileMessages { get; set; }
 
@@ -106,6 +105,5 @@ namespace DAL.Database
 
         }
                
-
     }
 }

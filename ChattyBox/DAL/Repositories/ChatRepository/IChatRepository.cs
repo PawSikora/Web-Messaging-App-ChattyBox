@@ -9,8 +9,10 @@ namespace DAL.Repositories.ChatRepository
 {
     public interface IChatRepository
     {
-        public IEnumerable<User> SortByName(string chatName);
-        public Chat CreateChat(string name,User user);
-        public void DeleteChat(string name);
+        IEnumerable<User> SortByName(string chatName);
+        void AddUserByEmail(string email, string chatName);
+        void DeleteUserByEmail(string email, string chatName);
+        Chat CreateChat(string name,User user);
+        void DeleteChat(string name);
     }
 }
