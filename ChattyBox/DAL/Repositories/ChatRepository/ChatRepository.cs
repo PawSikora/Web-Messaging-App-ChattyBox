@@ -26,16 +26,16 @@ namespace DAL.Repositories.ChatRepository
 
         public void AddMessage(Message message,string chatName)
         {
-
             Chat chat = _context.Chats.SingleOrDefault(c => c.Name == chatName) ?? throw new Exception("Nie znaleziono chatu");
-            chat.Messages.Add(message); // nie wiem po czym to filtrowac 
+            chat.Messages.Add(message);
 
         }
 
-        public List<User> SortByName(string chatName)
+        public IEnumerable<User> SortByName(string chatName)
         {
-            List<User> sortedUsers = _context.Chats.SingleOrDefault(c => c.Name == chatName).Users.OrderBy(u => u.Username).ToList() ?? throw new Exception("Nie znaleziono chatu");
+            IEnumerable<User> sortedUsers = _context.Chats.SingleOrDefault(c => c.Name == chatName).Users.OrderBy(u => u.Username).ToList() ?? throw new Exception("Nie znaleziono chatu");
             return sortedUsers;
+
         }
 
         public void RemoveUser(string email, string chatName)
@@ -50,7 +50,6 @@ namespace DAL.Repositories.ChatRepository
                 throw new Exception("Blad usuwania uzytkownia z czatu ");
             }
 
-
         }
 
         public void RemoveMessage(Message message, string chatName)
@@ -64,7 +63,7 @@ namespace DAL.Repositories.ChatRepository
                 throw new Exception("Blad usuwania wiadomosci z czatu ");
             }
 
-            }
+        }
     }
    
 }
