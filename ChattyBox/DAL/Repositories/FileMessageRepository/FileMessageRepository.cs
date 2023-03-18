@@ -15,8 +15,23 @@ namespace DAL.Repositories.FileMessageRepository
         {
             _context = context;
         }
-        
 
-        
+        public FileMessage CreateFileMessage(string path, string name)
+        {
+            FileMessage message = new FileMessage
+            {
+                Path = path,
+                Name = name,
+                TimeStamp = DateTime.Now
+            };
+            return message;
+        }
+
+        public void DeleteFileMessage(string path)
+        {
+            FileMessage fileMessage = _context.Files.FirstOrDefault(f => f.Path == path) ??
+                                      throw new Exception("Nie ma takiego pliku ");
+            _context.Files.Remove(fileMessage);
+        }
     }
 }

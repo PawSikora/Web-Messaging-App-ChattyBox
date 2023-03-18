@@ -14,6 +14,8 @@ namespace DAL.Repositories.ChatRepository
         public IEnumerable<User> SortByName(string chatName);
         public void RemoveUser(string email, string chatName);
         public void RemoveMessage(Message message, string chatName);
+        public Chat CreateChat(string name,User user);
+        public void DeleteChat(string name);
 
 
 

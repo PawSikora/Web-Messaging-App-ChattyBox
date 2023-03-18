@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace DAL.Repositories.TextMessageRepository
 {
     
-    public interface ITextMessageRepository 
+    public interface ITextMessageRepository
     {
-        
+        TextMessage CreateTextMessage(string userEmail,string content);
+        void DeleteTextMessage(DateTime date, User sender);
     }
 }

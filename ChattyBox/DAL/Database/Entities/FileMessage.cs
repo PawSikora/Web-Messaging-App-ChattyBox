@@ -16,11 +16,7 @@ namespace DAL.Database.Entities
 
         public string Name { get; set; }
 
-        
         public double Size { get; set; }
 
-        public string Extension { get; set; }
-
-        public string Type { get; set; }
     }
 }
