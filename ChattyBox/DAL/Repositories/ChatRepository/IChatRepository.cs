@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories.ChatRepository
 {
-    public interface IChatRepository 
+    public interface IChatRepository
     {
-        
+        public void AddUserByEmail(string email, string chatName);
+        public void AddMessage(Message message, string chatName);
+        public List<User> SortByName(string chatName);
+        public void RemoveUser(string email, string chatName);
+        public void RemoveMessage(Message message, string chatName);
+
+
+
     }
 }
