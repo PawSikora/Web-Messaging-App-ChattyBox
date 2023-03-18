@@ -16,24 +16,29 @@ namespace DAL.Repositories.TextMessageRepository
             _context = context;
         }
 
-        public TextMessage CreateTextMessage(string userEmail,string content)
+        public TextMessage CreateTextMessage(string userEmail,string content, int chatId)
         {
             User user = _context.Users.SingleOrDefault(u => u.Email == userEmail)?? throw new Exception("Nie znaleziono uzytkownika");
-            
+            var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
             TextMessage message = new TextMessage
             {
                 Content = content,
                 Sender = user,
+                ChatId = chatId,
                 TimeStamp = DateTime.Now
             };
+
+            _context.TextMessages.Add(message);
             return message;
         }
 
 
-        public void DeleteTextMessage(DateTime date, User sender)
+        public void DeleteTextMessage(DateTime date, int senderId, int chatId)
         {
-            TextMessage textMessage= _context.Texts.Where(d=>d.TimeStamp==date).Where(u=>u.Sender==sender).FirstOrDefault() ?? throw new Exception("blad w usuwaniu wiadomosci");
-            _context.Texts.Remove(textMessage);
+            var textMessage = _context.TextMessages.FirstOrDefault(c => c.ChatId == chatId && c.SenderId == senderId && c.TimeStamp == date) 
+                ?? throw new Exception("Nie znaleziono wiadomosci");
+          
+            _context.TextMessages.Remove(textMessage);
         }
     }
 }

@@ -15,8 +15,8 @@ namespace DAL.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Chat> Chats { get; set; }
         
-        public DbSet<TextMessage> Texts { get; set; }
-        public DbSet<FileMessage> Files { get; set; }
+        public DbSet<TextMessage> TextMessages { get; set; }
+        public DbSet<FileMessage> FileMessages { get; set; }
 
         public DbChattyBox(DbContextOptions<DbChattyBox> options) : base(options)
         {
