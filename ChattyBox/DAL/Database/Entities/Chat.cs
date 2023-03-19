@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace DAL.Database.Entities
 
         public DateTime? Updated { get; set; }
 
-        public List<User> Users { get; set; }
+        public virtual ICollection<UserChat> UserChats { get; set; }
 
-        public List<Message>? Messages { get; set; }
+        public virtual ICollection<Message>? Messages { get; set; }
 
         
     }

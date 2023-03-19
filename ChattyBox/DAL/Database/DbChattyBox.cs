@@ -1,5 +1,6 @@
 ﻿using DAL.Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,9 @@ namespace DAL.Database
         public DbSet<Chat> Chats { get; set; }
         public DbSet<TextMessage> TextMessages { get; set; }
         public DbSet<FileMessage> FileMessages { get; set; }
+
+        public DbSet<UserChat> UserChats { get; set; }
+
 
         public DbChattyBox(DbContextOptions<DbChattyBox> options) : base(options)
         {
@@ -47,10 +51,18 @@ namespace DAL.Database
             .HasIndex(x => x.Email)
             .IsUnique();
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Chats)
-                .WithMany(c => c.Users)
-                .UsingEntity(j => j.ToTable("UserChat"));
+            modelBuilder.Entity<UserChat>()
+                .HasKey(uc => new { uc.UserId, uc.ChatId });
+
+            modelBuilder.Entity<UserChat>()
+                .HasOne(uc => uc.User)
+                .WithMany(u => u.UserChats)
+                .HasForeignKey(uc => uc.UserId);
+
+            modelBuilder.Entity<UserChat>()
+                .HasOne(uc => uc.Chat)
+                .WithMany(c => c.UserChats)
+                .HasForeignKey(uc => uc.ChatId);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Messages)
@@ -75,17 +87,23 @@ namespace DAL.Database
 
             var user1 = createPasswordHash("123");
             var user2 = createPasswordHash("1234");
-            
+
+            List<UserChat> initUserChats = new List<UserChat>()
+            {
+                new UserChat { UserId = 1, ChatId = 1 },
+                new UserChat { UserId = 2, ChatId = 1 }
+            };
+
+            modelBuilder.Entity<UserChat>().HasData(initUserChats.ToArray());
+
+
             List<User> initUsers = new List<User>() 
-            { new User { Id=1, Email = "marcinq@gmail.com", Username="MarIwin", Created = DateTime.Now, PasswordHash = user1.passwordHash, PasswordSalt = user1.passwordSalt },
+            {
+                new User { Id=1, Email = "marcinq@gmail.com", Username="MarIwin", Created = DateTime.Now, PasswordHash = user1.passwordHash, PasswordSalt = user1.passwordSalt  },
               new User { Id = 2, Email = "tymonq@gmail.com", Username = "TymonSme", Created = DateTime.Now, PasswordHash = user2.passwordHash, PasswordSalt = user2.passwordSalt } 
             };
 
-            modelBuilder.Entity<User>().HasData(
-
-             initUsers[0],
-             initUsers[1]
-            );
+            modelBuilder.Entity<User>().HasData(initUsers.ToArray());
 
             List<TextMessage> initTextMessages = new List<TextMessage>()
             {
@@ -93,12 +111,8 @@ namespace DAL.Database
                  new TextMessage { Id = 2, TimeStamp = new DateTime(2020, 1, 1), SenderId = 2, ChatId = 1, Content = "Hello2" }
             };
 
-            modelBuilder.Entity<TextMessage>().HasData(
-                initTextMessages[0],
-                initTextMessages[1]
-            );
-
-
+            modelBuilder.Entity<TextMessage>().HasData(initTextMessages.ToArray());
+           
             modelBuilder.Entity<Chat>().HasData(
                  new Chat { Created = DateTime.Now, Name = "Chat1", Id = 1 }
             );

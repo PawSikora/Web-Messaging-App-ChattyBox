@@ -15,10 +15,10 @@ namespace DAL.Database.Entities
 
         public int SenderId { get; set; }
         
-        public User Sender { get; set; }
+        public virtual User Sender { get; set; }
 
         public int ChatId { get; set; }
         
-        public Chat Chat { get; set; }
+        public virtual Chat Chat { get; set; }
     }
 }

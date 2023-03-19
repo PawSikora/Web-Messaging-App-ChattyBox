@@ -106,24 +106,24 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserChat",
+                name: "UserChats",
                 columns: table => new
                 {
-                    ChatsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserChat", x => new { x.ChatsId, x.UsersId });
+                    table.PrimaryKey("PK_UserChats", x => new { x.UserId, x.ChatId });
                     table.ForeignKey(
-                        name: "FK_UserChat_Chats_ChatsId",
-                        column: x => x.ChatsId,
+                        name: "FK_UserChats_Chats_ChatId",
+                        column: x => x.ChatId,
                         principalTable: "Chats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserChat_Users_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_UserChats_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -132,15 +132,15 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Chats",
                 columns: new[] { "Id", "Created", "Name", "Updated" },
-                values: new object[] { 1, new DateTime(2023, 3, 18, 22, 3, 32, 681, DateTimeKind.Local).AddTicks(6794), "Chat1", null });
+                values: new object[] { 1, new DateTime(2023, 3, 19, 13, 58, 17, 569, DateTimeKind.Local).AddTicks(8159), "Chat1", null });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Created", "Email", "LastLog", "PasswordHash", "PasswordSalt", "Username" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 3, 18, 22, 3, 32, 681, DateTimeKind.Local).AddTicks(6626), "marcinq@gmail.com", null, new byte[] { 62, 123, 191, 213, 14, 172, 19, 198, 189, 89, 61, 166, 104, 93, 33, 64, 86, 202, 52, 141, 134, 208, 177, 101, 116, 255, 53, 1, 197, 11, 169, 254, 50, 118, 238, 156, 54, 74, 42, 42, 49, 213, 151, 19, 22, 198, 199, 234, 230, 190, 74, 138, 133, 174, 214, 4, 44, 31, 61, 89, 88, 240, 245, 149 }, new byte[] { 48, 178, 47, 58, 180, 228, 69, 35, 203, 226, 227, 241, 26, 88, 48, 168, 160, 177, 88, 195, 89, 233, 202, 92, 244, 51, 158, 169, 108, 60, 222, 188, 50, 223, 245, 163, 135, 168, 146, 69, 71, 166, 132, 104, 25, 179, 242, 88, 241, 203, 51, 223, 88, 45, 42, 173, 151, 110, 72, 176, 92, 53, 128, 241, 210, 111, 96, 60, 130, 178, 138, 76, 51, 17, 225, 239, 176, 146, 94, 248, 108, 17, 204, 146, 81, 18, 3, 252, 66, 94, 190, 228, 192, 243, 240, 156, 47, 103, 200, 90, 242, 251, 11, 55, 163, 120, 188, 130, 104, 70, 34, 236, 177, 183, 140, 164, 93, 41, 238, 207, 0, 208, 82, 228, 185, 183, 73, 183 }, "MarIwin" },
-                    { 2, new DateTime(2023, 3, 18, 22, 3, 32, 681, DateTimeKind.Local).AddTicks(6659), "tymonq@gmail.com", null, new byte[] { 62, 223, 139, 86, 225, 254, 137, 231, 203, 40, 155, 213, 147, 148, 0, 57, 53, 149, 36, 31, 54, 118, 165, 48, 139, 122, 202, 80, 195, 201, 119, 185, 64, 115, 107, 215, 224, 82, 13, 113, 205, 214, 78, 255, 28, 32, 162, 81, 77, 42, 84, 155, 194, 247, 212, 41, 130, 94, 165, 160, 152, 150, 7, 47 }, new byte[] { 14, 170, 88, 23, 76, 8, 177, 138, 136, 130, 18, 18, 111, 42, 11, 16, 159, 67, 219, 206, 236, 231, 56, 177, 178, 94, 137, 133, 132, 157, 58, 31, 24, 28, 160, 151, 9, 45, 111, 243, 98, 249, 230, 207, 20, 206, 121, 137, 58, 81, 10, 1, 108, 82, 70, 208, 218, 195, 89, 211, 196, 198, 132, 8, 112, 137, 224, 234, 153, 247, 146, 195, 221, 113, 255, 71, 233, 9, 53, 95, 85, 42, 40, 244, 116, 151, 124, 7, 20, 186, 29, 27, 16, 61, 203, 60, 171, 205, 39, 115, 171, 125, 197, 227, 153, 86, 8, 133, 45, 95, 131, 252, 199, 117, 200, 144, 1, 219, 67, 6, 16, 88, 147, 15, 252, 12, 182, 66 }, "TymonSme" }
+                    { 1, new DateTime(2023, 3, 19, 13, 58, 17, 569, DateTimeKind.Local).AddTicks(8087), "marcinq@gmail.com", null, new byte[] { 2, 214, 250, 227, 52, 148, 206, 86, 183, 189, 252, 114, 188, 87, 162, 108, 209, 246, 97, 252, 65, 156, 40, 91, 82, 156, 43, 95, 144, 101, 28, 76, 166, 185, 206, 63, 46, 240, 185, 178, 59, 126, 134, 207, 140, 153, 177, 195, 43, 47, 111, 50, 64, 150, 104, 155, 87, 233, 245, 75, 1, 51, 100, 175 }, new byte[] { 202, 70, 138, 147, 90, 193, 239, 208, 93, 234, 58, 159, 215, 28, 104, 127, 10, 89, 202, 214, 131, 4, 68, 38, 142, 25, 148, 214, 178, 154, 21, 118, 136, 5, 83, 223, 73, 221, 185, 90, 189, 114, 164, 187, 217, 27, 250, 112, 196, 93, 72, 223, 68, 247, 8, 211, 48, 135, 165, 152, 94, 162, 254, 183, 221, 169, 0, 101, 133, 60, 36, 253, 151, 69, 214, 211, 6, 235, 75, 213, 238, 72, 109, 43, 51, 37, 42, 252, 228, 253, 135, 66, 252, 201, 83, 227, 61, 247, 231, 62, 251, 226, 188, 30, 68, 8, 137, 123, 193, 158, 120, 211, 166, 121, 23, 46, 207, 45, 147, 215, 214, 20, 133, 57, 216, 173, 153, 39 }, "MarIwin" },
+                    { 2, new DateTime(2023, 3, 19, 13, 58, 17, 569, DateTimeKind.Local).AddTicks(8119), "tymonq@gmail.com", null, new byte[] { 17, 25, 234, 81, 186, 92, 130, 217, 104, 68, 79, 71, 233, 209, 175, 225, 152, 103, 15, 21, 54, 48, 22, 169, 64, 73, 150, 81, 200, 206, 160, 105, 17, 103, 108, 44, 167, 30, 235, 226, 17, 186, 93, 139, 48, 160, 207, 52, 195, 8, 51, 162, 105, 172, 120, 52, 245, 4, 96, 185, 187, 3, 0, 73 }, new byte[] { 2, 63, 134, 183, 45, 113, 95, 47, 93, 122, 198, 206, 252, 165, 176, 25, 16, 229, 37, 65, 226, 118, 147, 157, 10, 115, 101, 29, 76, 179, 182, 236, 227, 252, 139, 46, 211, 219, 224, 248, 120, 165, 176, 151, 8, 208, 205, 165, 49, 104, 108, 12, 123, 248, 210, 206, 238, 75, 86, 20, 51, 100, 121, 101, 63, 216, 119, 201, 1, 8, 253, 117, 228, 42, 66, 49, 18, 223, 96, 201, 76, 60, 19, 192, 191, 96, 22, 109, 132, 15, 87, 206, 67, 126, 31, 210, 247, 245, 57, 170, 56, 235, 105, 24, 26, 131, 73, 9, 241, 100, 28, 237, 172, 178, 89, 10, 138, 75, 217, 231, 146, 182, 85, 209, 73, 232, 29, 61 }, "TymonSme" }
                 });
 
             migrationBuilder.InsertData(
@@ -150,6 +150,15 @@ namespace DAL.Migrations
                 {
                     { 1, 1, "Hello1", 1, new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
                     { 2, 1, "Hello2", 2, new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserChats",
+                columns: new[] { "ChatId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -179,9 +188,9 @@ namespace DAL.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserChat_UsersId",
-                table: "UserChat",
-                column: "UsersId");
+                name: "IX_UserChats_ChatId",
+                table: "UserChats",
+                column: "ChatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -200,7 +209,7 @@ namespace DAL.Migrations
                 name: "TextMessages");
 
             migrationBuilder.DropTable(
-                name: "UserChat");
+                name: "UserChats");
 
             migrationBuilder.DropTable(
                 name: "Chats");

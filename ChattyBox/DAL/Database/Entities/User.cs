@@ -30,8 +30,8 @@ namespace DAL.Database.Entities
 
         public DateTime Created { get; set; }
 
-        public ICollection<Chat>? Chats { get; set; }
+        public virtual ICollection<UserChat>? UserChats { get; set; }
 
-        public ICollection<Message>? Messages { get; set; }
+        public virtual ICollection<Message>? Messages { get; set; }
     }
 }
