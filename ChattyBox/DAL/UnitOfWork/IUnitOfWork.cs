@@ -22,6 +22,6 @@ namespace DAL.UnitOfWork
         IUserRepository Users { get; }
 
         void Save();
-        
+
     }
 }

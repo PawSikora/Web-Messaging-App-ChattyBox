@@ -1,5 +1,6 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,16 @@ namespace DAL.Repositories.UserRepository
 
             _context.Users.Add(user);
 
+            return user;
+        }
+
+        public User GetUser(int id)
+        {
+            var user = _context.Users
+                .Include(i=>i.Messages)
+                .Include(i=>i.UserChats)
+                .ThenInclude(i=>i.Chat)
+                .SingleOrDefault(i => i.Id == id) ?? throw new Exception("Nie znaleziono uzytkownika");
             return user;
         }
 

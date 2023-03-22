@@ -40,5 +40,11 @@ namespace DAL.Repositories.TextMessageRepository
           
             _context.TextMessages.Remove(textMessage);
         }
+
+        public TextMessage GetTextMessage(int id)
+        {
+            var textMessage = _context.TextMessages.SingleOrDefault(t => t.Id == id) ?? throw new Exception("Nie znaleziono wiadomosci");
+            return textMessage;
+        }
     }
 }

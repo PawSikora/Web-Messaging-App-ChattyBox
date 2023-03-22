@@ -13,5 +13,7 @@ namespace DAL.Repositories.TextMessageRepository
     {
         TextMessage CreateTextMessage(string userEmail,string content, int chatId);
         void DeleteTextMessage(DateTime date, int senderId, int chatId);
+
+        TextMessage GetTextMessage(int id);
     }
 }

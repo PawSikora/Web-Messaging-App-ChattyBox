@@ -11,6 +11,7 @@ namespace DAL.Repositories.UserRepository
     {
         User LoginUser(string email, string password);
         User RegisterUser(string email, string username, string password);
+        User GetUser(int id);
     }
     
 }
