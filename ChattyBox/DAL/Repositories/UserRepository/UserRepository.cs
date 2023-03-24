@@ -44,7 +44,7 @@ namespace DAL.Repositories.UserRepository
             return user;
         }
 
-        public User RegisterUser(string email, string username, string password)
+        public void RegisterUser(string email, string username, string password)
         {
             if (_context.Users.Any(x => x.Email == email))
                 throw new Exception("Użytkownik o podanym adresie email już istnieje");
@@ -61,16 +61,11 @@ namespace DAL.Repositories.UserRepository
             };
 
             _context.Users.Add(user);
-
-            return user;
         }
 
         public User GetUser(int id)
         {
             var user = _context.Users
-                .Include(i=>i.Messages)
-                .Include(i=>i.UserChats)
-                .ThenInclude(i=>i.Chat)
                 .SingleOrDefault(i => i.Id == id) ?? throw new Exception("Nie znaleziono uzytkownika");
             return user;
         }

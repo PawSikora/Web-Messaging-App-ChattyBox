@@ -32,7 +32,7 @@ namespace DAL.Database
             return (hmac.Key, hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
         }
 
-       
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -41,8 +41,8 @@ namespace DAL.Database
 
             modelBuilder.Entity<Chat>()
                 .ToTable("Chats");
-            
-      
+
+
             modelBuilder.Entity<Chat>()
                 .HasIndex(c => c.Name)
                 .IsUnique();
@@ -78,12 +78,14 @@ namespace DAL.Database
             modelBuilder.Entity<Message>()
                 .UseTpcMappingStrategy();
 
-            
+
             modelBuilder.Entity<FileMessage>()
-               .ToTable("FileMessages");
-            
+                .ToTable("FileMessage", tb => tb.Property(e => e.Id)
+                    .UseIdentityColumn(2, 2));
+
             modelBuilder.Entity<TextMessage>()
-                .ToTable("TextMessages");
+                .ToTable("TextMessages", tb => tb.Property(e => e.Id)
+                    .UseIdentityColumn(1, 2));
 
             var user1 = createPasswordHash("123");
             var user2 = createPasswordHash("1234");
@@ -97,27 +99,27 @@ namespace DAL.Database
             modelBuilder.Entity<UserChat>().HasData(initUserChats.ToArray());
 
 
-            List<User> initUsers = new List<User>() 
+            List<User> initUsers = new List<User>()
             {
                 new User { Id=1, Email = "marcinq@gmail.com", Username="MarIwin", Created = DateTime.Now, PasswordHash = user1.passwordHash, PasswordSalt = user1.passwordSalt  },
-              new User { Id = 2, Email = "tymonq@gmail.com", Username = "TymonSme", Created = DateTime.Now, PasswordHash = user2.passwordHash, PasswordSalt = user2.passwordSalt } 
+              new User { Id = 2, Email = "tymonq@gmail.com", Username = "TymonSme", Created = DateTime.Now, PasswordHash = user2.passwordHash, PasswordSalt = user2.passwordSalt }
             };
 
             modelBuilder.Entity<User>().HasData(initUsers.ToArray());
 
             List<TextMessage> initTextMessages = new List<TextMessage>()
             {
-                 new TextMessage {Id=1,TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Content = "Hello1" },
-                 new TextMessage { Id = 2, TimeStamp = new DateTime(2020, 1, 1), SenderId = 2, ChatId = 1, Content = "Hello2" }
+                 new TextMessage {Id = 1,TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Content = "Hello1" },
+                 new TextMessage { Id = 3, TimeStamp = new DateTime(2020, 1, 1), SenderId = 2, ChatId = 1, Content = "Hello2" }
             };
 
             modelBuilder.Entity<TextMessage>().HasData(initTextMessages.ToArray());
-           
+
             modelBuilder.Entity<Chat>().HasData(
                  new Chat { Created = DateTime.Now, Name = "Chat1", Id = 1 }
             );
 
         }
-               
+
     }
 }

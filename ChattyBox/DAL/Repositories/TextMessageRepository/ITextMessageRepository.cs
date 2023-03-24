@@ -11,8 +11,8 @@ namespace DAL.Repositories.TextMessageRepository
     
     public interface ITextMessageRepository
     {
-        TextMessage CreateTextMessage(string userEmail,string content, int chatId);
-        void DeleteTextMessage(DateTime date, int senderId, int chatId);
+        void CreateTextMessage(int userId, string content, int chatId);
+        void DeleteTextMessage(int id);
 
         TextMessage GetTextMessage(int id);
     }

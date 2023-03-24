@@ -20,18 +20,18 @@ namespace DAL.Repositories.ChatRepository
             _context = context;
         }
 
-        public void AddUserByEmail(string email, int chatId) 
+        public void AddUserById(int userId, int chatId) 
         {
-            User user = _context.Users.SingleOrDefault(u => u.Email == email) ?? throw new Exception("Nie znaleziono uzytkownika");
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception("Nie znaleziono uzytkownika");
             Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono chatu");
             var userChat = new UserChat { User = user, Chat = chat };
             _context.UserChats.Add(userChat);
             chat.Updated = DateTime.Now;
         }
 
-        public void DeleteUserByEmail(string email, int chatId)
+        public void DeleteUserById(int userId, int chatId)
         {
-            User user = _context.Users.SingleOrDefault(u => u.Email == email) ?? throw new Exception("Nie znaleziono uzytkownika");
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception("Nie znaleziono uzytkownika");
             Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono chatu");
             var userChat = _context.UserChats.FirstOrDefault(u => u.User == user && u.Chat == chat) ?? throw new Exception("Nie znaleziono powiazanych rekordow");
             _context.UserChats.Remove(userChat);
@@ -49,17 +49,14 @@ namespace DAL.Repositories.ChatRepository
             return users;
         }
 
-        public Chat CreateChat(string name, User user)
+        public void CreateChat(string name, int userId)
         {
             if (_context.Chats.Any(c => c.Name == name))
             {
                 throw new Exception("Chat o takiej nazwie juz istnieje");
             }
 
-            if (user == null)
-            {
-                throw new Exception("Nie znaleziono uzytkownika");
-            }
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception("Nie znaleziono uzytkownika");
 
             Chat chat = new Chat
             {
@@ -74,8 +71,6 @@ namespace DAL.Repositories.ChatRepository
             };
             _context.Chats.Add(chat);
             _context.UserChats.Add(userChat);
-
-            return chat;
         }
 
         public void DeleteChat(int chatId)
