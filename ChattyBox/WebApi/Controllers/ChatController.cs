@@ -4,8 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using WebApi.Models.ChatDTO;
-using WebApi.Models.TextMessageDTO;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using Web.Models.UserDTOs;
+using System.Linq;
+using WebApi.Models.MessagesDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,42 +38,41 @@ namespace WebApi.Controllers
         public GetChatDTO Get(int id)
         {
             var chat = _unitOfWork.Chats.GetChat(id);
-            /*ICollection<User> users = new List<User>();
 
-            foreach (var user in chat.UserChats)
+            var usersDto = chat.UserChats.Select(uc => new UserDTO
             {
-                users.Add(user.User);
-            }*/
+                Id = uc.User.Id,
+                Email = uc.User.Email,
+                Username = uc.User.Username,
+                LastLog = uc.User.LastLog,
+                Created = uc.User.Created,
+            }).ToList();
+
+            var textMessagesDto = chat.Messages
+               .OfType<TextMessage>()
+               .Select(m => new TextMessageDTO
+               {
+                   Id = m.Id,
+                   ChatId = m.ChatId,
+                   Content = m.Content,
+                   SenderId = m.SenderId,
+               })
+               .ToList<MessageDTO>();
 
             var chatDto = new GetChatDTO()
             {
                 ChatId = chat.Id,
-                Name = chat.Name
+                Name = chat.Name,
+                Users = usersDto,
+                AllMessages = textMessagesDto
             };
+
             return chatDto;
         }
 
-        /*[HttpGet("{chatId}")]
-        public IActionResult GetChatData(int chatId)
-        {
-            var chatData = _unitOfWork.Chats.GetChat(chatId);
-
-            if (chatData == null)
-            {
-                return NotFound();
-            }
-
-            var jsonSettings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-
-            //return Json(chatData, jsonSettings);
-        }*/
-
         // POST api/<ChatController>
-        [HttpPost]
-        public void Post([FromBody] CreateChatDTO value)
+        [HttpPost("create")]
+        public void Create([FromBody] CreateChatDTO value)
         {
             _unitOfWork.Chats.CreateChat(value.Name, value.UserId);
             _unitOfWork.Save();

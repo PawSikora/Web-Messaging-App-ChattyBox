@@ -1,6 +1,6 @@
 ﻿using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.TextMessageDTO;
+using WebApi.Models.MessagesDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,10 +26,10 @@ namespace WebApi.Controllers
 
         // GET api/<TextMessageController>/5
         [HttpGet("{id}")]
-        public CreateTextMessageDTO Get(int id)
+        public TextMessageDTO Get(int id)
         {
             var message = _unitOfWork.TextMessages.GetTextMessage(id);
-            var messageDTO = new CreateTextMessageDTO
+            var messageDTO = new TextMessageDTO
             {
                 ChatId = message.ChatId,
                 Content = message.Content,
@@ -39,8 +39,8 @@ namespace WebApi.Controllers
         }
 
         // POST api/<TextMessageController>
-        [HttpPost]
-        public void Post([FromBody] CreateTextMessageDTO messageDTO)
+        [HttpPost("create")]
+        public void Create([FromBody] CreateTextMessageDTO messageDTO)
         {
             _unitOfWork.TextMessages.CreateTextMessage(messageDTO.SenderId, messageDTO.Content, messageDTO.ChatId);
             _unitOfWork.Save();

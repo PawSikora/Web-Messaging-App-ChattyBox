@@ -91,10 +91,11 @@ namespace DAL.Repositories.ChatRepository
         public Chat GetChat(int chatId)
         {
             var chat = _context.Chats
-                .Include(c=>c.Messages)
+                .Include(c => c.Messages)
                 .Include(c => c.UserChats)
                 .ThenInclude(uc => uc.User)
                 .FirstOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
+ 
             return chat;
         }
     }

@@ -16,8 +16,5 @@ namespace Web.Models.UserDTOs
 
         public DateTime Created { get; set; }
 
-        public ICollection<Chat>? Chats { get; set; }
-
-        public ICollection<Message>? Messages { get; set; }
     }
 }
