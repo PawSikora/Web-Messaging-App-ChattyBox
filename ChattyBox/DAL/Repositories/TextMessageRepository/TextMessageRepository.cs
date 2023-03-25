@@ -1,5 +1,6 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,5 +46,20 @@ namespace DAL.Repositories.TextMessageRepository
             var textMessage = _context.TextMessages.SingleOrDefault(t => t.Id == id) ?? throw new Exception("Nie znaleziono wiadomosci");
             return textMessage;
         }
+        public TextMessage GetLastTextMessage(int chatid)
+        {
+
+            var message = _context.TextMessages
+                .Include(m => m.Sender)
+                .Where(m => m.ChatId == chatid)
+                .OrderByDescending(m => m.TimeStamp)
+                .FirstOrDefault() ?? throw new Exception("Nie znaleziono czatu");
+
+            return message;
+
+        }
+
+
+
     }
 }

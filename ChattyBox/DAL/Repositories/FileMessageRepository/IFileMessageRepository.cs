@@ -9,8 +9,9 @@ namespace DAL.Repositories.FileMessageRepository
 {
     public interface IFileMessageRepository
     {
-        FileMessage CreateFileMessage(string userEmail, string path, int chatId);
+        FileMessage CreateFileMessage(int userId, string path, int chatId);
         void DeleteFileMessage(int id);
         FileMessage GetFileMessage(int id);
+        FileMessage GetLastTextMessage(int chatid);
     }
 }

@@ -18,12 +18,12 @@ namespace DAL.Repositories.FileMessageRepository
             _context = context;
         }
 
-        public FileMessage CreateFileMessage(string userEmail, string path, int chatId)
+        public FileMessage CreateFileMessage(int userId, string path, int chatId)
         {
             if (!File.Exists(path)) throw new Exception("Nie znaleziono pliku");
             if (_context.FileMessages.Any(f=>f.Path == path)) throw new Exception("Plik juz istnieje w tym miejscu");
 
-            User user = _context.Users.SingleOrDefault(u => u.Email == userEmail) ?? throw new Exception("Nie znaleziono uzytkownika");
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception("Nie znaleziono uzytkownika");
             var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
 
             FileInfo file = new FileInfo(path);
@@ -53,6 +53,18 @@ namespace DAL.Repositories.FileMessageRepository
         {
             var fileMessage = _context.FileMessages.SingleOrDefault(f => f.Id == id) ?? throw new Exception("Nie znaleziono wiadomosci");
             return fileMessage;
+        }
+        public FileMessage GetLastTextMessage(int chatid)
+        {
+
+            var message = _context.FileMessages
+                .Include(m => m.Sender)
+                .Where(m => m.ChatId == chatid)
+                .OrderByDescending(m => m.TimeStamp)
+                .FirstOrDefault() ?? throw new Exception("Nie znaleziono czatu");
+
+            return message;
+
         }
     }
 }

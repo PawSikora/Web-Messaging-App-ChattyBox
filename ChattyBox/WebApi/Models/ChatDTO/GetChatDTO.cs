@@ -14,10 +14,10 @@ namespace WebApi.Models.ChatDTO
 
         public int ChatId { get; set; }
 
-        public virtual ICollection<UserDTO> Users { get; set; }
+        public virtual ICollection<Web.Models.UserDTOs.UserDTO> Users { get; set; }
 
         public virtual ICollection<MessageDTO>? AllMessages { get; set; }
 
-        //public virtual ICollection<FileMessageDTO>? FileMessages { get; set; }
+
     }
 }

@@ -59,5 +59,20 @@ namespace WebApi.Controllers
             _unitOfWork.TextMessages.DeleteTextMessage(id);
             _unitOfWork.Save();
         }
+        [HttpGet("GetNewest/{idChat}")]
+        public GetNewestMessage GetNewestMessage(int idChat)
+        {
+            var message = _unitOfWork.TextMessages.GetLastTextMessage(idChat);
+            return new GetNewestMessage()
+            {
+                Content = message.Content,
+                SenderId = message.SenderId,
+                SenderName = message.Sender.Username,
+
+            };
+
+
+
+        }
     }
 }

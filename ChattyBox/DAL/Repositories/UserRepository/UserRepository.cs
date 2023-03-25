@@ -70,5 +70,41 @@ namespace DAL.Repositories.UserRepository
             return user;
         }
 
+        public ICollection<Chat> GetChats(int id)
+        {
+            //var user = _context.Users
+            //    .Where(i => i.Id == id)
+            //    .Include(u => u.UserChats)
+            //    .ThenInclude(uc => uc.Chat)
+            //    .SingleOrDefault() ?? throw new Exception(" Nie znaleziono uzytkownika");
+            //var chats = user.UserChats.ToList() ?? throw new Exception("uzytkownik nie ma czatu");
+
+
+            //List<Chat> chatList = new List<Chat>();
+            //foreach (Chat chat in chats)
+            //{
+            //    chatList.Add(chat);
+            //}
+
+            //return chatList;
+
+
+
+
+
+
+            var user = _context.Users
+                .Include(u => u.UserChats)
+                .ThenInclude(uc => uc.Chat)
+                .SingleOrDefault(i => i.Id == id) ?? throw new Exception("Brak użytkownika");
+
+            var chatList = user.UserChats
+                .Select(uc => uc.Chat)
+                .ToList();
+
+            return chatList;
+
+
+        }
     }
 }

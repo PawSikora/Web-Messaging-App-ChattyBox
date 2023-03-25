@@ -91,5 +91,6 @@ namespace WebApi.Controllers
             _unitOfWork.Chats.DeleteChat(id);
             _unitOfWork.Save();
         }
+
     }
 }

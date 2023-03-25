@@ -2,6 +2,8 @@
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.UserDTOs;
+using WebApi.Models.ChatDTO;
+using WebApi.Models.UserDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,6 +41,21 @@ namespace WebApi.Controllers
             };
             return userDTO;
             //return _unitOfWork.Users.GetUser(id);
+        }
+        [HttpGet("Chats/{id}")]
+        public ICollection<GetUserChatDTO> GetChats(int id)
+        {
+           
+            var chat = _unitOfWork.Users.GetChats(id)
+                .Select(c => new GetUserChatDTO()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+
+            return chat;
+
         }
 
         // POST api/<UserController>
