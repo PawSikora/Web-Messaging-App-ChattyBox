@@ -1,6 +1,6 @@
-﻿namespace WebApi.Models.MessagesDTO
+﻿namespace WebApi.Models.MessagesDtos
 {
-    public class GetNewestMessage
+    public class GetNewestMessageDTO
     {
 
         public int SenderId { get; set; }

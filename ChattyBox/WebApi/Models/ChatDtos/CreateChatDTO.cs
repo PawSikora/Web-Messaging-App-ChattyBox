@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApi.Models.ChatDTO
+namespace WebApi.Models.ChatDtos
 {
     public class CreateChatDTO
     {

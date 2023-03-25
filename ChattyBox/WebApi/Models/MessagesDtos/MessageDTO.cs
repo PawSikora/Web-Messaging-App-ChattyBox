@@ -1,7 +1,7 @@
 ﻿
 using System.Text.Json.Serialization;
 
-namespace WebApi.Models.MessagesDTO
+namespace WebApi.Models.MessagesDtos
 {
     [JsonConverter(typeof(MessageConverter))]
     public abstract class MessageDTO

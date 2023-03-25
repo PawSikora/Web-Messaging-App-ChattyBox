@@ -3,14 +3,15 @@ using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using WebApi.Models.ChatDTO;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
-using Web.Models.UserDTOs;
 using System.Linq;
-using WebApi.Models.MessagesDTO;
+using WebApi.Models.ChatDtos;
+using Web.Models.UserDtos;
+using WebApi.Models.MessagesDtos;
+using AutoMapper;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,9 +22,11 @@ namespace WebApi.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ChatController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public ChatController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // GET: api/<ChatController>
@@ -35,47 +38,29 @@ namespace WebApi.Controllers
 
         // GET api/<ChatController>/5
         [HttpGet("{id}")]
-        public GetChatDTO Get(int id)
+        public ActionResult<GetChatDTO> Get(int id)
         {
-            var chat = _unitOfWork.Chats.GetChat(id);
 
-            var usersDto = chat.UserChats.Select(uc => new UserDTO
+            Chat chat = _unitOfWork.Chats.GetChat(id);
+
+            if (chat == null)
             {
-                Id = uc.User.Id,
-                Email = uc.User.Email,
-                Username = uc.User.Username,
-                LastLog = uc.User.LastLog,
-                Created = uc.User.Created,
-            }).ToList();
+                return NotFound();
+            }
 
-            var textMessagesDto = chat.Messages
-               .OfType<TextMessage>()
-               .Select(m => new TextMessageDTO
-               {
-                   Id = m.Id,
-                   ChatId = m.ChatId,
-                   Content = m.Content,
-                   SenderId = m.SenderId,
-               })
-               .ToList<MessageDTO>();
+            var chatDto = _mapper.Map<GetChatDTO>(chat);
 
-            var chatDto = new GetChatDTO()
-            {
-                ChatId = chat.Id,
-                Name = chat.Name,
-                Users = usersDto,
-                AllMessages = textMessagesDto
-            };
-
-            return chatDto;
+            return Ok(chatDto);
+          
         }
 
         // POST api/<ChatController>
         [HttpPost("create")]
-        public void Create([FromBody] CreateChatDTO value)
+        public ActionResult Create([FromBody] CreateChatDTO value)
         {
             _unitOfWork.Chats.CreateChat(value.Name, value.UserId);
             _unitOfWork.Save();
+            return Ok();
         }
 
         // PUT api/<ChatController>/5
@@ -86,10 +71,11 @@ namespace WebApi.Controllers
 
         // DELETE api/<ChatController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
             _unitOfWork.Chats.DeleteChat(id);
             _unitOfWork.Save();
+            return Ok();
         }
 
     }

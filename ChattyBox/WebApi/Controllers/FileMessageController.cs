@@ -1,6 +1,7 @@
-﻿using DAL.UnitOfWork;
+﻿using AutoMapper;
+using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.MessagesDTO;
+using WebApi.Models.MessagesDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,12 +12,14 @@ namespace WebApi.Controllers
     public class FileMessageController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public FileMessageController(IUnitOfWork unitOfWork)
+        public FileMessageController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-
+        
         // GET: api/<FileMessageController>
         //[HttpGet]
         //public IEnumerable<string> Get()
@@ -26,31 +29,26 @@ namespace WebApi.Controllers
 
         // GET api/<FileMessageController>/5
         [HttpGet("{id}")]
-        public FileMessageDTO Get(int id)
+        public ActionResult<FileMessageDTO> Get(int id)
         {
             var file = _unitOfWork.FileMessages.GetFileMessage(id);
-            return new FileMessageDTO
+           
+            if (file == null)
             {
-                Id = file.Id,
-                ChatId = file.ChatId,
-                SenderId = file.SenderId,
-                TimeStamp = file.TimeStamp,
-                Name = file.Name,
-                Path = file.Path,
-                
-            };
+                return NotFound();
+            }
+            
+            return Ok(_mapper.Map<FileMessageDTO>(file));
 
         }
 
         // POST api/<FileMessageController>
         [HttpPost("create")]
-        public void Post([FromBody] CreateFileMessageDTO createFile)
+        public ActionResult Create([FromBody] CreateFileMessageDTO createFile)
         {
-
             _unitOfWork.FileMessages.CreateFileMessage(createFile.SenderId, createFile.Path, createFile.ChatId);
             _unitOfWork.Save();
-            
-
+            return Ok();
         }
 
         //// PUT api/<FileMessageController>/5
@@ -61,24 +59,24 @@ namespace WebApi.Controllers
 
         // DELETE api/<FileMessageController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
             _unitOfWork.FileMessages.DeleteFileMessage(id);
             _unitOfWork.Save();
-            
+            return Ok();
         }
-        [HttpGet("GetNewest/{idChat}")]
-        public GetNewestMessage GetNewestMessage(int idChat)
+        
+        [HttpGet("GetNewestFileMessage/{idChat}")]
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage(int idChat)
         {
-            var message = _unitOfWork.FileMessages.GetLastTextMessage(idChat);
-            return new GetNewestMessage()
+            var message = _unitOfWork.FileMessages.GetLastFileMessage(idChat);
+           
+            if (message == null)
             {
-                Content = message.Name,
-                SenderId = message.SenderId,
-                SenderName = message.Sender.Username,
-
-            };
-
+                return NotFound();
+            }
+            
+            return Ok(_mapper.Map<GetNewestMessageDTO>(message));
 
 
         }

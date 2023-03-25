@@ -1,16 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-namespace WebApi.Models.MessagesDTO
+
+namespace WebApi.Models.MessagesDtos
 {
-    public class FileMessageDTO : MessageDTO
+    public class CreateFileMessageDTO :MessageDTO
     {
+        [JsonIgnore] 
         public int Id { get; set; }
-        [Required(ErrorMessage = "Tekst jest wymagany")]
-        [MaxLength(500, ErrorMessage = "Tekst jest zbyt dlugi")]
-        [MinLength(1, ErrorMessage = "Nie wpisanu tekstu")]
-
-
-        public override string MessageType => "file";
 
 
         [Required(ErrorMessage = "Pole jest wymagane")]
@@ -21,6 +18,9 @@ namespace WebApi.Models.MessagesDTO
         [MaxLength(100, ErrorMessage = "Nazwa pliku jest za długa")]
         [MinLength(1, ErrorMessage = "Niepoprawne dane")]
         public string Name { get; set; }
+
+        public override string MessageType => "createFile";
+
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿using DAL.Database.Entities;
 
-namespace WebApi.Models.UserDTO
+namespace Web.Models.UserDtos
 {
     public class GetUserChatDTO
     {

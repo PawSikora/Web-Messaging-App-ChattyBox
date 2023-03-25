@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace WebApi.Models.MessagesDTO
+namespace WebApi.Models.MessagesDtos
 {
     public class CreateTextMessageDTO : MessageDTO
     {

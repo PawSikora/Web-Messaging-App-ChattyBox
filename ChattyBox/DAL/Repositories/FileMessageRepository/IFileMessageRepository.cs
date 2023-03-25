@@ -12,6 +12,6 @@ namespace DAL.Repositories.FileMessageRepository
         FileMessage CreateFileMessage(int userId, string path, int chatId);
         void DeleteFileMessage(int id);
         FileMessage GetFileMessage(int id);
-        FileMessage GetLastTextMessage(int chatid);
+        FileMessage GetLastFileMessage(int chatid);
     }
 }

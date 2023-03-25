@@ -54,7 +54,7 @@ namespace DAL.Repositories.FileMessageRepository
             var fileMessage = _context.FileMessages.SingleOrDefault(f => f.Id == id) ?? throw new Exception("Nie znaleziono wiadomosci");
             return fileMessage;
         }
-        public FileMessage GetLastTextMessage(int chatid)
+        public FileMessage GetLastFileMessage(int chatid)
         {
 
             var message = _context.FileMessages

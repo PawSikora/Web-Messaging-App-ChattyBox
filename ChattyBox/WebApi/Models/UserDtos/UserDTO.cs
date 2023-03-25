@@ -1,7 +1,7 @@
 ﻿using DAL.Database.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Web.Models.UserDTOs
+namespace Web.Models.UserDtos
 {
     public class UserDTO
     {
