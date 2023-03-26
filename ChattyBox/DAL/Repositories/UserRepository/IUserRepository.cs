@@ -12,7 +12,7 @@ namespace DAL.Repositories.UserRepository
         User LoginUser(string email, string password);
         void RegisterUser(string email, string username, string password);
         User GetUser(int id);
-        ICollection<Chat> GetChats(int id);
+        ICollection<Chat> GetChats(int id, int pageNumber);
     }
     
 }

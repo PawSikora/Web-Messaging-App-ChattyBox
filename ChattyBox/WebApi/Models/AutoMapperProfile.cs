@@ -10,7 +10,20 @@ namespace WebApi.Models
     {
         public AutoMapperProfile()
         {
-           
+
+            CreateMap<User, UserDTO>();
+
+            CreateMap<TextMessage, TextMessageDTO>();
+            CreateMap<TextMessage, GetNewestMessageDTO>();
+            CreateMap<FileMessage, GetNewestMessageDTO>()
+                .ForMember(dto => dto.Content, opt => opt.MapFrom(fm => fm.Name));
+
+            CreateMap<Chat, GetUserChatDTO>().ReverseMap();
+
+            CreateMap<User, UserDTO>();
+
+            CreateMap<FileMessage, FileMessageDTO>();
+
             CreateMap<Chat, GetChatDTO>()
                .ForMember(dto => dto.Users, opt => opt.MapFrom(chat => chat.UserChats.Select(uc => uc.User)))
                .ForMember(dto => dto.AllMessages, opt => opt.Ignore())
@@ -23,6 +36,7 @@ namespace WebApi.Models
                            ChatId = m.ChatId,
                            Content = m.Content,
                            SenderId = m.SenderId,
+                           TimeStamp = m.TimeStamp
                        })
                        .Cast<MessageDTO>();
 
@@ -34,26 +48,15 @@ namespace WebApi.Models
                            Path = m.Path,
                            Name = m.Name,
                            SenderId = m.SenderId,
+                           TimeStamp = m.TimeStamp
                        })
                        .Cast<MessageDTO>();
 
-                   dto.AllMessages = textMessagesDto.Concat(fileMessagesDto).ToList();
+                   dto.AllMessages = textMessagesDto.Concat(fileMessagesDto).OrderByDescending(t => t.TimeStamp).ToList();
                });
-
-
-            CreateMap<User, UserDTO>();
-
-            CreateMap<TextMessage, TextMessageDTO>();
-            CreateMap<TextMessage, GetNewestMessageDTO>();
-            CreateMap<FileMessage, GetNewestMessageDTO>()
-                .ForMember(dto => dto.Content, opt => opt.MapFrom(fm => fm.Name));
-            
-            CreateMap<Chat, GetUserChatDTO>().ReverseMap();
-
-            CreateMap<User, UserDTO>();
-
-            CreateMap<FileMessage, FileMessageDTO>();
-
         }
     }
 }
+
+
+

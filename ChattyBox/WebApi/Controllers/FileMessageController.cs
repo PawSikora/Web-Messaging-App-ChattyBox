@@ -20,16 +20,9 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
         
-        // GET: api/<FileMessageController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
         // GET api/<FileMessageController>/5
         [HttpGet("{id}")]
-        public ActionResult<FileMessageDTO> Get(int id)
+        public ActionResult<FileMessageDTO> Get([FromRoute] int id)
         {
             var file = _unitOfWork.FileMessages.GetFileMessage(id);
            
@@ -51,15 +44,9 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        //// PUT api/<FileMessageController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
         // DELETE api/<FileMessageController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete([FromRoute] int id)
         {
             _unitOfWork.FileMessages.DeleteFileMessage(id);
             _unitOfWork.Save();
@@ -67,7 +54,7 @@ namespace WebApi.Controllers
         }
         
         [HttpGet("GetNewestFileMessage/{idChat}")]
-        public ActionResult<GetNewestMessageDTO> GetNewestMessage(int idChat)
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
         {
             var message = _unitOfWork.FileMessages.GetLastFileMessage(idChat);
            
@@ -77,7 +64,6 @@ namespace WebApi.Controllers
             }
             
             return Ok(_mapper.Map<GetNewestMessageDTO>(message));
-
 
         }
     }

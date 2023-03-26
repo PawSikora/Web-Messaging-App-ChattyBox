@@ -20,16 +20,9 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/<TextMessageController>
-        /*[HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }*/
-
         // GET api/<TextMessageController>/5
         [HttpGet("{id}")]
-        public ActionResult<TextMessageDTO> Get(int id)
+        public ActionResult<TextMessageDTO> Get([FromRoute] int id)
         {
             var message = _unitOfWork.TextMessages.GetTextMessage(id);
          
@@ -50,15 +43,9 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        // PUT api/<TextMessageController>/5
-        /*[HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }*/
-
         // DELETE api/<TextMessageController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete([FromRoute] int id)
         {
             _unitOfWork.TextMessages.DeleteTextMessage(id);
             _unitOfWork.Save();
@@ -66,7 +53,7 @@ namespace WebApi.Controllers
         }
         
         [HttpGet("GetNewestTextMessage/{idChat}")]
-        public ActionResult<GetNewestMessageDTO> GetNewestMessage(int idChat)
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
         {
             var message = _unitOfWork.TextMessages.GetLastTextMessage(idChat);
            

@@ -23,25 +23,19 @@ namespace WebApi.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        
         public ChatController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        // GET: api/<ChatController>
-        /*[HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }*/
-
         // GET api/<ChatController>/5
-        [HttpGet("{id}")]
-        public ActionResult<GetChatDTO> Get(int id)
+        [HttpGet("{id}/{pageNumber}")]
+        public ActionResult<GetChatDTO> Get([FromRoute] int id, [FromRoute] int pageNumber)
         {
 
-            Chat chat = _unitOfWork.Chats.GetChat(id);
+            Chat chat = _unitOfWork.Chats.GetChat(id,pageNumber);
 
             if (chat == null)
             {
@@ -54,24 +48,36 @@ namespace WebApi.Controllers
           
         }
 
+
         // POST api/<ChatController>
         [HttpPost("create")]
-        public ActionResult Create([FromBody] CreateChatDTO value)
+        public ActionResult Create([FromBody] CreateChatDTO chat)
         {
-            _unitOfWork.Chats.CreateChat(value.Name, value.UserId);
+            _unitOfWork.Chats.CreateChat(chat.Name, chat.UserId);
+            _unitOfWork.Save();
+            return Ok();
+        }
+        
+        [HttpPut("{id}/addUser/{userId}")]
+        public ActionResult AddUser([FromRoute] int id, [FromRoute] int userId)
+        {
+            _unitOfWork.Chats.AddUserById(userId, id);
             _unitOfWork.Save();
             return Ok();
         }
 
         // PUT api/<ChatController>/5
-        /*[HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id}/deleteUser/{userId}")]
+        public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
         {
-        }*/
+            _unitOfWork.Chats.DeleteUserById(userId, id);
+            _unitOfWork.Save();
+            return Ok();
+        }
 
         // DELETE api/<ChatController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete([FromRoute] int id)
         {
             _unitOfWork.Chats.DeleteChat(id);
             _unitOfWork.Save();

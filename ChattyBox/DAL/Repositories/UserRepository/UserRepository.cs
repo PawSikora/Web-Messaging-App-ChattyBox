@@ -41,6 +41,8 @@ namespace DAL.Repositories.UserRepository
            !VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 throw new Exception("Niepoprawny login lub hasło");
 
+            user.LastLog = DateTime.Now;
+            
             return user;
         }
 
@@ -70,41 +72,38 @@ namespace DAL.Repositories.UserRepository
             return user;
         }
 
-        public ICollection<Chat> GetChats(int id)
+        public ICollection<Chat> GetChats(int id, int pageNumber)
         {
-            //var user = _context.Users
-            //    .Where(i => i.Id == id)
-            //    .Include(u => u.UserChats)
-            //    .ThenInclude(uc => uc.Chat)
-            //    .SingleOrDefault() ?? throw new Exception(" Nie znaleziono uzytkownika");
-            //var chats = user.UserChats.ToList() ?? throw new Exception("uzytkownik nie ma czatu");
+            if (pageNumber < 1)
+            {
+                throw new Exception("Numer strony nie może być mniejszy od 1");
+            }
+            
+            int chatsPerPage = 10;
 
+            var chatCount = _context.UserChats
+                .Where(x => x.UserId == id)
+                .Select(x => x.Chat)
+                .Count();
 
-            //List<Chat> chatList = new List<Chat>();
-            //foreach (Chat chat in chats)
-            //{
-            //    chatList.Add(chat);
-            //}
+            if (chatCount == 0)
+            {
+                throw new Exception("Nie znaleziono czatów");
+            }
 
-            //return chatList;
+            int maxPageNumber = (int)Math.Ceiling((double)chatCount / chatsPerPage);
 
+            pageNumber = pageNumber > maxPageNumber ? maxPageNumber : pageNumber;
 
-
-
-
-
-            var user = _context.Users
-                .Include(u => u.UserChats)
-                .ThenInclude(uc => uc.Chat)
-                .SingleOrDefault(i => i.Id == id) ?? throw new Exception("Brak użytkownika");
-
-            var chatList = user.UserChats
+            var chatList = _context.UserChats
+                .Where(uc => uc.UserId == id)
                 .Select(uc => uc.Chat)
+                .OrderByDescending(c => c.Updated)
+                .Skip((pageNumber - 1) * chatsPerPage)
+                .Take(chatsPerPage)
                 .ToList();
 
             return chatList;
-
-
         }
     }
 }

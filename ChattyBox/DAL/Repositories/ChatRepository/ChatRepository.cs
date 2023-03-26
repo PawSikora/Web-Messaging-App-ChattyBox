@@ -20,10 +20,16 @@ namespace DAL.Repositories.ChatRepository
             _context = context;
         }
 
-        public void AddUserById(int userId, int chatId) 
+        public void AddUserById(int userId, int chatId)
         {
             User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception("Nie znaleziono uzytkownika");
             Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono chatu");
+
+            if (_context.UserChats.Any(u => u.User == user && u.Chat == chat))
+            {
+                throw new Exception("Uzytkownik jest juz w czacie");
+            }
+
             var userChat = new UserChat { User = user, Chat = chat };
             _context.UserChats.Add(userChat);
             chat.Updated = DateTime.Now;
@@ -77,28 +83,43 @@ namespace DAL.Repositories.ChatRepository
         {
             var userChats = _context.UserChats.Where(uc => uc.Chat.Id == chatId);
 
-            if(userChats != null)
+            if (userChats != null)
             {
                 _context.UserChats.RemoveRange(userChats);
             }
-           
+
             var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
 
             _context.Chats.Remove(chat);
-           
+
         }
 
-        public Chat GetChat(int chatId)
+        public Chat GetChat(int chatId, int pageNumber)
         {
+            if (pageNumber < 1)
+            {
+                throw new Exception("Numer strony nie może być mniejszy od 1");
+            }
+
+            int messagesPerPage = 10;
+
+            var messageCount = _context.Chats.Where(c => c.Id == chatId)
+                .SelectMany(c => c.Messages).Count();
+
+            int maxPageNumber = (int)Math.Ceiling((double)messageCount / messagesPerPage);
+
+            pageNumber = pageNumber > maxPageNumber ? maxPageNumber : pageNumber;
+
             var chat = _context.Chats
-                .Include(c => c.Messages)
+                .Where(c => c.Id == chatId)
+                .Include(c => c.Messages.OrderByDescending(m => m.TimeStamp).Skip((pageNumber - 1) * messagesPerPage).Take(messagesPerPage))
                 .Include(c => c.UserChats)
                 .ThenInclude(uc => uc.User)
-                .FirstOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
- 
+                .SingleOrDefault() ?? throw new Exception("Nie znaleziono czatu");
+
             return chat;
         }
 
     }
-   
+
 }

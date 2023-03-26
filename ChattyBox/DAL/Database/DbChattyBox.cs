@@ -109,8 +109,8 @@ namespace DAL.Database
 
             List<TextMessage> initTextMessages = new List<TextMessage>()
             {
-                 new TextMessage {Id = 1,TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Content = "Hello1" },
-                 new TextMessage { Id = 3, TimeStamp = new DateTime(2020, 1, 1), SenderId = 2, ChatId = 1, Content = "Hello2" }
+                 new TextMessage {Id = 1,TimeStamp = new DateTime(2019, 1, 1), SenderId = 1, ChatId = 1, Content = "Hello1" },
+                 new TextMessage { Id = 3, TimeStamp = new DateTime(2021, 1, 1), SenderId = 2, ChatId = 1, Content = "Hello2" }
             };
 
             modelBuilder.Entity<TextMessage>().HasData(initTextMessages.ToArray());
@@ -118,7 +118,7 @@ namespace DAL.Database
             List<FileMessage> initFileMessages = new List<FileMessage>()
             {
                 new FileMessage {Id = 2,TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Name = "File1.txt",Path = "Path1"},
-                new FileMessage { Id = 4, TimeStamp = new DateTime(2020, 1, 1), SenderId = 2, ChatId = 1, Name = "File2.txt", Path = "Path1"},
+                new FileMessage { Id = 4, TimeStamp = new DateTime(2022, 1, 1), SenderId = 2, ChatId = 1, Name = "File2.txt", Path = "Path1"},
             };
 
             modelBuilder.Entity<FileMessage>().HasData(initFileMessages.ToArray());
