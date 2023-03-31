@@ -18,7 +18,7 @@ namespace DAL.Repositories.FileMessageRepository
             _context = context;
         }
 
-        public FileMessage CreateFileMessage(int userId, string path, int chatId)
+        public void CreateFileMessage(int userId, string path, int chatId)
         {
             if (!File.Exists(path)) throw new Exception("Nie znaleziono pliku");
             if (_context.FileMessages.Any(f=>f.Path == path)) throw new Exception("Plik juz istnieje w tym miejscu");
@@ -40,7 +40,6 @@ namespace DAL.Repositories.FileMessageRepository
             };
 
             _context.FileMessages.Add(message);
-            return message;
         }
 
         public void DeleteFileMessage(int id)

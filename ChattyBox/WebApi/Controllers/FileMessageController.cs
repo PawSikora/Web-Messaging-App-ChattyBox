@@ -1,70 +1,43 @@
-﻿using AutoMapper;
-using DAL.UnitOfWork;
+﻿using BLL.DataTransferObjects.MessageDtos;
+using BLL.Services.FileMessageService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.MessagesDtos;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class FileMessageController : ControllerBase
+    public class FileMessageController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IFileMessageService _fileMessageService;
 
-        public FileMessageController(IUnitOfWork unitOfWork, IMapper mapper)
+        public FileMessageController(IFileMessageService fileMessageService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _fileMessageService = fileMessageService;
         }
-        
-        // GET api/<FileMessageController>/5
+
         [HttpGet("{id}")]
         public ActionResult<FileMessageDTO> Get([FromRoute] int id)
         {
-            var file = _unitOfWork.FileMessages.GetFileMessage(id);
-           
-            if (file == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(_mapper.Map<FileMessageDTO>(file));
-
+            return View(_fileMessageService.GetFileMessage(id));
         }
 
-        // POST api/<FileMessageController>
         [HttpPost("create")]
         public ActionResult Create([FromBody] CreateFileMessageDTO createFile)
         {
-            _unitOfWork.FileMessages.CreateFileMessage(createFile.SenderId, createFile.Path, createFile.ChatId);
-            _unitOfWork.Save();
-            return Ok();
+            _fileMessageService.CreateFileMessage(createFile);
+            return View();
         }
 
-        // DELETE api/<FileMessageController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _unitOfWork.FileMessages.DeleteFileMessage(id);
-            _unitOfWork.Save();
-            return Ok();
+            _fileMessageService.DeleteFileMessage(id);
+            return View();
         }
-        
+
         [HttpGet("GetNewestFileMessage/{idChat}")]
         public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
         {
-            var message = _unitOfWork.FileMessages.GetLastFileMessage(idChat);
-           
-            if (message == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(_mapper.Map<GetNewestMessageDTO>(message));
-
+            return View(_fileMessageService.GetLastFileMessage(idChat));
         }
     }
 }

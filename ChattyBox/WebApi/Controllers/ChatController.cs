@@ -1,87 +1,59 @@
-﻿using DAL.Database.Entities;
-using DAL.UnitOfWork;
+﻿using BLL.DataTransferObjects.ChatDtos;
+using BLL.DataTransferObjects.UserDtos;
+using BLL.Services.ChatService;
+using DAL.Database.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
-using System.Linq;
-using WebApi.Models.ChatDtos;
-using Web.Models.UserDtos;
-using WebApi.Models.MessagesDtos;
-using AutoMapper;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ChatController : ControllerBase
+    public class ChatController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        
-        public ChatController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IChatService _chatService;
+
+        public ChatController(IChatService chatService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _chatService = chatService;
         }
 
-        // GET api/<ChatController>/5
         [HttpGet("{id}/{pageNumber}")]
         public ActionResult<GetChatDTO> Get([FromRoute] int id, [FromRoute] int pageNumber)
         {
-
-            Chat chat = _unitOfWork.Chats.GetChat(id,pageNumber);
-
-            if (chat == null)
-            {
-                return NotFound();
-            }
-
-            var chatDto = _mapper.Map<GetChatDTO>(chat);
-
-            return Ok(chatDto);
-          
+            return View(_chatService.GetChat(id, pageNumber));
         }
 
-
-        // POST api/<ChatController>
         [HttpPost("create")]
         public ActionResult Create([FromBody] CreateChatDTO chat)
         {
-            _unitOfWork.Chats.CreateChat(chat.Name, chat.UserId);
-            _unitOfWork.Save();
-            return Ok();
+            _chatService.CreateChat(chat);
+            return View();
         }
-        
+
         [HttpPut("{id}/addUser/{userId}")]
         public ActionResult AddUser([FromRoute] int id, [FromRoute] int userId)
         {
-            _unitOfWork.Chats.AddUserById(userId, id);
-            _unitOfWork.Save();
-            return Ok();
+            _chatService.AddUserById(userId, id);
+            return View();
         }
 
-        // PUT api/<ChatController>/5
         [HttpPut("{id}/deleteUser/{userId}")]
         public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
         {
-            _unitOfWork.Chats.DeleteUserById(userId, id);
-            _unitOfWork.Save();
-            return Ok();
+            _chatService.DeleteUserById(userId, id);
+            return View();
         }
 
-        // DELETE api/<ChatController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _unitOfWork.Chats.DeleteChat(id);
-            _unitOfWork.Save();
-            return Ok();
+            _chatService.DeleteChat(id);
+            return View();
+        }
+
+        [HttpGet("getUsers/{id}")]
+        public ActionResult<IEnumerable<UserDTO>> GetUsersInChat(int id)
+        {
+            return View(_chatService.GetUsersInChat(id));
         }
 
     }

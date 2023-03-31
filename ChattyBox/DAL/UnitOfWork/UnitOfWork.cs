@@ -16,15 +16,16 @@ namespace DAL.UnitOfWork
     {
         private readonly DbChattyBox _context;
 
-        public UnitOfWork(DbChattyBox context)
+        public UnitOfWork(DbChattyBox context, IChatRepository chatRepository, IFileMessageRepository fileMessageRepository, 
+            ITextMessageRepository textMessageRepository, IUserRepository userRepository)
         {
             _context = context;
-            Chats = new ChatRepository(_context);
-            FileMessages = new FileMessageRepository(_context);
-            TextMessages = new TextMessageRepository(_context);
-            Users = new UserRepository(_context);
+            Chats = chatRepository;
+            FileMessages = fileMessageRepository;
+            TextMessages = textMessageRepository;
+            Users = userRepository;
         }
-
+        
         public IChatRepository Chats { get; private set; }
 
         public IFileMessageRepository FileMessages { get; private set; }
