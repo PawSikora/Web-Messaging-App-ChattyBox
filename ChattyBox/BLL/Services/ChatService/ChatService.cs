@@ -2,6 +2,7 @@
 using BLL.DataTransferObjects.ChatDtos;
 using BLL.DataTransferObjects.UserDtos;
 using DAL.Database.Entities;
+using DAL.Exceptions;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -51,9 +52,14 @@ namespace BLL.Services.ChatService
             var chat = _unitOfWork.Chats.GetChat(id, pageNumber);
 
             if (chat == null) 
-                throw new Exception("Nie znaleziono chatu");
+                throw new NotFoundException("Nie znaleziono chatu");
 
             return _mapper.Map<GetChatDTO>(chat);
+        }
+
+        public int GetChatMessagesCount(int id)
+        {
+            return _unitOfWork.Chats.GetChatMessagesCount(id);
         }
 
         public IEnumerable<UserDTO> GetUsersInChat(int chatId)
@@ -61,9 +67,11 @@ namespace BLL.Services.ChatService
             var users = _unitOfWork.Chats.GetUsersInChat(chatId);
 
             if (users == null)
-                throw new Exception("Nie znaleziono użytkowników");
+                throw new NotFoundException("Nie znaleziono użytkowników");
 
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
+        
+        
     }
 }

@@ -1,0 +1,22 @@
+﻿@model BLL.DataTransferObjects.UserDtos.LoginUserDTO;
+
+<h2>Logowanie:</h2>
+
+<form method="post" asp-controller="User" asp-action="Login">
+    <div>
+        <label asp-for="Email">Adres E-mail:</label><br />
+        <input asp-for="Email" />
+        <span asp-validation-for="Email" style="color: red;"></span>
+    </div>
+    <br />
+    <div>
+        <label asp-for="Password">Haslo:</label><br />
+        <input type="password" asp-for="Password" />
+    </div>
+    <br />
+    <input type="submit" value="Zaloguj sie" />
+   
+</form>
+<br />
+<br />
+<a href="@Url.Action("Register", "User")" class="btn btn-primary">Zarejestruj się</a>

@@ -14,27 +14,27 @@ namespace WebApi.Controllers
             _fileMessageService = fileMessageService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("fMsg/{id}")]
         public ActionResult<FileMessageDTO> Get([FromRoute] int id)
         {
             return View(_fileMessageService.GetFileMessage(id));
         }
 
-        [HttpPost("create")]
-        public ActionResult Create([FromBody] CreateFileMessageDTO createFile)
+        [HttpPost]
+        public ActionResult Create( CreateFileMessageDTO createFile)
         {
             _fileMessageService.CreateFileMessage(createFile);
             return View();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("fMsg/{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
             _fileMessageService.DeleteFileMessage(id);
             return View();
         }
 
-        [HttpGet("GetNewestFileMessage/{idChat}")]
+        [HttpGet("fMsg/GetNewest/{idChat}")]
         public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
         {
             return View(_fileMessageService.GetLastFileMessage(idChat));

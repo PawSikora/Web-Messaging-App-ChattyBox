@@ -1,0 +1,12 @@
+﻿@model BLL.DataTransferObjects.UserDtos.UserDTO;
+
+
+<h1>Witaj @Model.Username !</h1>
+
+<a href="@Url.Action("GetChats", "User", new { id = Model.Id, pageNumber = 1 })" class="btn btn-primary">Wyswietl swoje chaty</a>
+<br /> <br />
+<a href="@Url.Action("CreateChat", "User", new {id = Model.Id})" class="btn btn-primary">Stworz nowy chat</a>
+
+<br />
+<br />
+<a href="@Url.Action("Login", "User")" class="btn btn-primary">Wyloguj sie</a>

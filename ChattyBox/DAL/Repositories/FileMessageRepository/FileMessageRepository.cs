@@ -1,5 +1,6 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
+using DAL.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,11 @@ namespace DAL.Repositories.FileMessageRepository
 
         public void CreateFileMessage(int userId, string path, int chatId)
         {
-            if (!File.Exists(path)) throw new Exception("Nie znaleziono pliku");
-            if (_context.FileMessages.Any(f=>f.Path == path)) throw new Exception("Plik juz istnieje w tym miejscu");
+            if (!File.Exists(path)) throw new NotFoundException("Nie znaleziono pliku");
+            if (_context.FileMessages.Any(f=>f.Path == path)) throw new NotUniqueElementException("Plik juz istnieje w tym miejscu");
 
-            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception("Nie znaleziono uzytkownika");
-            var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
+            var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
 
             FileInfo file = new FileInfo(path);
             double fileSizeOnMB = (double)file.Length / (1024 * 1024);
@@ -44,15 +45,16 @@ namespace DAL.Repositories.FileMessageRepository
 
         public void DeleteFileMessage(int id)
         {
-            var fileMessage = _context.FileMessages.SingleOrDefault(f => f.Id == id) ?? throw new Exception("Plik nie istnieje");
+            var fileMessage = _context.FileMessages.SingleOrDefault(f => f.Id == id) ?? throw new NotFoundException("Plik nie istnieje");
             _context.FileMessages.Remove(fileMessage);
         }
 
         public FileMessage GetFileMessage(int id)
         {
-            var fileMessage = _context.FileMessages.SingleOrDefault(f => f.Id == id) ?? throw new Exception("Nie znaleziono wiadomosci");
+            var fileMessage = _context.FileMessages.SingleOrDefault(f => f.Id == id) ?? throw new NotFoundException("Nie znaleziono wiadomosci");
             return fileMessage;
         }
+        
         public FileMessage GetLastFileMessage(int chatid)
         {
 
@@ -60,10 +62,9 @@ namespace DAL.Repositories.FileMessageRepository
                 .Include(m => m.Sender)
                 .Where(m => m.ChatId == chatid)
                 .OrderByDescending(m => m.TimeStamp)
-                .FirstOrDefault() ?? throw new Exception("Nie znaleziono czatu");
+                .FirstOrDefault() ?? throw new NotFoundException("Nie znaleziono czatu");
 
             return message;
-
         }
     }
 }

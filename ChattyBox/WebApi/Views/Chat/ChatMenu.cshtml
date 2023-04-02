@@ -1,0 +1,28 @@
+﻿@model BLL.DataTransferObjects.ChatDtos.GetChatDTO;
+@using BLL.DataTransferObjects.MessageDtos;
+<h1>Chat: @Model.Name</h1>
+
+<link rel="stylesheet" href="~/css/chat.css" />
+
+<div class="border">
+@foreach (var message in Model.AllMessages)
+{
+    <div class="item">
+        @Model.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
+        @if (message is FileMessageDTO fileMessage)
+        {
+            @fileMessage.Name
+        }
+        else if (message is TextMessageDTO textMessage)
+        {
+            @textMessage.Content
+        }
+     
+    </div>
+}
+@if(Model.AllMessages.Count == 0)
+    {
+        <div class="item">Brak wiadomości</div>
+    }
+</div>
+

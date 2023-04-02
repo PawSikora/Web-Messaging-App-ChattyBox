@@ -16,41 +16,53 @@ namespace WebApi.Controllers
             _chatService = chatService;
         }
 
-        [HttpGet("{id}/{pageNumber}")]
+        [HttpGet("chat/Get/{id}/{pageNumber}")]
         public ActionResult<GetChatDTO> Get([FromRoute] int id, [FromRoute] int pageNumber)
         {
-            return View(_chatService.GetChat(id, pageNumber));
+            return View("ChatMenu",_chatService.GetChat(id, pageNumber));
         }
 
-        [HttpPost("create")]
-        public ActionResult Create([FromBody] CreateChatDTO chat)
+        [HttpGet("chat/Create")]
+        public ActionResult Create(int id)
         {
-            _chatService.CreateChat(chat);
-            return View();
+            ViewBag.UserId = id;
+            return View("CreateChat");
         }
 
-        [HttpPut("{id}/addUser/{userId}")]
+        [HttpPost]
+        public ActionResult Create(CreateChatDTO chat)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("CreateChat", chat);
+            }
+            
+            _chatService.CreateChat(chat);
+            return RedirectToAction("GetChats", "User", new { id = chat.UserId, pageNumber = 1 });
+        }
+
+        [HttpPut("chat/{id}/addUser/{userId}")]
         public ActionResult AddUser([FromRoute] int id, [FromRoute] int userId)
         {
             _chatService.AddUserById(userId, id);
             return View();
         }
 
-        [HttpPut("{id}/deleteUser/{userId}")]
+        [HttpPut("chat/{id}/deleteUser/{userId}")]
         public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
         {
             _chatService.DeleteUserById(userId, id);
             return View();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("chat/{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
             _chatService.DeleteChat(id);
             return View();
         }
 
-        [HttpGet("getUsers/{id}")]
+        [HttpGet("chat/getUsers/{id}")]
         public ActionResult<IEnumerable<UserDTO>> GetUsersInChat(int id)
         {
             return View(_chatService.GetUsersInChat(id));

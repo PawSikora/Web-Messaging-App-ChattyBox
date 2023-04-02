@@ -13,30 +13,53 @@ namespace WebApi.Controllers
         {
             _userService = userService;
         }
+        
+        
+        public IActionResult Login()
+        {
+            return View("Login");
+        }
 
-        [HttpGet("{id}")]
+        [HttpGet("user/get/{id}")]
         public ActionResult<UserDTO> Get([FromRoute] int id)
         {
             return View(_userService.GetUser(id));
         }
 
-        [HttpGet("Chats/{id}/{pageNumber}")]
+        [HttpGet("user/getChats/{id}/{pageNumber}")]
         public ActionResult<ICollection<GetUserChatDTO>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
         {
-            return View(_userService.GetChats(id, pageNumber));
+            return View("ChatBrowser",_userService.GetChats(id, pageNumber));
         }
 
-        [HttpPost("register")]
-        public ActionResult Register([FromBody] CreateUserDTO registerUser)
+        [HttpGet("user/register")]
+        public ActionResult Register()
         {
-            _userService.RegisterUser(registerUser);
             return View();
         }
 
-        [HttpPost("login")]
-        public ActionResult<UserDTO> Login([FromBody] LoginUserDTO loginUser)
+
+        [HttpPost]
+        public ActionResult Register(CreateUserDTO registerUser)
         {
-            return View(_userService.LoginUser(loginUser));
+            if (!ModelState.IsValid)
+                return View("Register", registerUser);
+            
+            _userService.RegisterUser(registerUser);
+            return View("Login");
+        }
+
+        [HttpPost]
+        public ActionResult<UserDTO> Login( LoginUserDTO loginUser)
+        {
+            return View("UserMenu",_userService.LoginUser(loginUser));
+        }
+
+       
+        [HttpGet("user/createChat")]
+        public ActionResult CreateChat(int id)
+        {
+            return RedirectToAction("Create", "Chat", new { id });
         }
 
     }

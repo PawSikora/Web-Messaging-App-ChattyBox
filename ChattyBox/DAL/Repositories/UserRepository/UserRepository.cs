@@ -1,5 +1,6 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
+using DAL.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace DAL.Repositories.UserRepository
 {
@@ -31,15 +33,15 @@ namespace DAL.Repositories.UserRepository
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return computedHash.SequenceEqual(passwordHash);
         }
-
-
+        
+        
         public User LoginUser(string email, string password)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Email == email) ?? throw new Exception("Nie znaleziono uzytkownika");
+            var user = _context.Users.SingleOrDefault(x => x.Email == email) ?? throw new LoginFailedException("Niepoprawny login lub hasło");
 
             if (password == null ||
            !VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                throw new Exception("Niepoprawny login lub hasło");
+                throw new LoginFailedException("Niepoprawny login lub hasło");
 
             user.LastLog = DateTime.Now;
             
@@ -49,7 +51,7 @@ namespace DAL.Repositories.UserRepository
         public void RegisterUser(string email, string username, string password)
         {
             if (_context.Users.Any(x => x.Email == email))
-                throw new Exception("Użytkownik o podanym adresie email już istnieje");
+                throw new EmailAlreadyUsedException("Użytkownik o podanym adresie email już istnieje");
 
             createPasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -68,7 +70,7 @@ namespace DAL.Repositories.UserRepository
         public User GetUser(int id)
         {
             var user = _context.Users
-                .SingleOrDefault(i => i.Id == id) ?? throw new Exception("Nie znaleziono uzytkownika");
+                .SingleOrDefault(i => i.Id == id) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
             return user;
         }
 
@@ -76,7 +78,7 @@ namespace DAL.Repositories.UserRepository
         {
             if (pageNumber < 1)
             {
-                throw new Exception("Numer strony nie może być mniejszy od 1");
+                throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
             }
             
             int chatsPerPage = 10;
@@ -88,7 +90,7 @@ namespace DAL.Repositories.UserRepository
 
             if (chatCount == 0)
             {
-                throw new Exception("Nie znaleziono czatów");
+                throw new NotFoundException("Nie znaleziono czatów");
             }
 
             int maxPageNumber = (int)Math.Ceiling((double)chatCount / chatsPerPage);
@@ -101,7 +103,7 @@ namespace DAL.Repositories.UserRepository
                 .OrderByDescending(c => c.Updated)
                 .Skip((pageNumber - 1) * chatsPerPage)
                 .Take(chatsPerPage)
-                .ToList();
+                .ToList() ?? throw new NotFoundException("Nie znaleziono czatów");
 
             return chatList;
         }

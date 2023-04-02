@@ -1,0 +1,14 @@
+﻿@model BLL.DataTransferObjects.ChatDtos.CreateChatDTO;
+
+<h2>Kreator chatu:</h2>
+
+<form method="post" asp-controller="Chat" asp-action="Create">
+    <input type="hidden" asp-for="UserId" value="@ViewBag.UserId" />
+    <div>
+        <label asp-for="Name">Nazwa chatu:</label><br />
+        <input asp-for="Name" />
+        <span asp-validation-for="Name" style="color: red;"></span>
+    </div>
+    <br />
+    <input type="submit" value="Stworz Chat" />
+</form>

@@ -15,5 +15,6 @@ namespace DAL.Repositories.ChatRepository
         void CreateChat(string name, int userId);
         void DeleteChat(int chatId);
         Chat GetChat(int id, int pageNumber);
+        int GetChatMessagesCount(int chatId);
     }
 }

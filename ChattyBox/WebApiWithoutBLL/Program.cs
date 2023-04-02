@@ -5,6 +5,7 @@ using DAL.Repositories.TextMessageRepository;
 using DAL.Repositories.UserRepository;
 using DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using WebApiWithouBLL.Middleware;
 using WebApiWithoutBLL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,7 @@ builder.Services.AddScoped<ITextMessageRepository, TextMessageRepository>();
 builder.Services.AddScoped<IFileMessageRepository, FileMessageRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -27,7 +29,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
-
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseRouting();
 
 app.UseAuthorization();

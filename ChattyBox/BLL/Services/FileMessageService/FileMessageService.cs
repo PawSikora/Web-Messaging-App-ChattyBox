@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.DataTransferObjects.MessageDtos;
 using DAL.Database.Entities;
+using DAL.Exceptions;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace BLL.Services.FileMessageService
             var file = _unitOfWork.FileMessages.GetFileMessage(id);
 
             if (file == null)
-                throw new Exception("Nie znaleziono pliku");
+                throw new NotFoundException("Nie znaleziono pliku");
 
             return _mapper.Map<FileMessageDTO>(file);
         }
@@ -48,7 +49,7 @@ namespace BLL.Services.FileMessageService
             var file = _unitOfWork.FileMessages.GetLastFileMessage(chatId);
 
             if (file == null)
-                throw new Exception("Nie znaleziono pliku");
+                throw new NotFoundException("Nie znaleziono pliku");
 
             return _mapper.Map<GetNewestMessageDTO>(file);
         }

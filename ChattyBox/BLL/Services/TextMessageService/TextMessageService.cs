@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.DataTransferObjects.MessageDtos;
 using DAL.Database.Entities;
+using DAL.Exceptions;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace BLL.Services.TextMessageService
             var message = _unitOfWork.TextMessages.GetLastTextMessage(chatId);
 
             if (message == null)
-                throw new Exception("Nie znaleziono wiadomosci");
+                throw new NotFoundException("Nie znaleziono wiadomosci");
 
             return _mapper.Map<GetNewestMessageDTO>(message);
         }
@@ -48,7 +49,7 @@ namespace BLL.Services.TextMessageService
             var message = _unitOfWork.TextMessages.GetTextMessage(id);
 
             if (message == null)
-                throw new Exception("Nie znaleziono wiadomosci");
+                throw new NotFoundException("Nie znaleziono wiadomosci");
 
             return _mapper.Map<TextMessageDTO>(message);
         }

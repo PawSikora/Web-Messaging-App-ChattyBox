@@ -1,0 +1,11 @@
+﻿.border {
+    border-style: solid;
+    border-color: black;
+    align-items: center;
+}
+
+.item {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid black;
+}

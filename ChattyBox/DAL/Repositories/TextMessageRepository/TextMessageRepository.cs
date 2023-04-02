@@ -1,5 +1,6 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
+using DAL.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,8 @@ namespace DAL.Repositories.TextMessageRepository
 
         public void CreateTextMessage(int userId,string content, int chatId)
         {
-            User user = _context.Users.SingleOrDefault(u => u.Id == userId)?? throw new Exception("Nie znaleziono uzytkownika");
-            var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new Exception("Nie znaleziono czatu");
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId)?? throw new NotFoundException("Nie znaleziono uzytkownika");
+            var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
             TextMessage message = new TextMessage
             {
                 Content = content,
@@ -36,14 +37,14 @@ namespace DAL.Repositories.TextMessageRepository
         public void DeleteTextMessage(int id)
         {
             var textMessage = _context.TextMessages.FirstOrDefault(c => c.Id == id) 
-                ?? throw new Exception("Nie znaleziono wiadomosci");
+                ?? throw new NotFoundException("Nie znaleziono wiadomosci");
           
             _context.TextMessages.Remove(textMessage);
         }
 
         public TextMessage GetTextMessage(int id)
         {
-            var textMessage = _context.TextMessages.SingleOrDefault(t => t.Id == id) ?? throw new Exception("Nie znaleziono wiadomosci");
+            var textMessage = _context.TextMessages.SingleOrDefault(t => t.Id == id) ?? throw new NotFoundException("Nie znaleziono wiadomosci");
             return textMessage;
         }
         public TextMessage GetLastTextMessage(int chatid)
@@ -53,7 +54,7 @@ namespace DAL.Repositories.TextMessageRepository
                 .Include(m => m.Sender)
                 .Where(m => m.ChatId == chatid)
                 .OrderByDescending(m => m.TimeStamp)
-                .FirstOrDefault() ?? throw new Exception("Nie znaleziono czatu");
+                .FirstOrDefault() ?? throw new NotFoundException("Nie znaleziono czatu");
 
             return message;
 

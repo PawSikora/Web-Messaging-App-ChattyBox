@@ -1,0 +1,12 @@
+﻿@model List<BLL.DataTransferObjects.UserDtos.GetUserChatDTO>;
+
+<link rel="stylesheet" href="~/css/chat.css" />
+
+    <div class="border">
+        @foreach (var chat in Model)
+        {
+            <div class="item">@chat.Name
+            <a href="@Url.Action("Get", "Chat", new { id = chat.Id, pageNumber = 1 })" class="btn btn-primary"></a>
+        </div>
+        }
+    </div>

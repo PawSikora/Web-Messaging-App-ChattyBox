@@ -14,27 +14,27 @@ namespace WebApi.Controllers
             _textMessageService = textMessageService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("txtMsg/{id}")]
         public ActionResult<TextMessageDTO> Get([FromRoute] int id)
         {
             return View(_textMessageService.GetTextMessage(id));
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public ActionResult Create([FromBody] CreateTextMessageDTO messageDTO)
         {
             _textMessageService.CreateTextMessage(messageDTO);
             return View();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("txtMsg/{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
             _textMessageService.DeleteTextMessage(id);
             return View();
         }
 
-        [HttpGet("GetNewestTextMessage/{idChat}")]
+        [HttpGet("txtMsg/GetNewest/{idChat}")]
         public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
         {
             return View(_textMessageService.GetLastTextMessage(idChat));

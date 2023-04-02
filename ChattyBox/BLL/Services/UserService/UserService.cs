@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DataTransferObjects.UserDtos;
+using DAL.Exceptions;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace BLL.Services.UserService
             var chat = _unitOfWork.Users.GetChats(id, pageNumber).ToList();
 
             if (chat == null)
-                throw new Exception("Nie znaleziono czatu");
+                throw new NotFoundException("Nie znaleziono czatu");
 
             return _mapper.Map<ICollection<GetUserChatDTO>>(chat);
         }
@@ -35,7 +36,7 @@ namespace BLL.Services.UserService
             var user = _unitOfWork.Users.GetUser(id);
 
             if (user == null)
-                throw new Exception("Nie znaleziono uzytkownika");
+                throw new NotFoundException("Nie znaleziono uzytkownika");
 
             return _mapper.Map<UserDTO>(user);
         }
@@ -45,7 +46,7 @@ namespace BLL.Services.UserService
             var user = _unitOfWork.Users.LoginUser(dto.Email, dto.Password);
 
             if (user == null)
-                throw new Exception("Nie znaleziono uzytkownika");
+                throw new NotFoundException("Nie znaleziono uzytkownika");
 
             _unitOfWork.Save();
 
