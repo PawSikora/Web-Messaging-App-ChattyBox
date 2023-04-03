@@ -1,28 +1,93 @@
-﻿@model BLL.DataTransferObjects.ChatDtos.GetChatDTO;
+﻿@model WebApi.ViewModels.MessagesAndCount;
 @using BLL.DataTransferObjects.MessageDtos;
-<h1>Chat: @Model.Name</h1>
+<h1>Chat: @Model.Chat.Name</h1>
 
 <link rel="stylesheet" href="~/css/chat.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
-<div class="border">
-@foreach (var message in Model.AllMessages)
-{
-    <div class="item">
-        @Model.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
-        @if (message is FileMessageDTO fileMessage)
-        {
-            @fileMessage.Name
-        }
-        else if (message is TextMessageDTO textMessage)
-        {
-            @textMessage.Content
-        }
+
+@{
+    int x = 0;
+
+    <div class="border">
+    @foreach (var message in Model.Chat.AllMessages)
+    {
+        x++;
+        if (x > Model.MessagesPerPage) break;
+        <li class="item">
+            @Model.Chat.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
+            @if (message is FileMessageDTO fileMessage)
+            {
+                @fileMessage.Name
+            }
+            else if (message is TextMessageDTO textMessage)
+            {
+                @textMessage.Content
+            }
      
-    </div>
-}
-@if(Model.AllMessages.Count == 0)
+        </li>
+    }
+
+    @if (Model.Chat.AllMessages.Count == 0)
     {
         <div class="item">Brak wiadomości</div>
     }
-</div>
+    
+    @if (Model.Count % 2 == 0)
+    {
+    Model.Count--;
+    }
+    
+    @if (Model.MessagesPerPage == 1 || Model.MessagesPerPage==Model.Count)
+    {
 
+    @for (int i = 0; i < Model.Count / Model.MessagesPerPage ; i++)
+    {
+
+
+                <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId,chatId=Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
+
+
+    }
+    }
+    else if (Model.MessagesPerPage > 1)
+    {
+
+            @for (int i = 0; i < Model.Count / Model.MessagesPerPage+1; i++)
+    {
+
+
+    <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId,chatId=Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
+
+
+    }
+    }
+</div>
+}
+<a href="@Url.Action("Create", "TextMessage", new { id = @Model.Chat.ChatId,senderId=Model.UserId})" class="btn btn-primary">Stworz wiadomosc</a>
+<a href="@Url.Action("GetChats", "User", new { id = Model.UserId, pageNumber = 1 })" class="btn btn-primary">Powrot</a>
+<br/>
+<br/>
+<button class="btn btn-primary" id="deleteUserButton" data-id="@Model.Chat.ChatId" data-user-id="@Model.UserId">Opusc czat</button>
+
+<script>
+    $(document).ready(function () {
+        $('#deleteUserButton').on('click', function () {
+            var id = $(this).data('id');
+            var userId = $(this).data('userId');
+
+            $.ajax({
+                url: '/chat/' + id + '/deleteUser/' + userId,
+                type: 'PUT',
+                success: function (result) {
+                    // Handle success
+                    window.location.href = '/user/GetChats?id=' + userId + '&pageNumber=1';
+                },
+                error: function (xhr, status, error) {
+                    // Handle error 
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>

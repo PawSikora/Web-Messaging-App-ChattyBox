@@ -21,10 +21,9 @@ namespace BLL.Services.UserService
             _mapper = mapper;
         }
 
-        public ICollection<GetUserChatDTO> GetChats(int id, int pageNumber)
+        public ICollection<GetUserChatDTO> GetChats(int id, int pageNumber, int chatsPerPage)
         {
-            var chat = _unitOfWork.Users.GetChats(id, pageNumber).ToList();
-
+            var chat = _unitOfWork.Users.GetChats(id, pageNumber,chatsPerPage).ToList();
             if (chat == null)
                 throw new NotFoundException("Nie znaleziono czatu");
 
@@ -57,6 +56,11 @@ namespace BLL.Services.UserService
         {
             _unitOfWork.Users.RegisterUser(dto.Email, dto.Name, dto.Password);
             _unitOfWork.Save();
+        }
+
+        public int GetUserChatsCount(int id)
+        {
+            return _unitOfWork.Users.GetUserChatsCount(id);
         }
     }
 }

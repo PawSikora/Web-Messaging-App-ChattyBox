@@ -47,9 +47,9 @@ namespace BLL.Services.ChatService
             _unitOfWork.Save();
         }
 
-        public GetChatDTO GetChat(int id, int pageNumber)
+        public GetChatDTO GetChat(int id, int pageNumber, int messagePerPage)
         {
-            var chat = _unitOfWork.Chats.GetChat(id, pageNumber);
+            var chat = _unitOfWork.Chats.GetChat(id, pageNumber,messagePerPage);
 
             if (chat == null) 
                 throw new NotFoundException("Nie znaleziono chatu");

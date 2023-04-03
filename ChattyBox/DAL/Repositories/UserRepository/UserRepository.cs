@@ -74,15 +74,15 @@ namespace DAL.Repositories.UserRepository
             return user;
         }
 
-        public ICollection<Chat> GetChats(int id, int pageNumber)
+        public ICollection<Chat> GetChats(int id, int pageNumber,int chatsPerPage)
         {
             if (pageNumber < 1)
             {
                 throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
             }
             
-            int chatsPerPage = 10;
-
+            
+            
             var chatCount = _context.UserChats
                 .Where(x => x.UserId == id)
                 .Select(x => x.Chat)
@@ -106,6 +106,15 @@ namespace DAL.Repositories.UserRepository
                 .ToList() ?? throw new NotFoundException("Nie znaleziono czatów");
 
             return chatList;
+        }
+
+        public int GetUserChatsCount(int id)
+        {
+            var chatCount = _context.UserChats
+                .Where(x => x.UserId == id)
+                .Select(x => x.Chat)
+                .Count();
+            return chatCount;
         }
     }
 }

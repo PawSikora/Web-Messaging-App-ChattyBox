@@ -1,12 +1,70 @@
-﻿@model List<BLL.DataTransferObjects.UserDtos.GetUserChatDTO>;
+﻿@using Microsoft.CodeAnalysis.Editing
+@model WebApi.ViewModels.ChatsAndCount
+
+
 
 <link rel="stylesheet" href="~/css/chat.css" />
 
-    <div class="border">
-        @foreach (var chat in Model)
+<ol class="border">
+    @{
+
+        int x = 0;
+
+
+
+        if (Model.Count % 2 == 0)
         {
-            <div class="item">@chat.Name
-            <a href="@Url.Action("Get", "Chat", new { id = chat.Id, pageNumber = 1 })" class="btn btn-primary"></a>
-        </div>
+            Model.Count--;
         }
-    </div>
+        foreach (var chat in Model.Chats)
+        {
+            x++;
+            if (x > Model.ChatsPerPage) break;
+
+            <li class="item">
+
+
+                @chat.Name
+
+                <a href="@Url.Action("Get", "Chat", new {userId=Model.UserId, chatId = chat.Id, pageNumber = 1 })" class="btn btn-primary">Wysiwetl czat</a>
+
+            </li>
+
+
+
+        }
+        if (Model.ChatsPerPage == 1 || Model.ChatsPerPage==Model.Count)
+        {
+            
+
+            for (int i = 0; i < Model.Count / Model.ChatsPerPage ; i++)
+            {
+
+
+                <a href="@Url.Action("GetChats", "User", new { id = Model.UserId, pageNumber = i+1 })" class="btn btn-primary">@(i + 1)</a>
+
+
+            }
+        }
+        else if (Model.ChatsPerPage > 1)
+        {
+
+            for (int i = 0; i < Model.Count / Model.ChatsPerPage + 1; i++)
+            {
+
+
+                <a href="@Url.Action("GetChats", "User", new { id = Model.UserId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
+
+
+            }
+        }
+        else throw new Exception("Ilosc czatow na strone nie moze byc mniejsza badz rowna 0");
+
+
+
+
+        
+
+    }
+
+</ol>

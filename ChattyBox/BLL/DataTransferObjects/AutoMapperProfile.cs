@@ -25,6 +25,7 @@ namespace BLL.DataTransferObjects
             CreateMap<FileMessage, FileMessageDTO>();
 
             CreateMap<Chat, GetChatDTO>()
+                .ForMember(dto=>dto.ChatId,opt=>opt.MapFrom(chat=>chat.Id))
                .ForMember(dto => dto.Users, opt => opt.MapFrom(chat => chat.UserChats.Select(uc => uc.User)))
                .ForMember(dto => dto.AllMessages, opt => opt.Ignore())
                .AfterMap((chat, dto) =>

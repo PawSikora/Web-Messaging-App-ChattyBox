@@ -1,0 +1,14 @@
+﻿@model BLL.DataTransferObjects.MessageDtos.CreateTextMessageDTO;
+
+
+
+<h2>Zawartosc</h2>
+
+<form asp-controller="TextMessage" asp-action="Create">
+    <textarea asp-for="Content"></textarea>
+    <span asp-validation-for="Content" style="color: red;"></span>
+    <input type="hidden" asp-for="ChatId" value="@ViewBag.ChatId"  />
+    <input type="hidden" asp-for="SenderId" value="@ViewBag.SenderId" />
+    <input type="submit" value="Wyslij"/>
+</form>
+<a href="@Url.Action("Get", "Chat", new {userId=@ViewBag.SenderId, chatId = @ViewBag.ChatId, pageNumber = 1 })" class="btn btn-primary">Anuluj</a>

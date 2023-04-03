@@ -4,6 +4,8 @@ using BLL.Services.ChatService;
 using DAL.Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using WebApi.ViewModels;
 
 namespace WebApi.Controllers
 {
@@ -16,11 +18,22 @@ namespace WebApi.Controllers
             _chatService = chatService;
         }
 
-        [HttpGet("chat/Get/{id}/{pageNumber}")]
-        public ActionResult<GetChatDTO> Get([FromRoute] int id, [FromRoute] int pageNumber)
+        [HttpGet("chat/user/{userId}/Get/{chatId}/{pageNumber}")]
+        public ActionResult<GetChatDTO> Get([FromRoute]int userId,[FromRoute] int chatId, [FromRoute] int pageNumber)
         {
-            return View("ChatMenu",_chatService.GetChat(id, pageNumber));
+            var messagesPerPage = 5;
+            var count = _chatService.GetChatMessagesCount(chatId);
+            var chat = new MessagesAndCount()
+            {
+                Chat = _chatService.GetChat(chatId, pageNumber,messagesPerPage),
+                Count = count,
+                MessagesPerPage = messagesPerPage,
+                UserId = userId
+
+            };
+            return View("ChatMenu",chat);
         }
+
 
         [HttpGet("chat/Create")]
         public ActionResult Create(int id)
@@ -52,7 +65,13 @@ namespace WebApi.Controllers
         public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
         {
             _chatService.DeleteUserById(userId, id);
-            return View();
+            return RedirectToAction("GetChats", "User", new { id = userId, pageNumber = 1 });
+        }
+        [HttpGet]
+        public ActionResult DeleteUserGet([FromRoute] int id, [FromRoute] int userId)
+        {
+            _chatService.DeleteUserById(userId, id);
+            return RedirectToAction("GetChats", "User", new { id = userId, pageNumber = 1 });
         }
 
         [HttpDelete("chat/{id}")]

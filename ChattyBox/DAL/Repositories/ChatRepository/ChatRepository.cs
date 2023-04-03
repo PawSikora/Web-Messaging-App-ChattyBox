@@ -94,14 +94,12 @@ namespace DAL.Repositories.ChatRepository
 
         }
 
-        public Chat GetChat(int chatId, int pageNumber)
+        public Chat GetChat(int chatId, int pageNumber,int messagesPerPage)
         {
             if (pageNumber < 1)
             {
                 throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
             }
-
-            int messagesPerPage = 10;
 
             var messageCount = _context.Chats.Where(c => c.Id == chatId)
                 .SelectMany(c => c.Messages).Count();

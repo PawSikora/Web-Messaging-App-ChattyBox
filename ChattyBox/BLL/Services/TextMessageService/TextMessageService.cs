@@ -44,6 +44,8 @@ namespace BLL.Services.TextMessageService
             return _mapper.Map<GetNewestMessageDTO>(message);
         }
 
+
+
         public TextMessageDTO GetTextMessage(int id)
         {
             var message = _unitOfWork.TextMessages.GetTextMessage(id);
