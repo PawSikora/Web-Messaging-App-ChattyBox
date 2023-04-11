@@ -3,10 +3,13 @@
 
 <h1>Witaj @Model.Username !</h1>
 
-<a href="@Url.Action("GetChats", "User", new { id = Model.Id, pageNumber = 1 })" class="btn btn-primary">Wyswietl swoje chaty</a>
+<a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.Id" asp-route-pageNumber="1" class="btn btn-primary">Wyświetl swoje chatyV2</a>
+
 <br /> <br />
-<a href="@Url.Action("CreateChat", "User", new {id = Model.Id})" class="btn btn-primary">Stworz nowy chat</a>
+
+<a asp-controller="User" asp-action="CreateChat" asp-route-id="@Model.Id" class="btn btn-primary">Stworz nowy chatV2</a>
 
 <br />
 <br />
-<a href="@Url.Action("Login", "User")" class="btn btn-primary">Wyloguj sie</a>
+
+<a asp-controller="User" asp-action="Login" class="btn btn-primary">Wyloguj sięV2</a>

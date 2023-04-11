@@ -9,7 +9,6 @@
 @{
     int x = 0;
 
-
     <div class="list-group">
         <a class="list-group-item list-group-item flex-column align-items-start active">
             <div class="d-flex w-100 justify-content-between">
@@ -34,9 +33,9 @@
                             </div>
                         
                         <div align="right">
-                            <form method="post" asp-action="Delete" 
-                                  asp-controller="FileMessage"
-                                  asp-route-chatId="@Model.Chat.ChatId"
+                        <form method="post" asp-controller="FileMessage"
+	                              asp-action="Delete"
+	                              asp-route-chatId="@Model.Chat.ChatId"
                                   asp-route-messageId="@fileMessage.Id"
                                   asp-route-senderId="@Model.UserId">
                                 <input type="submit" value="Usuń wiadomość" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć tą wiadomość?');" @if (Model.UserRole != "Admin") { <text>disabled</text> }/>
@@ -53,7 +52,7 @@
                             </div>
                         
                         <div align="right">
-                            <form method="post" asp-controller="TextMessage"
+	                        <form method="post" asp-controller="TextMessage"
                                   asp-action="Delete"
                                   asp-route-chatId="@Model.Chat.ChatId"
                                   asp-route-messageId="@textMessage.Id"
@@ -84,11 +83,7 @@
 
             @for (int i = 0; i < Model.Count / Model.MessagesPerPage; i++)
             {
-
-
-                <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId, chatId = Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
-
-
+	            <a asp-controller="Chat" asp-action="Get" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.Chat.ChatId" asp-route-pageNumber="@i+1" class="btn btn-primary">@(i + 1)</a>
             }
         }
         else if (Model.MessagesPerPage > 1)
@@ -96,26 +91,28 @@
 
             @for (int i = 0; i < Model.Count / Model.MessagesPerPage + 1; i++)
             {
-
-
-                <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId, chatId = Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
-
+	            <a asp-controller="Chat" asp-action="Get" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.Chat.ChatId" asp-route-pageNumber="@i+1" class="btn btn-primary">@(i + 1)</a>
 
             }
         }
 
 }
-<a href="@Url.Action("Create", "TextMessage", new { id = @Model.Chat.ChatId,senderId=Model.UserId})" class="btn btn-primary">Stworz wiadomosc</a>
-<a href="@Url.Action("GetChats", "User", new { id = Model.UserId, pageNumber = 1 })" class="btn btn-primary">Powrot</a>
+
+<br/> <br/>
+<a asp-controller="TextMessage" asp-action="Create" asp-route-id="@Model.Chat.ChatId" asp-route-senderId="@Model.UserId" class="btn btn-primary">Stwórz wiadomość</a>
+
+<a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.UserId" asp-route-pageNumber="1" class="btn btn-primary">Powrót</a>
 <br/>
 <br/>
 
-<form method="post" asp-action="DeleteUser" asp-controller="Chat" asp-route-id="@Model.Chat.ChatId" asp-route-userId="@Model.UserId">
-    <input type="submit" value="Opuść czat" class="btn btn-primary" onclick="return confirm('Czy na pewno chesz opuścić ten czat?');"/>
-</form>
+<a asp-controller="Chat" asp-action="DeleteUser" asp-route-id="@Model.Chat.ChatId" asp-route-userId="@Model.UserId" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz opuścić ten czat?');">Opuść czat</a>
 
 <br/>
+<br/>
 
-<form method="post" asp-action="DeleteChat" asp-controller="Chat" asp-route-chatId="@Model.Chat.ChatId" asp-route-senderId="@Model.UserId">
+<form method="post" asp-action="DeleteChat" 
+      asp-controller="Chat" 
+      asp-route-chatId="@Model.Chat.ChatId" 
+      asp-route-senderId="@Model.UserId">
     <input type="submit" value="Usuń czat" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć ten czat?');" @if (Model.UserRole != "Admin") { <text>disabled</text> }/>
 </form>

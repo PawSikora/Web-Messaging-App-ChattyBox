@@ -4,7 +4,7 @@
 
 <form method="post" asp-controller="User" asp-action="Register">
     <div>
-        <label asp-for="Name">Nazwa uzytkownika:</label><br />
+        <label asp-for="Name">Nazwa użytkownika:</label><br />
         <input asp-for="Name" />
         <span asp-validation-for="Name" style="color: red;"></span>
     </div>
@@ -16,18 +16,19 @@
     </div>
     <br />
     <div>
-        <label asp-for="Password">Haslo:</label><br />
+        <label asp-for="Password">Hasło:</label><br />
         <input type="password" asp-for="Password" />
         <span asp-validation-for="Password" style="color: red;"></span>
     </div>
     <br />
     <div>
-        <label asp-for="ConfirmedPassword">Powtorz haslo:</label><br />
+        <label asp-for="ConfirmedPassword">Powtórz hasło:</label><br />
         <input type="password" asp-for="ConfirmedPassword" />
         <span asp-validation-for="ConfirmedPassword" style="color: red;"></span>
     </div>
     <br />
-    <input type="submit" value="Zarejestruj sie" />
+    <input type="submit" value="Zarejestruj się" />
 </form>
 <br /> <br />
-<a href="@Url.Action("Login", "User")" class="btn btn-primary">Wroc do ekranu logowania</a>
+
+<a asp-controller="User" asp-action="Login" class="btn btn-primary">Wróć do ekranu logowaniaV2</a>

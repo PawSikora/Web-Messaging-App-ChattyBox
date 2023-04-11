@@ -6,7 +6,7 @@
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Lista Członków</h5>
         </div>
-        <p align="right"> Ostatnia Aktywnosc</p>
+        <p align="right"> Ostatnia Aktywność</p>
 
     </a>
 
@@ -29,20 +29,22 @@
                 <small class="text-muted">@user.LastLog</small>
             </div>
             <div align="center">
-                <form method="post" asp-action="DeleteUser" asp-controller="Chat"
+	            <form method="post" asp-action="DeleteUser" asp-controller="Chat"
                       asp-route-id="@Model.ChatId"
                       asp-route-userId="@Model.UserId">
                 <input type="submit" value="Usuń Użytkownika" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?');" @if (Model.UserRole != "Admin" || user.Id==@Model.UserId) { <text>disabled</text> }/>
                 </form>
+
+
             </div>
         </a>
     }
     
     if (Model.UsersPerPage == 1 || Model.UsersPerPage == Model.Count)
     {
-            for (int i = 0; i < Model.Count / Model.UsersPerPage; i++)
+	    for (int i = 0; i < Model.Count / Model.UsersPerPage; i++)
         {
-                <a href="@Url.Action("GetUsersInChat", "Chat", new {chatId = Model.ChatId,userId=Model.UserId, pageNumber = i+1 })" class="btn btn-primary">@(i + 1)</a>
+	        <a asp-controller="Chat" asp-action="GetUsersInChat" asp-route-chatId="@Model.ChatId" asp-route-userId="@Model.UserId" asp-route-pageNumber="@i+1" class="btn btn-primary">@(i + 1)</a>
         }
     }
     else if (Model.UsersPerPage > 1)
@@ -50,7 +52,7 @@
 
         for (int i = 0; i < Model.Count / Model.UsersPerPage + 1; i++)
         {
-                <a href="@Url.Action("GetUsersInChat", "Chat", new { chatId = Model.ChatId,userId=Model.UserId, pageNumber = i+1 })" class="btn btn-primary">@(i + 1)</a>
+	        <a asp-controller="Chat" asp-action="GetUsersInChat" asp-route-chatId="@Model.ChatId" asp-route-userId="@Model.UserId" asp-route-pageNumber="@i+1" class="btn btn-primary">@(i + 1)</a>
         }
     }
     else throw new Exception("Ilosc czatow na strone nie moze byc mniejsza badz rowna 0");
