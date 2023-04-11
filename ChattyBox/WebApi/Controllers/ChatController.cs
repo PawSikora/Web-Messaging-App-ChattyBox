@@ -78,10 +78,26 @@ namespace WebApi.Controllers
             return RedirectToAction("GetChats", "User", new { id = senderId, pageNumber = 1 });
         }
 
-        [HttpGet("chat/getUsers/{id}")]
-        public ActionResult<IEnumerable<UserDTO>> GetUsersInChat(int id)
+        [HttpGet("chat/getUsers/{chatId}/{pageNumber}/{userId}")]
+        public ActionResult<ICollection<ChatAndUsers>> GetUsersInChat([FromRoute]int chatId, [FromRoute] int userId, [FromRoute] int pageNumber)
         {
-            return View(_chatService.GetUsersInChat(id));
+            var usersPerPage = 5;
+            var users = _chatService.GetUsersInChat(chatId);
+            var role = _chatService.GetUserRole(userId,chatId);
+            var chatsAndUsers = new ChatAndUsers
+            {
+                ChatId = chatId,
+                Users = users.ToList(),
+                Count = users.Count(),
+                UsersPerPage = usersPerPage,
+                PageNumber = pageNumber,
+                UserRole = role,
+                UserId = userId
+
+            };
+
+
+            return View("ChatGetUsers",chatsAndUsers);
         }
 
     }
