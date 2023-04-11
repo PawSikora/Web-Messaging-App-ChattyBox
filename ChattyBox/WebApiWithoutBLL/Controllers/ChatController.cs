@@ -20,10 +20,10 @@ namespace WebApiWithoutBLL.Controllers
         }
 
         [HttpGet("{id}/{pageNumber}")]
-        public ActionResult<GetChatDTO> Get([FromRoute] int id, [FromRoute] int pageNumber)
+        public ActionResult<GetChatDTO> Get([FromRoute] int id, [FromRoute] int pageNumber, [FromRoute] int messagePerPage)
         {
 
-            Chat chat = _unitOfWork.Chats.GetChat(id, pageNumber);
+            Chat chat = _unitOfWork.Chats.GetChat(id, pageNumber, messagePerPage);
 
             if (chat == null)
             {

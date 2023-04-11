@@ -18,5 +18,8 @@ namespace BLL.Services.ChatService
         void DeleteChat(int chatId);
         GetChatDTO GetChat(int id, int pageNumber,int messagePerPage);
         int GetChatMessagesCount(int id);
+        void AssignRole(int userId, int chatId, int roleId);
+        void RevokeRole(int userId, int chatId);
+        string GetUserRole(int userId, int chatId);
     }
 }

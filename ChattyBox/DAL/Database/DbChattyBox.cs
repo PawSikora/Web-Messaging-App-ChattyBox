@@ -19,7 +19,7 @@ namespace DAL.Database
         public DbSet<FileMessage> FileMessages { get; set; }
 
         public DbSet<UserChat> UserChats { get; set; }
-
+        public DbSet<Role> Roles { get; set; }
 
         public DbChattyBox(DbContextOptions<DbChattyBox> options) : base(options)
         {
@@ -38,18 +38,23 @@ namespace DAL.Database
             modelBuilder.Entity<User>()
                 .ToTable("Users");
 
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Email)
+                .IsUnique();
 
             modelBuilder.Entity<Chat>()
                 .ToTable("Chats");
-
 
             modelBuilder.Entity<Chat>()
                 .HasIndex(c => c.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<User>()
-            .HasIndex(x => x.Email)
-            .IsUnique();
+            modelBuilder.Entity<Role>()
+                .ToTable("Roles");
+
+            modelBuilder.Entity<Role>()
+                .HasIndex(r => r.Name)
+                .IsUnique();
 
             modelBuilder.Entity<UserChat>()
                 .HasKey(uc => new { uc.UserId, uc.ChatId });
@@ -63,6 +68,11 @@ namespace DAL.Database
                 .HasOne(uc => uc.Chat)
                 .WithMany(c => c.UserChats)
                 .HasForeignKey(uc => uc.ChatId);
+
+            modelBuilder.Entity<UserChat>()
+                .HasOne(uc => uc.Role)
+                .WithMany(r => r.UserChats)
+                .HasForeignKey(uc => uc.RoleId);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Messages)
@@ -78,7 +88,6 @@ namespace DAL.Database
             modelBuilder.Entity<Message>()
                 .UseTpcMappingStrategy();
 
-
             modelBuilder.Entity<FileMessage>()
                 .ToTable("FileMessage", tb => tb.Property(e => e.Id)
                     .UseIdentityColumn(2, 2));
@@ -87,17 +96,25 @@ namespace DAL.Database
                 .ToTable("TextMessages", tb => tb.Property(e => e.Id)
                     .UseIdentityColumn(1, 2));
 
+
             var user1 = createPasswordHash("123");
             var user2 = createPasswordHash("1234");
 
             List<UserChat> initUserChats = new List<UserChat>()
             {
-                new UserChat { UserId = 1, ChatId = 1 },
-                new UserChat { UserId = 2, ChatId = 1 }
+                new UserChat { UserId = 1, ChatId = 1, RoleId = 1},
+                new UserChat { UserId = 2, ChatId = 1, RoleId = 2}
             };
 
             modelBuilder.Entity<UserChat>().HasData(initUserChats.ToArray());
 
+            List<Role> initRoles = new List<Role>()
+            {
+                new Role { Id = 1, Name = "Admin" },
+                new Role { Id = 2, Name = "User" }
+            };
+
+            modelBuilder.Entity<Role>().HasData(initRoles.ToArray());
 
             List<User> initUsers = new List<User>()
             {
@@ -120,6 +137,7 @@ namespace DAL.Database
                 new FileMessage {Id = 2,TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Name = "File1.txt",Path = "Path1"},
                 new FileMessage { Id = 4, TimeStamp = new DateTime(2022, 1, 1), SenderId = 2, ChatId = 1, Name = "File2.txt", Path = "Path1"},
             };
+
 
             modelBuilder.Entity<FileMessage>().HasData(initFileMessages.ToArray());
 

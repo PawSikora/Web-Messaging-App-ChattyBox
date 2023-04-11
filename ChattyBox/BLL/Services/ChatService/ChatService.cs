@@ -71,7 +71,21 @@ namespace BLL.Services.ChatService
 
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
-        
-        
+
+        public void AssignRole(int userId, int chatId, int roleId)
+        {
+            _unitOfWork.Chats.AssignRole(userId, chatId, roleId);
+            _unitOfWork.Save();
+        }
+
+        public void RevokeRole(int userId, int chatId)
+        {
+            _unitOfWork.Chats.RevokeRole(userId, chatId);
+            _unitOfWork.Save();
+        }
+        public string GetUserRole(int userId, int chatId)
+        {
+			return _unitOfWork.Chats.GetUserRole(userId, chatId).Name;
+		}
     }
 }

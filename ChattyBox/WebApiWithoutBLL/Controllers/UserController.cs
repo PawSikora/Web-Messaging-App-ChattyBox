@@ -31,9 +31,9 @@ namespace WebApiWithoutBLL.Controllers
         }
 
         [HttpGet("Chats/{id}/{pageNumber}")]
-        public ActionResult<ICollection<GetUserChatDTO>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
+        public ActionResult<ICollection<GetUserChatDTO>> GetChats([FromRoute] int id, [FromRoute] int pageNumber, [FromRoute] int messagePerPage)
         {
-            var chat = _unitOfWork.Users.GetChats(id, pageNumber).ToList();
+            var chat = _unitOfWork.Users.GetChats(id, pageNumber, messagePerPage).ToList();
 
             if (chat == null)
             {

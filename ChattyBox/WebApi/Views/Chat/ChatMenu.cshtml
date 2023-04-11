@@ -5,27 +5,49 @@
 <link rel="stylesheet" href="~/css/chat.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
-
 @{
-    int x = 0;
+	int x = 0;
 
-    <div class="border">
+	<div class="border">
     @foreach (var message in Model.Chat.AllMessages)
     {
         x++;
         if (x > Model.MessagesPerPage) break;
-        <li class="item">
-            @Model.Chat.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
-            @if (message is FileMessageDTO fileMessage)
-            {
-                @fileMessage.Name
-            }
-            else if (message is TextMessageDTO textMessage)
-            {
-                @textMessage.Content
-            }
-     
-        </li>
+	    <li class="item">
+		    <div style="display: inline-block;">
+			    @Model.Chat.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
+			    @if (message is FileMessageDTO fileMessage)
+			    {
+				    @fileMessage.Name
+				    <div>
+					    <form method="post" asp-action="Delete" 
+											asp-controller="FileMessage"
+											asp-route-chatId="@Model.Chat.ChatId"
+											asp-route-messageId="@fileMessage.Id"
+											asp-route-senderId="@Model.UserId">
+								<input type="submit" value="Usuń wiadomość" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć tą wiadomość?');" @if (Model.UserRole != "Admin") { <text>disabled</text> }/>
+					    </form>
+				    </div>
+			    }
+			    else if (message is TextMessageDTO textMessage)
+			    {
+				    @textMessage.Content
+				    <div>
+
+					    <form method="post" asp-controller="TextMessage"
+					          asp-action="Delete"
+							  asp-route-chatId="@Model.Chat.ChatId"
+					          asp-route-messageId="@textMessage.Id"
+					          asp-route-senderId="@Model.UserId">
+
+						    <input type="submit" value="Usuń wiadomość" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć tą wiadomość?');"@if (Model.UserRole != "Admin"){ <text>disabled</text>}/>
+					    </form>
+				    </div>
+			    }
+		    </div>
+		    
+
+	    </li>
     }
 
     @if (Model.Chat.AllMessages.Count == 0)
@@ -40,54 +62,33 @@
     
     @if (Model.MessagesPerPage == 1 || Model.MessagesPerPage==Model.Count)
     {
+	    @for (int i = 0; i < Model.Count / Model.MessagesPerPage ; i++)
+	    {
+		    <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId,chatId=Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
+	    }
 
-    @for (int i = 0; i < Model.Count / Model.MessagesPerPage ; i++)
-    {
-
-
-                <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId,chatId=Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
-
-
-    }
     }
     else if (Model.MessagesPerPage > 1)
     {
-
-            @for (int i = 0; i < Model.Count / Model.MessagesPerPage+1; i++)
-    {
-
-
-    <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId,chatId=Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
-
-
+	    @for (int i = 0; i < Model.Count / Model.MessagesPerPage+1; i++)
+	    {
+		    <a href="@Url.Action("Get", "Chat", new { userId = Model.UserId,chatId=Model.Chat.ChatId, pageNumber = i + 1 })" class="btn btn-primary">@(i + 1)</a>
+	    }
     }
-    }
-</div>
+	</div>
 }
-<a href="@Url.Action("Create", "TextMessage", new { id = @Model.Chat.ChatId,senderId=Model.UserId})" class="btn btn-primary">Stworz wiadomosc</a>
+
+<a href="@Url.Action("Create", "TextMessage", new { id = @Model.Chat.ChatId, senderId=Model.UserId})" class="btn btn-primary">Stworz wiadomosc</a>
 <a href="@Url.Action("GetChats", "User", new { id = Model.UserId, pageNumber = 1 })" class="btn btn-primary">Powrot</a>
 <br/>
 <br/>
-<button class="btn btn-primary" id="deleteUserButton" data-id="@Model.Chat.ChatId" data-user-id="@Model.UserId">Opusc czat</button>
 
-<script>
-    $(document).ready(function () {
-        $('#deleteUserButton').on('click', function () {
-            var id = $(this).data('id');
-            var userId = $(this).data('userId');
+<form method="post" asp-action="DeleteUser" asp-controller="Chat" asp-route-id="@Model.Chat.ChatId" asp-route-userId="@Model.UserId">
+	<input type="submit" value="Opuść czat" class="btn btn-primary" onclick="return confirm('Czy na pewno chesz opuścić ten czat?');"/>
+</form>
 
-            $.ajax({
-                url: '/chat/' + id + '/deleteUser/' + userId,
-                type: 'PUT',
-                success: function (result) {
-                    // Handle success
-                    window.location.href = '/user/GetChats?id=' + userId + '&pageNumber=1';
-                },
-                error: function (xhr, status, error) {
-                    // Handle error 
-                    console.log(error);
-                }
-            });
-        });
-    });
-</script>
+<br/>
+
+<form method="post" asp-action="DeleteChat" asp-controller="Chat" asp-route-id="@Model.Chat.ChatId" asp-route-userId="@Model.UserId">
+	<input type="submit" value="Usuń czat" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć ten czat?');" @if (Model.UserRole != "Admin") { <text>disabled</text> }/>
+</form>

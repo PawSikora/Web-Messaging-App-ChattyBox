@@ -13,5 +13,8 @@ namespace DAL.Database.Entities
 
         public int ChatId { get; set; }
         public virtual Chat Chat { get; set; }
+
+        public int RoleId { get; set; }
+        public virtual Role Role { get; set; }
     }
 }

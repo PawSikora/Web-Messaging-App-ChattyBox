@@ -25,13 +25,14 @@ namespace DAL.Repositories.ChatRepository
         {
             User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
             Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono chatu");
+            Role role = _context.Roles.SingleOrDefault(r => r.Id == 2) ?? throw new NotFoundException("Nie znaleziono roli");
 
             if (_context.UserChats.Any(u => u.User == user && u.Chat == chat))
             {
                 throw new IllegalOperationException("Uzytkownik jest juz w czacie");
             }
 
-            var userChat = new UserChat { User = user, Chat = chat };
+            var userChat = new UserChat { User = user, Chat = chat, Role = role};
             _context.UserChats.Add(userChat);
             chat.Updated = DateTime.Now;
         }
@@ -64,6 +65,8 @@ namespace DAL.Repositories.ChatRepository
 
             User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
 
+            Role role = _context.Roles.SingleOrDefault(r => r.Id == 1) ?? throw new NotFoundException("Nie znaleziono roli");
+
             Chat chat = new Chat
             {
                 Name = name,
@@ -73,7 +76,8 @@ namespace DAL.Repositories.ChatRepository
             UserChat userChat = new UserChat
             {
                 Chat = chat,
-                User = user
+                User = user,
+                Role = role,
             };
             _context.Chats.Add(chat);
             _context.UserChats.Add(userChat);
@@ -124,6 +128,58 @@ namespace DAL.Repositories.ChatRepository
                 .SelectMany(c => c.Messages).Count();
         }
 
-    }
+        public void AssignRole(int userId, int chatId, int roleId)
+        {
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
+
+            Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
+
+            Role role = _context.Roles.SingleOrDefault(r => r.Id == roleId) ?? throw new NotFoundException("Nie znaleziono roli");
+
+            if (_context.UserChats.Any(u => u.User == user && u.Role == role && u.Chat == chat))
+            {
+                throw new IllegalOperationException("Uzytkownik ma juz ta role");
+            }
+
+            UserChat userChat = _context.UserChats.SingleOrDefault(uc => uc.User == user && uc.Chat == chat) ?? throw new NotFoundException("Nie znaleziono relacji");
+
+            userChat.Role = role;
+            userChat.RoleId = role.Id;
+
+            _context.Attach(userChat);
+            _context.Entry(userChat).State = EntityState.Modified;
+        }
+
+        public void RevokeRole(int userId, int chatId)
+        {
+            User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
+
+            Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
+            Role role = _context.Roles.SingleOrDefault(r => r.Id == 2) ?? throw new NotFoundException("Nie znaleziono roli");
+
+            if (_context.UserChats.Any(u => u.User == user && u.Chat == chat))
+            {
+                throw new IllegalOperationException("Uzytkownik nie ma juz tej roli");
+            }
+
+            UserChat userChat = _context.UserChats.SingleOrDefault(uc => uc.User == user && uc.Chat == chat) ?? throw new NotFoundException("Nie znaleziono relacji");
+
+            userChat.Role = role;
+            userChat.RoleId = role.Id;
+
+            _context.Attach(userChat);
+            _context.Entry(userChat).State = EntityState.Modified;
+        }
+
+        public Role GetUserRole(int userId, int chatId)
+        {
+	        var role = _context.UserChats
+		        .Where(uc => uc.UserId == userId && uc.ChatId == chatId)
+		        .Select(uc => uc.Role)
+		        .SingleOrDefault() ?? throw new NotFoundException("Nie znaleziono roli użytkownika");
+	        return role;
+        }
+
+	}
 
 }

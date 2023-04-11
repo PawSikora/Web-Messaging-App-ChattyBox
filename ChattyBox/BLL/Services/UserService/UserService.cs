@@ -62,5 +62,13 @@ namespace BLL.Services.UserService
         {
             return _unitOfWork.Users.GetUserChatsCount(id);
         }
+
+        public string GetRole(int userId, int chatId)
+        {
+            var role = _unitOfWork.Chats.GetUserRole(userId, chatId);
+            if (role == null)
+                throw new NotFoundException("Nie znaleziono roli");
+            return role.Name;
+        }
     }
 }

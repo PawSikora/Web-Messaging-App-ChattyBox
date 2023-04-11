@@ -5,6 +5,7 @@ using DAL.Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Authorization;
 using WebApi.ViewModels;
 
 namespace WebApi.Controllers
@@ -28,8 +29,8 @@ namespace WebApi.Controllers
                 Chat = _chatService.GetChat(chatId, pageNumber,messagesPerPage),
                 Count = count,
                 MessagesPerPage = messagesPerPage,
-                UserId = userId
-
+                UserId = userId,
+                UserRole = _chatService.GetUserRole(userId, chatId),
             };
             return View("ChatMenu",chat);
         }
@@ -61,24 +62,20 @@ namespace WebApi.Controllers
             return View();
         }
 
-        [HttpPut("chat/{id}/deleteUser/{userId}")]
+        [HttpPost("chat/{id}/deleteUser/{userId}")]
         public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
         {
             _chatService.DeleteUserById(userId, id);
             return RedirectToAction("GetChats", "User", new { id = userId, pageNumber = 1 });
-        }
-        [HttpGet]
-        public ActionResult DeleteUserGet([FromRoute] int id, [FromRoute] int userId)
-        {
-            _chatService.DeleteUserById(userId, id);
-            return RedirectToAction("GetChats", "User", new { id = userId, pageNumber = 1 });
+
         }
 
-        [HttpDelete("chat/{id}")]
-        public ActionResult Delete([FromRoute] int id)
+        [HttpPost("chat/{chatId}-{senderId}")]
+        [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
+        public ActionResult DeleteChat([FromRoute] int chatId, [FromRoute] int senderId)
         {
-            _chatService.DeleteChat(id);
-            return View();
+            _chatService.DeleteChat(chatId);
+            return RedirectToAction("GetChats", "User", new { id = senderId, pageNumber = 1 });
         }
 
         [HttpGet("chat/getUsers/{id}")]

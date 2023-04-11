@@ -1,5 +1,6 @@
 ﻿using BLL.DataTransferObjects.MessageDtos;
 using BLL.Services.FileMessageService;
+using DAL.Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,14 +28,15 @@ namespace WebApi.Controllers
             return View();
         }
 
-        [HttpDelete("fMsg/{id}")]
-        public ActionResult Delete([FromRoute] int id)
-        {
-            _fileMessageService.DeleteFileMessage(id);
-            return View();
+		[HttpPost("FileMessage/Delete/{chatId}/{messageId}/{senderId}")]
+		[TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
+		public ActionResult Delete([FromRoute] int chatId, [FromRoute] int messageId, [FromRoute] int senderId)
+		{
+            _fileMessageService.DeleteFileMessage(messageId);
+            return RedirectToAction("Get", "Chat", new { userId = senderId, chatId = chatId, pageNumber = 1 });
         }
 
-        [HttpGet("fMsg/GetNewest/{idChat}")]
+		[HttpGet("fMsg/GetNewest/{idChat}")]
         public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
         {
             return View(_fileMessageService.GetLastFileMessage(idChat));

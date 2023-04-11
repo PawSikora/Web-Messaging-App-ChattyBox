@@ -14,7 +14,9 @@ namespace BLL.DataTransferObjects
             CreateMap<User, UserDTO>();
 
             CreateMap<TextMessage, TextMessageDTO>();
+
             CreateMap<TextMessage, GetNewestMessageDTO>();
+
             CreateMap<FileMessage, GetNewestMessageDTO>()
                 .ForMember(dto => dto.Content, opt => opt.MapFrom(fm => fm.Name));
 

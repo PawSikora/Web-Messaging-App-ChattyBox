@@ -1,5 +1,6 @@
 ﻿using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.ViewModels;
@@ -62,12 +63,12 @@ namespace WebApi.Controllers
             return View("Login");
         }
 
+
         [HttpPost]
         public ActionResult<UserDTO> Login(LoginUserDTO loginUser)
         {
             return View("UserMenu", _userService.LoginUser(loginUser));
         }
-
 
 
         [HttpGet("user/createChat")]
@@ -76,5 +77,9 @@ namespace WebApi.Controllers
             return RedirectToAction("Create", "Chat", new { id });
         }
 
+        public ActionResult Unauthorized()
+        {
+			return View("AuthorizeFailed");
+        }
     }
 }

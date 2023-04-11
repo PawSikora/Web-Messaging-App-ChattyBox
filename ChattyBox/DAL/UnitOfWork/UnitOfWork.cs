@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Repositories.RoleRepository;
 
 namespace DAL.UnitOfWork
 {
@@ -17,13 +18,14 @@ namespace DAL.UnitOfWork
         private readonly DbChattyBox _context;
 
         public UnitOfWork(DbChattyBox context, IChatRepository chatRepository, IFileMessageRepository fileMessageRepository, 
-            ITextMessageRepository textMessageRepository, IUserRepository userRepository)
+            ITextMessageRepository textMessageRepository, IUserRepository userRepository, IRoleRepository roleRepository)
         {
             _context = context;
             Chats = chatRepository;
             FileMessages = fileMessageRepository;
             TextMessages = textMessageRepository;
             Users = userRepository;
+            Roles = roleRepository;
         }
         
         public IChatRepository Chats { get; private set; }
@@ -33,6 +35,8 @@ namespace DAL.UnitOfWork
         public ITextMessageRepository TextMessages { get; private set; }
 
         public IUserRepository Users { get; private set; }
+
+        public IRoleRepository Roles { get; private set; }
 
         public void Dispose()
         {
