@@ -49,6 +49,9 @@ namespace BLL.Services.ChatService
 
         public GetChatDTO GetChat(int id, int pageNumber, int messagePerPage)
         {
+            if (pageNumber < 1)
+                throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
+           
             var chat = _unitOfWork.Chats.GetChat(id, pageNumber,messagePerPage);
 
             if (chat == null) 

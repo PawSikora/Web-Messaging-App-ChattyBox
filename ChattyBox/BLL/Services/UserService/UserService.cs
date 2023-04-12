@@ -23,7 +23,11 @@ namespace BLL.Services.UserService
 
         public ICollection<GetUserChatDTO> GetChats(int id, int pageNumber, int chatsPerPage)
         {
+            if (pageNumber < 1)
+                throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
+            
             var chat = _unitOfWork.Users.GetChats(id, pageNumber,chatsPerPage).ToList();
+
             if (chat == null)
                 throw new NotFoundException("Nie znaleziono czatu");
 
@@ -66,8 +70,10 @@ namespace BLL.Services.UserService
         public string GetRole(int userId, int chatId)
         {
             var role = _unitOfWork.Chats.GetUserRole(userId, chatId);
+
             if (role == null)
                 throw new NotFoundException("Nie znaleziono roli");
+
             return role.Name;
         }
 

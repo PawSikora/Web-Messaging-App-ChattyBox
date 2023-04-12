@@ -28,9 +28,8 @@ namespace DAL.Repositories.ChatRepository
             Role role = _context.Roles.SingleOrDefault(r => r.Id == 2) ?? throw new NotFoundException("Nie znaleziono roli");
 
             if (_context.UserChats.Any(u => u.User == user && u.Chat == chat))
-            {
                 throw new IllegalOperationException("Uzytkownik jest juz w czacie");
-            }
+            
 
             var userChat = new UserChat { User = user, Chat = chat, Role = role};
             _context.UserChats.Add(userChat);
@@ -41,7 +40,9 @@ namespace DAL.Repositories.ChatRepository
         {
             User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
             Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono chatu");
+
             var userChat = _context.UserChats.FirstOrDefault(u => u.User == user && u.Chat == chat) ?? throw new NotFoundException("Nie znaleziono powiazanych rekordow");
+
             _context.UserChats.Remove(userChat);
             chat.Updated = DateTime.Now;
         }
@@ -52,16 +53,16 @@ namespace DAL.Repositories.ChatRepository
                 .Include(c => c.UserChats)
                 .ThenInclude(uc => uc.User)
                 .FirstOrDefault(c => c.Id == chatId) ?? throw new NotUniqueElementException("Czat o podanej nazwie nie istnieje");
+
             var users = chat.UserChats.Select(uc => uc.User);
+
             return users;
         }
 
         public void CreateChat(string name, int userId)
         {
             if (_context.Chats.Any(c => c.Name == name))
-            {
-                throw new Exception("Chat o takiej nazwie juz istnieje");
-            }
+                throw new NotUniqueElementException("Chat o takiej nazwie juz istnieje");
 
             User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
 
@@ -88,23 +89,15 @@ namespace DAL.Repositories.ChatRepository
             var userChats = _context.UserChats.Where(uc => uc.Chat.Id == chatId);
 
             if (userChats != null)
-            {
                 _context.UserChats.RemoveRange(userChats);
-            }
-
+            
             var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
 
             _context.Chats.Remove(chat);
-
         }
 
         public Chat GetChat(int chatId, int pageNumber,int messagesPerPage)
         {
-            if (pageNumber < 1)
-            {
-                 throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
-            }
-
             var messageCount = _context.Chats.Where(c => c.Id == chatId)
                 .SelectMany(c => c.Messages).Count();
 
@@ -137,9 +130,7 @@ namespace DAL.Repositories.ChatRepository
             Role role = _context.Roles.SingleOrDefault(r => r.Id == roleId) ?? throw new NotFoundException("Nie znaleziono roli");
 
             if (_context.UserChats.Any(u => u.User == user && u.Role == role && u.Chat == chat))
-            {
                 throw new IllegalOperationException("Uzytkownik ma juz ta role");
-            }
 
             UserChat userChat = _context.UserChats.SingleOrDefault(uc => uc.User == user && uc.Chat == chat) ?? throw new NotFoundException("Nie znaleziono relacji");
 
@@ -153,14 +144,11 @@ namespace DAL.Repositories.ChatRepository
         public void RevokeRole(int userId, int chatId)
         {
             User user = _context.Users.SingleOrDefault(u => u.Id == userId) ?? throw new NotFoundException("Nie znaleziono uzytkownika");
-
             Chat chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
             Role role = _context.Roles.SingleOrDefault(r => r.Id == 2) ?? throw new NotFoundException("Nie znaleziono roli");
 
             if (_context.UserChats.Any(u => u.User == user && u.Chat == chat))
-            {
                 throw new IllegalOperationException("Uzytkownik nie ma juz tej roli");
-            }
 
             UserChat userChat = _context.UserChats.SingleOrDefault(uc => uc.User == user && uc.Chat == chat) ?? throw new NotFoundException("Nie znaleziono relacji");
 

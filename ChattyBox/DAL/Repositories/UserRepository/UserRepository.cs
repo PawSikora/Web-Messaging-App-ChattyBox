@@ -76,22 +76,14 @@ namespace DAL.Repositories.UserRepository
 
         public ICollection<Chat> GetChats(int id, int pageNumber,int chatsPerPage)
         {
-            if (pageNumber < 1)
-            {
-                throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
-            }
-            
-            
-            
+          
             var chatCount = _context.UserChats
                 .Where(x => x.UserId == id)
                 .Select(x => x.Chat)
                 .Count();
 
             if (chatCount == 0)
-            {
                 throw new NotFoundException("Nie znaleziono czatów");
-            }
 
             int maxPageNumber = (int)Math.Ceiling((double)chatCount / chatsPerPage);
 
@@ -116,7 +108,6 @@ namespace DAL.Repositories.UserRepository
                 .Count();
             return chatCount;
         }
-
 
     }
 }

@@ -57,7 +57,6 @@ namespace DAL.Repositories.FileMessageRepository
         
         public FileMessage GetLastFileMessage(int chatid)
         {
-
             var message = _context.FileMessages
                 .Include(m => m.Sender)
                 .Where(m => m.ChatId == chatid)
