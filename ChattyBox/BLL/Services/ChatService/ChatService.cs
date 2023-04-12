@@ -87,5 +87,10 @@ namespace BLL.Services.ChatService
         {
 			return _unitOfWork.Chats.GetUserRole(userId, chatId).Name;
 		}
+        public UserDTO GetUserByEmail(string email)
+        {
+            var user = _unitOfWork.Chats.GetUserByEmail(email);
+            return _mapper.Map<UserDTO>(user);
+        }
     }
 }

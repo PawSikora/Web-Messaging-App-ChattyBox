@@ -22,12 +22,6 @@ namespace WebApi.Controllers
         }
 
 
-        //[CustomAuthorization(Role = "Admin", service = _textMessageService)] //TUTAJ AUTORYZACJA TESTOWA!!!
-        //[ServiceFilter(typeof(RolesAuthorization))]
-        //[ServiceFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-        //[TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-        //[ServiceFilter(typeof(RolesAuthorization))]
-        //[ChatAuthorizationFilter(Role = "Admin")]
         [HttpPost]
         public ActionResult Create( CreateTextMessageDTO messageDTO)
         {
@@ -37,8 +31,6 @@ namespace WebApi.Controllers
             return RedirectToAction("Get", "Chat", new { userId=messageDTO.SenderId,chatId = messageDTO.ChatId, pageNumber = 1 });
         }
 
-        /*[Route("TextMessage/Create/{senderId}")]
-        [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]*/
         [HttpGet]
         public ActionResult Create(int id,int senderId)
         {

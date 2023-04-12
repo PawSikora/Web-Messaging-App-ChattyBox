@@ -1,0 +1,43 @@
+﻿@model WebApi.ViewModels.AddUserToChat
+
+
+<form method="get" asp-action="FindUser" asp-controller="Chat">
+<input type="hidden" asp-for="ChatId" value="@ViewBag.chatId" />
+    <input type="hidden" asp-for="AdminId" value="@ViewBag.userId" />
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">@@</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" asp-for="Email">
+        <input type="submit" class="btn btn-primary" value="Znajdz"/>
+
+    </div>
+</form>
+@{
+
+    if (Model!=null && Model.userDto != null)
+    {
+        <div class="list-group">
+        <div class="list-group-item list-group-item flex-column align-items-start ">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Wyszukiwarka</h5>
+            </div>
+
+        </div>
+            <div class="list-group-item list-group-item flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@Model.userDto.Email</h5>
+                    <h5 class="mb-1">@Model.userDto.Username</h5>
+                    <small class="text-muted">@Model.userDto.LastLog</small>
+                    <form method="post" asp-controller="Chat" asp-action="AddUser" 
+                       asp-route-userId="@Model.userDto.Id"
+                       asp-route-senderId="@Model.AdminId"
+                       asp-route-chatId="@Model.ChatId">
+                        <input type="submit" class="btn btn-primary" value="Dodaj"/></form>
+                </div>
+            </div>
+
+
+        </div>
+    }
+}

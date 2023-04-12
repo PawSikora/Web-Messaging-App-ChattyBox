@@ -102,7 +102,7 @@ namespace DAL.Repositories.ChatRepository
         {
             if (pageNumber < 1)
             {
-                throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
+                 throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
             }
 
             var messageCount = _context.Chats.Where(c => c.Id == chatId)
@@ -179,7 +179,12 @@ namespace DAL.Repositories.ChatRepository
 		        .SingleOrDefault() ?? throw new NotFoundException("Nie znaleziono roli użytkownika");
 	        return role;
         }
+        public User GetUserByEmail(string email)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Email == email) ?? throw new NotFoundException("Nie znaleziono użytkownika");
+            return user;
+        }
 
-	}
+    }
 
 }

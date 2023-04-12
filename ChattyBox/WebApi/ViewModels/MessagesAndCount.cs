@@ -1,4 +1,5 @@
 ﻿using BLL.DataTransferObjects.ChatDtos;
+using BLL.DataTransferObjects.MessageDtos;
 
 namespace WebApi.ViewModels
 {
@@ -10,5 +11,6 @@ namespace WebApi.ViewModels
         public int PageNumber { get; set; }
         public int UserId { get; set; }
         public string UserRole { get; set; }
+        public CreateTextMessageDTO? CreateTextMessage { get; set; }
     }
 }

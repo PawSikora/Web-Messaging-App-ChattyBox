@@ -14,6 +14,7 @@ namespace DAL.Repositories.UserRepository
         User GetUser(int id);
         ICollection<Chat> GetChats(int id, int pageNumber, int chatsPerPage);
         int GetUserChatsCount(int id);
+
     }
     
 }

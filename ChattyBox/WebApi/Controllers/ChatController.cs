@@ -55,12 +55,33 @@ namespace WebApi.Controllers
             return RedirectToAction("GetChats", "User", new { id = chat.UserId, pageNumber = 1 });
         }
 
-        [HttpPut("chat/{id}/addUser/{userId}")]
-        public ActionResult AddUser([FromRoute] int id, [FromRoute] int userId)
+        [HttpPost("chat/{chatId}/addUser/{userId}/senderId/{senderId}")]
+        [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
+        public ActionResult AddUser([FromRoute] int chatId, [FromRoute] int userId, [FromRoute] int senderId)
         {
-            _chatService.AddUserById(userId, id);
-            return View();
+
+            _chatService.AddUserById(userId, chatId);
+            return RedirectToAction("GetUsersInChat","Chat",new {chatId= chatId, userId=senderId,pageNumber=1});
         }
+        [HttpGet("chat/{chatId}/GetAddUserToChat/adminId/{userId}")]
+        public ActionResult GetAddUserToChat([FromRoute]int chatId,[FromRoute] int userId)
+        {
+            ViewBag.chatId = chatId;
+            ViewBag.userId = userId;
+
+            return View("ChatAddUser");
+        }
+        [HttpGet]
+        public ActionResult FindUser(AddUserToChat user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("ChatAddUser", user);
+            }
+            user.userDto =_chatService.GetUserByEmail(user.Email);
+            return View("ChatAddUser",user);
+        }
+
 
         [HttpPost("chat/{id}/deleteUser/{userId}")]
         public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
@@ -95,7 +116,6 @@ namespace WebApi.Controllers
                 UserId = userId
 
             };
-
 
             return View("ChatGetUsers",chatsAndUsers);
         }

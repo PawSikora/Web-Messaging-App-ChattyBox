@@ -116,5 +116,7 @@ namespace DAL.Repositories.UserRepository
                 .Count();
             return chatCount;
         }
+
+
     }
 }

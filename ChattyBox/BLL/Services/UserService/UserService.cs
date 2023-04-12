@@ -70,5 +70,7 @@ namespace BLL.Services.UserService
                 throw new NotFoundException("Nie znaleziono roli");
             return role.Name;
         }
+
+
     }
 }

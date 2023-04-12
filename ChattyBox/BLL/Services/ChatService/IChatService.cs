@@ -21,5 +21,6 @@ namespace BLL.Services.ChatService
         void AssignRole(int userId, int chatId, int roleId);
         void RevokeRole(int userId, int chatId);
         string GetUserRole(int userId, int chatId);
+        UserDTO GetUserByEmail(string email);
     }
 }

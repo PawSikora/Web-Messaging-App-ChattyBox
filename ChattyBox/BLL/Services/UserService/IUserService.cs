@@ -16,5 +16,6 @@ namespace BLL.Services.UserService
         ICollection<GetUserChatDTO> GetChats(int id, int pageNumber,int chatsPerPage);
         int GetUserChatsCount(int id);
         string GetRole(int userId, int chatId);
+        
     }
 }

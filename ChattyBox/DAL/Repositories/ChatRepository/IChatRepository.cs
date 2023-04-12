@@ -19,5 +19,6 @@ namespace DAL.Repositories.ChatRepository
         void AssignRole(int userId, int chatId, int roleId);
         void RevokeRole(int userId, int chatId);
         Role GetUserRole(int userId, int chatId);
-	}
+        User GetUserByEmail(string email);
+    }
 }
