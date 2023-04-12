@@ -10,8 +10,8 @@
             <h5 class="mb-1">Lista Czatów</h5>
         </div>
     </div>
-
-    @{
+	
+	@{
         int x = 0;
 
         if (Model.Count % 2 == 0)
@@ -22,28 +22,38 @@
         {
             x++;
             if (x > Model.ChatsPerPage) break;
-	        <a asp-controller="Chat" asp-action="Get" asp-route-userId="@Model.UserId" asp-route-chatId="@chat.Id" asp-route-pageNumber="1" class="list-group-item list-group-item-action flex-column align-items-start">
+	        <a asp-controller="Chat"
+	           asp-action="Get"
+	           asp-route-userId="@Model.UserId"
+	           asp-route-chatId="@chat.Id"
+	           asp-route-pageNumber="1" class="list-group-item list-group-item-action flex-column align-items-start">
+
 		        <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">@chat.Name</h5>
-                    <a asp-controller="Chat" asp-action="GetUsersInChat" asp-route-chatId="@chat.Id" asp-route-userId="@Model.UserId" asp-route-pageNumber="1" class="btn btn-success">Wyświetl użytkowników</a>
+			        <h5 class="mb-1">@chat.Name</h5>
+			        <a asp-controller="Chat" 
+			           asp-action="GetUsersInChat" 
+			           asp-route-chatId="@chat.Id" 
+			           asp-route-userId="@Model.UserId" 
+			           asp-route-pageNumber="1" class="btn btn-success">Wyświetl użytkowników</a>
 		        </div>
 	        </a>
-	        
         }
-    }
-        </div>
+	}
+</div>
           
 <br/>
 @{
-
-    if (Model.ChatsPerPage == 1 || Model.ChatsPerPage == Model.Count)
+	if (Model.ChatsPerPage == 1 || Model.ChatsPerPage == Model.Count)
     {
         int index = 0;
 
         for (int i = 0; i < Model.Count / Model.ChatsPerPage; i++)
         {
             index = i + 1;
-            <a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.UserId" asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	        <a asp-controller="User" 
+	           asp-action="GetChats" 
+	           asp-route-id="@Model.UserId" 
+	           asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
         }
     }
     else if (Model.ChatsPerPage > 1)
@@ -52,11 +62,11 @@
         for (int i = 0; i < Model.Count / Model.ChatsPerPage + 1; i++)
         {
             index = i + 1;
-            <a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.UserId" asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	        <a asp-controller="User" 
+	           asp-action="GetChats" 
+	           asp-route-id="@Model.UserId" 
+	           asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
         }
     }
     else throw new Exception("Ilosc czatow na strone nie moze byc mniejsza badz rowna 0");
-
 }
-
-

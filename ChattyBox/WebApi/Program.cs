@@ -40,17 +40,11 @@ builder.Services.AddScoped<IFileMessageService, FileMessageService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
-//builder.Services.AddScoped<RolesAuthorization>();
 builder.Services.AddScoped(provider =>
 {
     var chatService = provider.GetRequiredService<IChatService>();
     return new RolesAuthorization(chatService, "role");
 });
-//builder.Services.AddTransient<RolesAuthorization>();
-//builder.Services.AddControllers(config => config.Filters.Add(new RolesAuthorization()));
-//builder.Services.AddControllers(config => config.Filters.Add(new ChatAuthorizationFilter()))
-//services.AddControllers(config => 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -6,10 +6,8 @@
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Lista Członków</h5>
         </div>
-        <p align="right"> Ostatnia Aktywność</p>
-
+        <p align="right">Ostatnia Aktywność</p>
     </div>
-
 
 
 @{
@@ -24,15 +22,18 @@
         x++;
         if (x > Model.UsersPerPage) break;
         <div class="list-group-item list-group-item flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@user.Username</h5>
-                <small class="text-muted">@user.LastLog</small>
-            </div>
+	        <div class="d-flex w-100 justify-content-between">
+		        <h5 class="mb-1">@user.Username</h5>
+		        <small class="text-muted">@user.LastLog</small>
+	        </div>
+
             <div align="center">
 	            <form method="post" asp-action="DeleteUser" asp-controller="Chat"
                       asp-route-id="@Model.ChatId"
                       asp-route-userId="@Model.UserId">
-                <input type="submit" value="Usuń Użytkownika" class="btn btn-primary" onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?');" @if (Model.UserRole != "Admin" || user.Id==@Model.UserId) { <text>disabled</text> }/>
+		            <input type="submit" value="Usuń Użytkownika" class="btn btn-primary" 
+		                   onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?');" 
+		                   @if (Model.UserRole != "Admin" || user.Id==@Model.UserId) { <text>disabled</text> }/>
                 </form>
             </div>
         </div>
@@ -44,26 +45,38 @@
 	    for (int i = 0; i < Model.Count / Model.UsersPerPage; i++)
 	    {
 	        index = 1 + i;
-	        <a asp-controller="Chat" asp-action="GetUsersInChat" asp-route-chatId="@Model.ChatId" asp-route-userId="@Model.UserId" asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+		    <a asp-controller="Chat" 
+		       asp-action="GetUsersInChat" 
+		       asp-route-chatId="@Model.ChatId" 
+		       asp-route-userId="@Model.UserId" 
+		       asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
         }
     }
     else if (Model.UsersPerPage > 1)
     {
-            int index = 0;
-
-        for (int i = 0; i < Model.Count / Model.UsersPerPage + 1; i++)
+	    int index = 0;
+	    for (int i = 0; i < Model.Count / Model.UsersPerPage + 1; i++)
         {
                 index = 1 + i;
-	        <a asp-controller="Chat" asp-action="GetUsersInChat" asp-route-chatId="@Model.ChatId" asp-route-userId="@Model.UserId" asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	        <a asp-controller="Chat" 
+	           asp-action="GetUsersInChat" 
+	           asp-route-chatId="@Model.ChatId" 
+	           asp-route-userId="@Model.UserId" 
+	           asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
         }
     }
     else throw new Exception("Ilosc użytkowników na strone nie moze byc mniejsza badz rowna 0");
     
-    <br/>
-    <a class="btn btn-primary" asp-controller="Chat" asp-action="GetAddUserToChat" asp-route-chatId="@Model.ChatId" asp-route-userId="@Model.UserId">Dodaj Uzytkownika</a>
-} 
+	<br/>
 
-  </div>
+	<a class="btn btn-primary" 
+	   asp-controller="Chat" 
+	   asp-action="GetAddUserToChat" 
+	   asp-route-chatId="@Model.ChatId" 
+	   asp-route-userId="@Model.UserId">Dodaj Uzytkownika</a>
+}
+
+</div>
 
 
     

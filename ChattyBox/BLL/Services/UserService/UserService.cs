@@ -71,6 +71,5 @@ namespace BLL.Services.UserService
             return role.Name;
         }
 
-
     }
 }

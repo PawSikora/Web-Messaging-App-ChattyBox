@@ -24,7 +24,5 @@ namespace DAL.Database.Entities
         public virtual ICollection<UserChat> UserChats { get; set; }
 
         public virtual ICollection<Message>? Messages { get; set; }
-
-        
     }
 }

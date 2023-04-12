@@ -5,22 +5,20 @@
 <link rel="stylesheet" href="~/css/chat.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
-@*<a href="#" class="list-group-item list-group-item-action flex-column align-items-start">*@
 @{
     int x = 0;
 
     <div class="list-group">
-        <div class="list-group-item list-group-item flex-column align-items-start active">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Lista Wiadomosci</h5>
-                <p align="right"> Data Wysłania</p>
-            </div>
+	    <div class="list-group-item list-group-item flex-column align-items-start active">
+		    <div class="d-flex w-100 justify-content-between">
+			    <h5 class="mb-1">Lista Wiadomosci</h5>
+			    <p align="right"> Data Wysłania</p>
+		    </div>
 
-        </div>
+	    </div>
             @foreach (var message in Model.Chat.AllMessages)
             {
-
-                x++;
+	            x++;
                 if (x > Model.MessagesPerPage) break;
                     <div class="list-group-item list-group-item flex-column align-items-start">
                     @Model.Chat.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
@@ -64,13 +62,13 @@
                     }
                     </div>
 
-                
             }
 
             @if (Model.Chat.AllMessages.Count == 0)
             {
                 <div class="item">Brak wiadomości</div>
             }
+
         </div>
 
         @if (Model.Count % 2 == 0)
@@ -85,7 +83,11 @@
             @for (int i = 0; i < Model.Count / Model.MessagesPerPage; i++)
             {
             index = i + 1;
-	            <a asp-controller="Chat" asp-action="Get" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.Chat.ChatId" asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	            <a asp-controller="Chat" 
+	               asp-action="Get" 
+	               asp-route-userId="@Model.UserId" 
+	               asp-route-chatId="@Model.Chat.ChatId" 
+	               asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
             }
         }
         else if (Model.MessagesPerPage > 1)
@@ -94,27 +96,34 @@
             @for (int i = 0; i < Model.Count / Model.MessagesPerPage + 1; i++)
             {
                 index = i + 1;
-	            <a asp-controller="Chat" asp-action="Get" asp-route-userId="@Model.UserId" asp-route-chatId="@Model.Chat.ChatId" asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	            <a asp-controller="Chat" 
+	               asp-action="Get" 
+	               asp-route-userId="@Model.UserId" 
+	               asp-route-chatId="@Model.Chat.ChatId"
+	               asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
 
             }
         }
-
 }
 
-
-
-
-
-
 <br/> <br/>
-<a asp-controller="TextMessage" asp-action="Create" asp-route-id="@Model.Chat.ChatId" asp-route-senderId="@Model.UserId" class="btn btn-primary">Stwórz wiadomość</a>
 
-<a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.UserId" asp-route-pageNumber="1" class="btn btn-primary">Powrót</a>
+<a asp-controller="TextMessage" 
+   asp-action="Create" 
+   asp-route-id="@Model.Chat.ChatId" 
+   asp-route-senderId="@Model.UserId" class="btn btn-primary">Stwórz wiadomość</a>
+
+<a asp-controller="User" 
+   asp-action="GetChats" 
+   asp-route-id="@Model.UserId" 
+   asp-route-pageNumber="1" class="btn btn-primary">Powrót</a>
 <br/>
 <br/>
 
-<a asp-controller="Chat" asp-action="DeleteUser" asp-route-id="@Model.Chat.ChatId" asp-route-userId="@Model.UserId" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz opuścić ten czat?');">Opuść czat</a>
-
+<a asp-controller="Chat" 
+   asp-action="DeleteUser" 
+   asp-route-id="@Model.Chat.ChatId" 
+   asp-route-userId="@Model.UserId" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz opuścić ten czat?');">Opuść czat</a>
 <br/>
 <br/>
 

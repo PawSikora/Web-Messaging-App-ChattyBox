@@ -15,8 +15,6 @@ namespace WebApi.Controllers
         {
             _userService = userService;
         }
-
-
         public IActionResult Login()
         {
             return View("Login");
@@ -31,7 +29,6 @@ namespace WebApi.Controllers
         [HttpGet("user/getChats/{id}/{pageNumber}")]
         public ActionResult<ICollection<ChatsAndCount>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
         {
-
             var chatsPerPage = 5;
             var chatList = _userService.GetChats(id, pageNumber, chatsPerPage);
             var count = _userService.GetUserChatsCount(id);
@@ -52,7 +49,6 @@ namespace WebApi.Controllers
             return View();
         }
 
-
         [HttpPost]
         public ActionResult Register(CreateUserDTO registerUser)
         {
@@ -63,13 +59,11 @@ namespace WebApi.Controllers
             return View("Login");
         }
 
-
         [HttpPost]
         public ActionResult<UserDTO> Login(LoginUserDTO loginUser)
         {
             return View("UserMenu", _userService.LoginUser(loginUser));
         }
-
 
         [HttpGet("user/createChat")]
         public ActionResult CreateChat(int id)

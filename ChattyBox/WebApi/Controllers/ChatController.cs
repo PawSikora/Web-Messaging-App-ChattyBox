@@ -63,6 +63,7 @@ namespace WebApi.Controllers
             _chatService.AddUserById(userId, chatId);
             return RedirectToAction("GetUsersInChat","Chat",new {chatId= chatId, userId=senderId,pageNumber=1});
         }
+
         [HttpGet("chat/{chatId}/GetAddUserToChat/adminId/{userId}")]
         public ActionResult GetAddUserToChat([FromRoute]int chatId,[FromRoute] int userId)
         {
@@ -71,6 +72,7 @@ namespace WebApi.Controllers
 
             return View("ChatAddUser");
         }
+
         [HttpGet]
         public ActionResult FindUser(AddUserToChat user)
         {
@@ -81,7 +83,6 @@ namespace WebApi.Controllers
             user.userDto =_chatService.GetUserByEmail(user.Email);
             return View("ChatAddUser",user);
         }
-
 
         [HttpPost("chat/{id}/deleteUser/{userId}")]
         public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
@@ -114,9 +115,7 @@ namespace WebApi.Controllers
                 PageNumber = pageNumber,
                 UserRole = role,
                 UserId = userId
-
             };
-
             return View("ChatGetUsers",chatsAndUsers);
         }
 

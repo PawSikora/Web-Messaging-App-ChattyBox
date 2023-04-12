@@ -33,7 +33,6 @@ namespace DAL.Repositories.TextMessageRepository
             _context.TextMessages.Add(message);
         }
 
-
         public void DeleteTextMessage(int id)
         {
             var textMessage = _context.TextMessages.FirstOrDefault(c => c.Id == id) 
@@ -59,8 +58,6 @@ namespace DAL.Repositories.TextMessageRepository
             return message;
 
         }
-
-
 
     }
 }
