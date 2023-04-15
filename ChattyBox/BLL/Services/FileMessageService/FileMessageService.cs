@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BLL.DataTransferObjects.MessageDtos;
+using BLL.Exceptions;
 using DAL.Database.Entities;
-using DAL.Exceptions;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -24,21 +24,68 @@ namespace BLL.Services.FileMessageService
         
         public void CreateFileMessage(CreateFileMessageDTO dto)
         {
-            _unitOfWork.FileMessages.CreateFileMessage(dto.SenderId, dto.Path, dto.ChatId);
+            var user = _unitOfWork.Users.GetById(dto.SenderId);
+
+            if (user is null)
+                throw new NotFoundException("Nie znaleziono użytkownika");
+
+            var chat = _unitOfWork.Chats.GetById(dto.ChatId);
+
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono czatu");
+
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var relativePath = Path.Combine("files", chat.Name, dto.File.FileName);
+            var fullPath = Path.Combine(wwwrootPath, relativePath);
+
+            if (File.Exists(fullPath)) throw new NotUniqueElementException("Plik o takiej nazwie już istnieje");
+
+            using (var fileStream = new FileStream(fullPath, FileMode.Create))
+            {
+                dto.File.CopyTo(fileStream);
+            }
+
+            FileInfo file = new FileInfo(fullPath);
+            double fileSizeOnMB = (double)file.Length / (1024 * 1024);
+
+            FileMessage message = new FileMessage
+            {
+                Path = relativePath,
+                Name = file.Name,
+                Sender = user,
+                Chat = chat,
+                Size = fileSizeOnMB,
+                TimeStamp = DateTime.Now
+            };
+
+            _unitOfWork.FileMessages.CreateFileMessage(message);
             _unitOfWork.Save();
         }
 
         public void DeleteFileMessage(int id)
         {
-            _unitOfWork.FileMessages.DeleteFileMessage(id);
+            var file = _unitOfWork.FileMessages.GetById(id);
+
+            if (file is null)
+                throw new NotFoundException("Nie znaleziono pliku");
+
+            string path = file.Path;
+
+            _unitOfWork.FileMessages.DeleteFileMessage(file);
             _unitOfWork.Save();
+
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var fullPath = Path.Combine(wwwrootPath, path);
+
+            if (File.Exists(fullPath))
+                File.Delete(fullPath);
         }
 
         public FileMessageDTO GetFileMessage(int id)
         {
-            var file = _unitOfWork.FileMessages.GetFileMessage(id);
+            var file = _unitOfWork.FileMessages.GetById(id);
 
-            if (file == null)
+            if (file is null)
                 throw new NotFoundException("Nie znaleziono pliku");
 
             return _mapper.Map<FileMessageDTO>(file);
@@ -46,10 +93,17 @@ namespace BLL.Services.FileMessageService
 
         public GetNewestMessageDTO GetLastFileMessage(int chatId)
         {
+            var chat = _unitOfWork.Chats.GetById(chatId);
+
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono czatu");
+
             var file = _unitOfWork.FileMessages.GetLastFileMessage(chatId);
 
-            if (file == null)
+            if (file is null)
                 throw new NotFoundException("Nie znaleziono pliku");
+
+            file.Path = $"/{file.Path.Replace('\\', '/')}";
 
             return _mapper.Map<GetNewestMessageDTO>(file);
         }

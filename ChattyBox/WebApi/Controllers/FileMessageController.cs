@@ -22,10 +22,15 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create( CreateFileMessageDTO createFile)
+        public ActionResult Create(CreateFileMessageDTO createFile)
         {
-            _fileMessageService.CreateFileMessage(createFile);
-            return View();
+            if (ModelState.IsValid)
+            {
+                createFile.Name = createFile.File.FileName;
+                _fileMessageService.CreateFileMessage(createFile);
+            }
+
+            return RedirectToAction("Get", "Chat", new { userId = createFile.SenderId, chatId = createFile.ChatId, pageNumber = 1 });
         }
 
 		[HttpPost("FileMessage/Delete/{chatId}/{messageId}/{senderId}")]

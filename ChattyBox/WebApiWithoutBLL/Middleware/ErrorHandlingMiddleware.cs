@@ -1,4 +1,4 @@
-﻿using DAL.Exceptions;
+﻿using WebApiWithoutBLL.Exceptions;
 
 namespace WebApiWithouBLL.Middleware
 {

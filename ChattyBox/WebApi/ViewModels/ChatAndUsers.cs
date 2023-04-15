@@ -4,7 +4,7 @@ namespace WebApi.ViewModels
 {
     public class ChatAndUsers
     {
-        public ICollection<UserDTO> Users { get; set; }
+        public IEnumerable<UserDTO> Users { get; set; }
         public int Count { get; set; }
         public int UsersPerPage { get; set; }
         public int ChatId { get; set; }

@@ -9,16 +9,21 @@ namespace DAL.Repositories.ChatRepository
 {
     public interface IChatRepository
     {
-        IEnumerable<User> GetUsersInChat(int chatId);
-        public void AddUserById(int userId, int chatId);
-        public void DeleteUserById(int userId, int chatId);
-        void CreateChat(string name, int userId);
-        void DeleteChat(int chatId);
-        Chat GetChat(int id, int pageNumber,int messagesPerPage);
+        Chat? GetById(int id);
+        bool IsUserInChat(int userId, int chatId);
+        bool IsChatNameTaken(string name);
+        IEnumerable<UserChat>? GetChatUsersById(int chatId);
+        void RemoveUsersFromChat(IEnumerable<UserChat> chatUsers);
+        IEnumerable<User>? GetUsersInChat(int chatId);
+        public UserChat? GetUserChatById(int userId, int chatId);
+        void AddUserToChat(UserChat userChat);
+        public void RemoveUserFromChat(UserChat userChat);
+        void CreateChat(Chat chat, UserChat userChat);
+        void DeleteChat(Chat chat);
+        Chat? GetChat(int id, int pageNumber,int messagesPerPage);
         int GetChatMessagesCount(int chatId);
-        void AssignRole(int userId, int chatId, int roleId);
-        void RevokeRole(int userId, int chatId);
-        Role GetUserRole(int userId, int chatId);
-        User GetUserByEmail(string email);
+        bool IsUserRole(int userId, int chatId, int roleId);
+        Role? GetUserRole(int userId, int chatId);
+        IEnumerable<Chat> GetChatsForUser(int userId, int pageNumber, int chatsPerPage);
     }
 }

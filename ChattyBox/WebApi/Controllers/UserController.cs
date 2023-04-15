@@ -27,11 +27,17 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("user/getChats/{id}/{pageNumber}")]
-        public ActionResult<ICollection<ChatsAndCount>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
+        public ActionResult<IEnumerable<ChatsAndCount>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
         {
-            var chatsPerPage = 5;
-            var chatList = _userService.GetChats(id, pageNumber, chatsPerPage);
             var count = _userService.GetUserChatsCount(id);
+
+            if (count == 0)
+                return View("UserMenu", _userService.GetUser(id));
+
+            var chatsPerPage = 5;
+
+            var chatList = _userService.GetChats(id, pageNumber, chatsPerPage);
+            
             var chats = new ChatsAndCount()
             {
                 Count = count,
@@ -74,6 +80,11 @@ namespace WebApi.Controllers
         public ActionResult Unauthorized()
         {
 			return View("AuthorizeFailed");
+        }
+
+        public ActionResult<UserDTO> GetUserMenu(int id)
+        {
+            return View("UserMenu", _userService.GetUser(id));
         }
     }
 }

@@ -9,12 +9,11 @@ namespace DAL.Repositories.UserRepository
 {
     public interface IUserRepository
     {
-        User LoginUser(string email, string password);
-        void RegisterUser(string email, string username, string password);
-        User GetUser(int id);
-        ICollection<Chat> GetChats(int id, int pageNumber, int chatsPerPage);
+        void CreateUser(User user);
         int GetUserChatsCount(int id);
-
+        User? GetById(int id);
+        User? GetUserByEmail(string email);
+        bool IsEmailTaken(string email);
     }
     
 }

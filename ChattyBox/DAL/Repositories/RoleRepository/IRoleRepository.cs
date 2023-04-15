@@ -9,8 +9,11 @@ namespace DAL.Repositories.RoleRepository
 {
     public interface IRoleRepository
     {
-        void CreateRole(string name);
-        void DeleteRole(int id);
-        Role GetRole(int id);
+        void CreateRole(Role role);
+        void DeleteRole(Role role);
+        Role? GetById(int id);
+        Role? GetByName(string name);
+
+        bool RoleExists(string name);
     }
 }

@@ -23,21 +23,12 @@ namespace WebApi.Controllers
 
 
         [HttpPost]
-        public ActionResult Create( CreateTextMessageDTO messageDTO)
+        public ActionResult Create(CreateTextMessageDTO messageDTO)
         {
-            if (!ModelState.IsValid) return View("Create",messageDTO); 
+            if (ModelState.IsValid)
                 _textMessageService.CreateTextMessage(messageDTO);
-                
+             
             return RedirectToAction("Get", "Chat", new { userId=messageDTO.SenderId,chatId = messageDTO.ChatId, pageNumber = 1 });
-        }
-
-        [HttpGet]
-        public ActionResult Create(int id,int senderId)
-        {
-            ViewBag.ChatId = id;
-            ViewBag.SenderId = senderId;
-            
-            return View();
         }
 
         [HttpPost("TextMessage/Delete/{chatId}/{messageId}/{senderId}")]

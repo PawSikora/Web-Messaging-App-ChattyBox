@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Database;
 using DAL.Database.Entities;
-using DAL.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.RoleRepository
@@ -18,30 +17,29 @@ namespace DAL.Repositories.RoleRepository
         {
             _context = context;
         }
-        public void CreateRole(string name)
+        public void CreateRole(Role role)
         {
-            if(_context.Roles.Any(x => x.Name == name))
-                throw new NotUniqueElementException("Rola juz istnieje");
-
-            var role = new Role
-            {
-                Name = name
-            };
-
             _context.Roles.Add(role);
         }
 
-        public void DeleteRole(int id)
+        public void DeleteRole(Role role)
         {
-            var role = _context.Roles.FirstOrDefault(x => x.Id == id) ?? throw new NotFoundException("Nie znaleziono roli");
-
             _context.Roles.Remove(role);
         }
 
-        public Role GetRole(int id)
+        public Role? GetById(int id)
         {
-            Role role = _context.Roles.SingleOrDefault(r => r.Id == id) ?? throw new NotFoundException("Nie znaleziono roli");
-            return role;
+           return _context.Roles.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Role? GetByName(string name)
+        {
+            return _context.Roles.FirstOrDefault(x => x.Name == name);
+        }
+
+        public bool RoleExists(string name)
+        {
+            return _context.Roles.Any(x => x.Name == name);
         }
     }
 }

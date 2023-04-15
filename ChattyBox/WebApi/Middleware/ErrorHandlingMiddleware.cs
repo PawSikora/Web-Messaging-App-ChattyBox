@@ -1,5 +1,5 @@
 ﻿using Azure;
-using DAL.Exceptions;
+using BLL.Exceptions;
 
 namespace WebApi.Middleware
 {

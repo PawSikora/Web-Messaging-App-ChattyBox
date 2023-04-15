@@ -30,7 +30,8 @@
             <div align="center">
 	            <form method="post" asp-action="DeleteUser" asp-controller="Chat"
                       asp-route-id="@Model.ChatId"
-                      asp-route-userId="@Model.UserId">
+                      asp-route-userId="@user.Id"
+                      asp-route-senderId="@Model.UserId" >
 		            <input type="submit" value="Usuń Użytkownika" class="btn btn-primary" 
 		                   onclick="return confirm('Czy na pewno chcesz usunąć tego użytkownika?');" 
 		                   @if (Model.UserRole != "Admin" || user.Id==@Model.UserId) { <text>disabled</text> }/>
@@ -74,6 +75,13 @@
 	   asp-action="GetAddUserToChat" 
 	   asp-route-chatId="@Model.ChatId" 
 	   asp-route-userId="@Model.UserId">Dodaj Uzytkownika</a>
+
+        <br /> <br />
+    <a asp-controller="User" asp-action="GetChats" 
+             asp-route-id="@Model.UserId" 
+             asp-route-pageNumber="1" 
+             class="btn btn-primary">Wróć do przeglądarki chatów</a>
+
 }
 
 </div>

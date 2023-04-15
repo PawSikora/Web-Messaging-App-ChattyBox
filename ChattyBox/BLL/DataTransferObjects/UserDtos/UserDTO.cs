@@ -14,5 +14,7 @@ namespace BLL.DataTransferObjects.UserDtos
         public DateTime? LastLog { get; set; }
 
         public DateTime Created { get; set; }
+
+        public int ChatsCount { get; set; }
     }
 }

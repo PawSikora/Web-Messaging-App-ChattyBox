@@ -69,4 +69,7 @@
         }
     }
     else throw new Exception("Ilosc czatow na strone nie moze byc mniejsza badz rowna 0");
+
+    <br /> <br />
+    <a asp-controller="User" asp-action="GetUserMenu" asp-route-id="@Model.UserId" class="btn btn-primary">Wróć do menu</a>
 }

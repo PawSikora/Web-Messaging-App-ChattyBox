@@ -1,6 +1,5 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
-using DAL.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,45 +17,28 @@ namespace DAL.Repositories.TextMessageRepository
             _context = context;
         }
 
-        public void CreateTextMessage(int userId,string content, int chatId)
+        public void CreateTextMessage(TextMessage message)
         {
-            User user = _context.Users.SingleOrDefault(u => u.Id == userId)?? throw new NotFoundException("Nie znaleziono uzytkownika");
-            var chat = _context.Chats.SingleOrDefault(c => c.Id == chatId) ?? throw new NotFoundException("Nie znaleziono czatu");
-            TextMessage message = new TextMessage
-            {
-                Content = content,
-                Sender = user,
-                ChatId = chatId,
-                TimeStamp = DateTime.Now
-            };
-
             _context.TextMessages.Add(message);
         }
 
-        public void DeleteTextMessage(int id)
+        public void DeleteTextMessage(TextMessage message)
         {
-            var textMessage = _context.TextMessages.FirstOrDefault(c => c.Id == id) 
-                ?? throw new NotFoundException("Nie znaleziono wiadomosci");
-          
-            _context.TextMessages.Remove(textMessage);
+            _context.TextMessages.Remove(message);
         }
 
-        public TextMessage GetTextMessage(int id)
+        public TextMessage? GetLastTextMessage(int chatid)
         {
-            var textMessage = _context.TextMessages.SingleOrDefault(t => t.Id == id) ?? throw new NotFoundException("Nie znaleziono wiadomosci");
-            return textMessage;
-        }
-
-        public TextMessage GetLastTextMessage(int chatid)
-        {
-            var message = _context.TextMessages
+           return _context.TextMessages
                 .Include(m => m.Sender)
                 .Where(m => m.ChatId == chatid)
                 .OrderByDescending(m => m.TimeStamp)
-                .FirstOrDefault() ?? throw new NotFoundException("Nie znaleziono czatu");
-
-            return message;
+                .FirstOrDefault();
         }
 
+        public TextMessage? GetById(int id)
+        {
+            return _context.TextMessages.FirstOrDefault(t => t.Id == id);
+        }
     }
 }

@@ -2,9 +2,12 @@
 
 <h1>Witaj @Model.Username !</h1>
 
-<a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.Id" asp-route-pageNumber="1" class="btn btn-primary">Wyświetl swoje chaty</a>
-<br /> 
-<br />
+@if(@Model.ChatsCount != 0)
+{
+    <a asp-controller="User" asp-action="GetChats" asp-route-id="@Model.Id" asp-route-pageNumber="1" class="btn btn-primary">Wyświetl swoje chaty</a>
+    <br />
+    <br />
+}
 
 <a asp-controller="User" asp-action="CreateChat" asp-route-id="@Model.Id" class="btn btn-primary">Stworz nowy chat</a>
 <br />

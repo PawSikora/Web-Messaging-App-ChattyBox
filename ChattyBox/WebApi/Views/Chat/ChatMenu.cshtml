@@ -5,6 +5,10 @@
 <link rel="stylesheet" href="~/css/chat.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
+
+
+
+
 @{
     int x = 0;
 
@@ -24,11 +28,31 @@
                     @Model.Chat.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Username:
                     @if (message is FileMessageDTO fileMessage)
                     {
-                        
-                            <div class="d-flex w-100 justify-content-between">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">
+
+                            @if (fileMessage.Type.Equals("image"))
+                            {
+                                <img src="@fileMessage.Path" alt="Obrazek" />
+                            }
+                            else if (fileMessage.Type.Equals("video"))
+                            {
+                                <video src="@fileMessage.Path" controls></video>
+                            }
+                            else if (fileMessage.Type.Equals("audio"))
+                            {
+                                 <audio src="@fileMessage.Path" controls></audio>
+                            }
+
+                        </h5>
+                            <small class="text-muted">@fileMessage.TimeStamp</small>
+                        </div>
+                      
+                      
+                            <!--<div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">@fileMessage.Name</h5>
                                 <small class="text-muted">@fileMessage.TimeStamp</small>
-                            </div>
+                            </div> -->
                         
                         <div align="right">
                         <form method="post" asp-controller="FileMessage"
@@ -108,10 +132,53 @@
 
 <br/> <br/>
 
-<a asp-controller="TextMessage" 
-   asp-action="Create" 
-   asp-route-id="@Model.Chat.ChatId" 
-   asp-route-senderId="@Model.UserId" class="btn btn-primary">Stwórz wiadomość</a>
+<form method="post" action="/Chat/SendMessage" enctype="multipart/form-data">
+    <div class="form-group">
+
+        <div class="input-group-append">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none;" placeholder="Wiadomosc" aria-label="Wiadomosc" aria-describedby="basic-addon2" name="Content"> </textarea>
+            <input type="file" name="File" value="Wybierz plik" />
+            <input type="hidden" name="ChatId" value="@Model.Chat.ChatId" />
+            <input type="hidden" name="SenderId" value="@Model.UserId" />
+        </div>
+
+        <div>
+            <input src="https://static.vecteezy.com/system/resources/previews/018/930/708/original/telegram-logo-telegram-icon-transparent-free-png.png" type="image" height="80" width="80" alt="Submit Form" />
+        </div>
+
+    </div>
+
+</form>
+
+<br /><br />
+<!--"<form id="fileMessageForm" method="post" action="/FileMessage/Create">
+    <div class="form-group">
+
+        <div class="input-group-append">
+            <input type="file" name="File" value="Wybierz plik"/>
+            <input type="hidden" name="ChatId" value="@Model.Chat.ChatId" />
+            <input type="hidden" name="SenderId" value="@Model.UserId" />
+        </div>
+    </div>
+
+</form> -->
+
+<br /> <br />
+
+
+<script>
+    document.getElementById("sendButton").addEventListener("click", function () {
+
+        var textMessageForm = document.getElementById("textMessageForm");
+        var fileMessageForm = document.getElementById("fileMessageForm");
+
+        textMessageForm.submit();
+        fileMessageForm.submit();
+    });
+</script>
+
+
+<br /> <br />
 
 <a asp-controller="User" 
    asp-action="GetChats" 

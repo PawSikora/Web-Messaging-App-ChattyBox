@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using DAL.Database.Entities;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApiWithoutBLL.Exceptions;
 using WebApiWithoutBLL.Models.MessagesDtos;
 
 namespace WebApiWithoutBLL.Controllers
@@ -20,43 +22,82 @@ namespace WebApiWithoutBLL.Controllers
         [HttpGet("{id}")]
         public ActionResult<FileMessageDTO> Get([FromRoute] int id)
         {
-            var file = _unitOfWork.FileMessages.GetFileMessage(id);
+            var file = _unitOfWork.FileMessages.GetById(id);
 
-            if (file == null)
-            {
-                return View("Error");
-            }
-            
-            return View(_mapper.Map<FileMessageDTO>(file));
+            if (file is null)
+                throw new NotFoundException("Nie znaleziono pliku");
+
+            return _mapper.Map<FileMessageDTO>(file);
         }
 
         [HttpPost("create")]
-        public ActionResult Create([FromBody] CreateFileMessageDTO createFile)
+        public ActionResult Create([FromBody] CreateFileMessageDTO dto)
         {
-            _unitOfWork.FileMessages.CreateFileMessage(createFile.SenderId, createFile.Path, createFile.ChatId);
+            if (_unitOfWork.FileMessages.IsFileNameTaken(dto.Name))
+                throw new NotUniqueElementException("Plik o takiej nazwie juz istnieje");
+
+            var user = _unitOfWork.Users.GetById(dto.SenderId);
+
+            if (user is null)
+                throw new NotFoundException("Nie znaleziono użytkownika");
+
+            var chat = _unitOfWork.Chats.GetById(dto.ChatId);
+
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono czatu");
+
+            var path = Path.Combine(Path.GetFullPath("wwwroot"), dto.File.FileName);
+
+            if (System.IO.File.Exists(path))
+                throw new NotUniqueElementException("Plik o takiej nazwie już istnieje");
+
+            FileInfo file = new FileInfo(path);
+            double fileSizeOnMB = (double)file.Length / (1024 * 1024);
+
+            FileMessage message = new FileMessage
+            {
+                Path = path,
+                Name = file.Name,
+                Sender = user,
+                Chat = chat,
+                Size = fileSizeOnMB,
+                TimeStamp = DateTime.Now
+            };
+
+            _unitOfWork.FileMessages.CreateFileMessage(message);
             _unitOfWork.Save();
+
             return View();
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _unitOfWork.FileMessages.DeleteFileMessage(id);
+            var file = _unitOfWork.FileMessages.GetById(id);
+
+            if (file is null)
+                throw new NotFoundException("Nie znaleziono pliku");
+
+            _unitOfWork.FileMessages.DeleteFileMessage(file);
             _unitOfWork.Save();
+
             return View();
         }
 
         [HttpGet("GetNewestFileMessage/{idChat}")]
-        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int chatId)
         {
-            var message = _unitOfWork.FileMessages.GetLastFileMessage(idChat);
+            var chat = _unitOfWork.Chats.GetById(chatId);
 
-            if (message == null)
-            {
-                return View("Error");
-            }
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono czatu");
 
-            return View(_mapper.Map<GetNewestMessageDTO>(message));
+            var file = _unitOfWork.FileMessages.GetLastFileMessage(chatId);
+
+            if (file is null)
+                throw new NotFoundException("Nie znaleziono pliku");
+
+            return View(_mapper.Map<GetNewestMessageDTO>(file));
         }
     }
 }

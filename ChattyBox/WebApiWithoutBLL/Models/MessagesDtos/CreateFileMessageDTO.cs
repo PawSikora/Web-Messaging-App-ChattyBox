@@ -9,11 +9,6 @@ namespace WebApiWithoutBLL.Models.MessagesDtos
         [JsonIgnore] 
         public int Id { get; set; }
 
-
-        [Required(ErrorMessage = "Pole jest wymagane")]
-        [MaxLength(100, ErrorMessage = "Sciezka jest za długa")]
-        [MinLength(1, ErrorMessage = "Niepoprawne dane")]
-        public string Path { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane")]
         [MaxLength(100, ErrorMessage = "Nazwa pliku jest za długa")]
         [MinLength(1, ErrorMessage = "Niepoprawne dane")]
@@ -21,6 +16,7 @@ namespace WebApiWithoutBLL.Models.MessagesDtos
 
         public override string MessageType => "createFile";
 
-
+        [Required(ErrorMessage = "Pole jest wymagane")]
+        public IFormFile File;
     }
 }

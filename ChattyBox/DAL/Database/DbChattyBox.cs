@@ -106,7 +106,7 @@ namespace DAL.Database
                 new UserChat { UserId = 2, ChatId = 1, RoleId = 2}
             };
 
-            modelBuilder.Entity<UserChat>().HasData(initUserChats.ToArray());
+            modelBuilder.Entity<UserChat>().HasData(initUserChats);
 
             List<Role> initRoles = new List<Role>()
             {
@@ -114,12 +114,12 @@ namespace DAL.Database
                 new Role { Id = 2, Name = "User" }
             };
 
-            modelBuilder.Entity<Role>().HasData(initRoles.ToArray());
+            modelBuilder.Entity<Role>().HasData(initRoles);
 
             List<User> initUsers = new List<User>()
             {
                 new User { Id=1, Email = "marcinq@gmail.com", Username="MarIwin", Created = DateTime.Now, PasswordHash = user1.passwordHash, PasswordSalt = user1.passwordSalt  },
-              new User { Id = 2, Email = "tymonq@gmail.com", Username = "TymonSme", Created = DateTime.Now, PasswordHash = user2.passwordHash, PasswordSalt = user2.passwordSalt }
+                new User { Id = 2, Email = "tymonq@gmail.com", Username = "TymonSme", Created = DateTime.Now, PasswordHash = user2.passwordHash, PasswordSalt = user2.passwordSalt }
             };
 
             modelBuilder.Entity<User>().HasData(initUsers.ToArray());
@@ -130,21 +130,35 @@ namespace DAL.Database
                  new TextMessage { Id = 3, TimeStamp = new DateTime(2021, 1, 1), SenderId = 2, ChatId = 1, Content = "Hello2" }
             };
 
-            modelBuilder.Entity<TextMessage>().HasData(initTextMessages.ToArray());
+            modelBuilder.Entity<TextMessage>().HasData(initTextMessages);
 
             List<FileMessage> initFileMessages = new List<FileMessage>()
             {
-                new FileMessage {Id = 2,TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Name = "File1.txt",Path = "Path1"},
-                new FileMessage { Id = 4, TimeStamp = new DateTime(2022, 1, 1), SenderId = 2, ChatId = 1, Name = "File2.txt", Path = "Path1"},
+                new FileMessage { Id = 2, TimeStamp = new DateTime(2020, 1, 1), SenderId = 1, ChatId = 1, Name = "stockImage.jpg", Path = "files\\Chat1\\stockImage.jpg", Size = 0.09969329833984375},
+                new FileMessage { Id = 4, TimeStamp = new DateTime(2022, 1, 1), SenderId = 2, ChatId = 1, Name = "stockGif.gif", Path = "files\\Chat1\\stockGif.gif", Size = 5.467991828918457},
             };
 
+            modelBuilder.Entity<FileMessage>().HasData(initFileMessages);
 
-            modelBuilder.Entity<FileMessage>().HasData(initFileMessages.ToArray());
+            List<Chat> initChats = new List<Chat>()
+            {
+                new Chat { Created = DateTime.Now, Name = "Chat1", Id = 1 }
+            };
+          
+            modelBuilder.Entity<Chat>().HasData(initChats);
 
-            modelBuilder.Entity<Chat>().HasData(
-                 new Chat { Created = DateTime.Now, Name = "Chat1", Id = 1 }
-            );
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            string relativePath;
+            string fullPath;
 
+            foreach (var chat in initChats)
+            {
+                relativePath = Path.Combine("files", chat.Name);
+                fullPath = Path.Combine(wwwrootPath, relativePath);
+
+                if (!Directory.Exists(fullPath))
+                    Directory.CreateDirectory(fullPath);
+            }
         }
 
     }

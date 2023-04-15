@@ -7,16 +7,45 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using WebApi.ViewModels;
+using BLL.DataTransferObjects.MessageDtos;
+using System.Web.WebPages;
+using BLL.Services.FileMessageService;
+using BLL.Services.TextMessageService;
 
 namespace WebApi.Controllers
 {
     public class ChatController : Controller
     {
         private readonly IChatService _chatService;
+        private readonly IFileMessageService _fileMessageService;
+        private readonly ITextMessageService _textMessageService;
 
-        public ChatController(IChatService chatService)
+        public ChatController(IChatService chatService, IFileMessageService fileMessageService, ITextMessageService textMessageService)
         {
             _chatService = chatService;
+            _fileMessageService = fileMessageService;
+            _textMessageService = textMessageService;
+        }
+
+        [HttpPost]
+        public ActionResult SendMessage(CreateFileMessageDTO fileMessage, CreateTextMessageDTO textMessage)
+        {
+            if (textMessage.Content.IsEmpty() && fileMessage.File is not null)
+            {
+                fileMessage.Name = fileMessage.File.FileName;
+                _fileMessageService.CreateFileMessage(fileMessage);
+            }
+            else if (!textMessage.Content.IsEmpty() && fileMessage.File is null)
+            {
+               _textMessageService.CreateTextMessage(textMessage);
+            }
+            else
+            {
+                _textMessageService.CreateTextMessage(textMessage);
+                _fileMessageService.CreateFileMessage(fileMessage);
+            }
+
+            return RedirectToAction("Get", "Chat", new { userId = textMessage.SenderId, chatId = textMessage.ChatId, pageNumber = 1 });
         }
 
         [HttpGet("chat/user/{userId}/Get/{chatId}/{pageNumber}")]
@@ -47,9 +76,7 @@ namespace WebApi.Controllers
         public ActionResult Create(CreateChatDTO chat)
         {
             if (!ModelState.IsValid)
-            {
                 return View("CreateChat", chat);
-            }
             
             _chatService.CreateChat(chat);
             return RedirectToAction("GetChats", "User", new { id = chat.UserId, pageNumber = 1 });
@@ -59,7 +86,6 @@ namespace WebApi.Controllers
         [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
         public ActionResult AddUser([FromRoute] int chatId, [FromRoute] int userId, [FromRoute] int senderId)
         {
-
             _chatService.AddUserById(userId, chatId);
             return RedirectToAction("GetUsersInChat","Chat",new {chatId= chatId, userId=senderId,pageNumber=1});
         }
@@ -77,19 +103,17 @@ namespace WebApi.Controllers
         public ActionResult FindUser(AddUserToChat user)
         {
             if (!ModelState.IsValid)
-            {
                 return View("ChatAddUser", user);
-            }
+            
             user.userDto =_chatService.GetUserByEmail(user.Email);
             return View("ChatAddUser",user);
         }
 
-        [HttpPost("chat/{id}/deleteUser/{userId}")]
-        public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int userId)
+        [HttpPost("chat/{id}-{senderId}/deleteUser/{userId}")]
+        public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int senderId, [FromRoute] int userId)
         {
             _chatService.DeleteUserById(userId, id);
-            return RedirectToAction("GetChats", "User", new { id = userId, pageNumber = 1 });
-
+            return RedirectToAction("GetUsersInChat", "Chat", new { chatId = id, userId = senderId, pageNumber = 1 });
         }
 
         [HttpPost("chat/{chatId}-{senderId}")]

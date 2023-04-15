@@ -11,6 +11,5 @@ namespace WebApi.ViewModels
         public int PageNumber { get; set; }
         public int UserId { get; set; }
         public string UserRole { get; set; }
-        public CreateTextMessageDTO? CreateTextMessage { get; set; }
     }
 }
