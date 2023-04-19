@@ -15,5 +15,7 @@ namespace DAL.Repositories.TextMessageRepository
         void DeleteTextMessage(TextMessage message);
         TextMessage? GetLastTextMessage(int chatid);
         TextMessage? GetById(int id);
+        void Save();
+        void Dispose();
     }
 }

@@ -40,5 +40,15 @@ namespace DAL.Repositories.TextMessageRepository
         {
             return _context.TextMessages.FirstOrDefault(t => t.Id == id);
         }
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
     }
 }

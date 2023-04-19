@@ -14,13 +14,10 @@ using DAL.Repositories.RoleRepository;
 namespace DAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
-    {
-        private readonly DbChattyBox _context;
-
-        public UnitOfWork(DbChattyBox context, IChatRepository chatRepository, IFileMessageRepository fileMessageRepository, 
+    { 
+        public UnitOfWork(IChatRepository chatRepository, IFileMessageRepository fileMessageRepository, 
             ITextMessageRepository textMessageRepository, IUserRepository userRepository, IRoleRepository roleRepository)
         {
-            _context = context;
             Chats = chatRepository;
             FileMessages = fileMessageRepository;
             TextMessages = textMessageRepository;
@@ -40,13 +37,20 @@ namespace DAL.UnitOfWork
 
         public void Dispose()
         {
-            _context.Dispose();
+            Chats.Dispose();
+            FileMessages.Dispose();
+            TextMessages.Dispose();
+            Users.Dispose();
+            Roles.Dispose();
         }
 
         public void Save()
         {
-            _context.SaveChanges();
+           Chats.Save();
+           FileMessages.Save();
+           TextMessages.Save();
+           Users.Save();
+           Roles.Save();
         }
-
     }
 }

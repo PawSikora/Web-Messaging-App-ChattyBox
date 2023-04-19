@@ -41,5 +41,16 @@ namespace DAL.Repositories.RoleRepository
         {
             return _context.Roles.Any(x => x.Name == name);
         }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
     }
 }

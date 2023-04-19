@@ -121,6 +121,17 @@ namespace DAL.Repositories.ChatRepository
                 .Skip((pageNumber - 1) * chatsPerPage)
                 .Take(chatsPerPage);
         }
+
+        public void Save()
+        {
+           _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+           _context.Dispose();
+        }
+
     }
 
 }

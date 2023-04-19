@@ -15,5 +15,7 @@ namespace DAL.Repositories.RoleRepository
         Role? GetByName(string name);
 
         bool RoleExists(string name);
+        void Save();
+        void Dispose();
     }
 }

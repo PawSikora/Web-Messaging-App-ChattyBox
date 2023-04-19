@@ -59,6 +59,7 @@ namespace BLL.Services.FileMessageService
             };
 
             _unitOfWork.FileMessages.CreateFileMessage(message);
+            chat.Updated = DateTime.Now;
             _unitOfWork.Save();
         }
 
@@ -69,9 +70,15 @@ namespace BLL.Services.FileMessageService
             if (file is null)
                 throw new NotFoundException("Nie znaleziono pliku");
 
+            var chat = _unitOfWork.Chats.GetById(file.ChatId);
+
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono czatu");
+
             string path = file.Path;
 
             _unitOfWork.FileMessages.DeleteFileMessage(file);
+            chat.Updated = DateTime.Now;
             _unitOfWork.Save();
 
             var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");

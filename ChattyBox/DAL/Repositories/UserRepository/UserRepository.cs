@@ -46,5 +46,16 @@ namespace DAL.Repositories.UserRepository
         {
             return _context.Users.Any(x => x.Email == email);
         }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
     }
 }

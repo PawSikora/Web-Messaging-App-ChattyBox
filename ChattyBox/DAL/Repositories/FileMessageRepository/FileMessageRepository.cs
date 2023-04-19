@@ -47,5 +47,15 @@ namespace DAL.Repositories.FileMessageRepository
                  .OrderByDescending(m => m.TimeStamp)
                  .FirstOrDefault();
         }
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
     }
 }

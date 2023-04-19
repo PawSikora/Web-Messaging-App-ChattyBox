@@ -35,17 +35,10 @@ namespace BLL.Services.TextMessageService
             if (chat is null)
                 throw new NotFoundException("Nie znaleziono czatu");
 
-            //TextMessage message = new TextMessage
-            //{
-            //    Content = dto.Content,
-            //    SenderId = dto.SenderId,
-            //    ChatId = dto.ChatId,
-            //    TimeStamp = DateTime.Now
-            //};
-
             var message = _mapper.Map<TextMessage>(dto);
 
             _unitOfWork.TextMessages.CreateTextMessage(message);
+            chat.Updated = DateTime.Now;
             _unitOfWork.Save();
         }
 
@@ -56,7 +49,13 @@ namespace BLL.Services.TextMessageService
             if (message is null)
                 throw new NotFoundException("Nie znaleziono wiadomosci");
 
+            var chat = _unitOfWork.Chats.GetById(message.ChatId);
+
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono czatu");
+
             _unitOfWork.TextMessages.DeleteTextMessage(message);
+            chat.Updated = DateTime.Now;
             _unitOfWork.Save();
         }
 

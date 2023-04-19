@@ -25,5 +25,7 @@ namespace DAL.Repositories.ChatRepository
         bool IsUserRole(int userId, int chatId, int roleId);
         Role? GetUserRole(int userId, int chatId);
         IEnumerable<Chat> GetChatsForUser(int userId, int pageNumber, int chatsPerPage);
+        void Save();
+        void Dispose();
     }
 }

@@ -86,7 +86,6 @@ namespace BLL.Services.UserService
                 throw new NotFoundException("Nie znaleziono uzytkownika");
             
             user.LastLog = DateTime.Now;
-
             _unitOfWork.Save();
 
             var userDTO = _mapper.Map<UserDTO>(user);

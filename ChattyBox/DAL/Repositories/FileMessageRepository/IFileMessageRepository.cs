@@ -14,5 +14,7 @@ namespace DAL.Repositories.FileMessageRepository
         FileMessage? GetLastFileMessage(int chatid);
         FileMessage? GetById(int chatid);
         bool IsFileNameTaken(string fileName);
+        void Save();
+        void Dispose();
     }
 }
