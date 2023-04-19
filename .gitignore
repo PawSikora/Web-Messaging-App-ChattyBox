@@ -401,3 +401,5 @@ FodyWeavers.xsd
 #Fleet
 .fleet/
 
+ChattyBox/WebApi/wwwroot/files/*
+!ChattyBox/WebApi/wwwroot/files/Chat1

@@ -30,18 +30,14 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult SendMessage(CreateFileMessageDTO fileMessage, CreateTextMessageDTO textMessage)
         {
-            if (textMessage.Content.IsEmpty() && fileMessage.File is not null)
-            {
-                fileMessage.Name = fileMessage.File.FileName;
-                _fileMessageService.CreateFileMessage(fileMessage);
-            }
-            else if (!textMessage.Content.IsEmpty() && fileMessage.File is null)
-            {
-               _textMessageService.CreateTextMessage(textMessage);
-            }
-            else
+            if (!textMessage.Content.IsEmpty())
             {
                 _textMessageService.CreateTextMessage(textMessage);
+            }
+
+            if (fileMessage.File is not null)
+            {
+                fileMessage.Name = fileMessage.File.FileName;
                 _fileMessageService.CreateFileMessage(fileMessage);
             }
 
