@@ -23,115 +23,108 @@ namespace UnitTests.BLL
 {
     public class UserServiceTest
     {
-        private FakeUserRepository userRepo;
-        private FakeChatRepository chatRepo;
-        private FakeTextMessageRepository textRepo;
-        private FakeFileMessageRepository fileRepo;
-        private FakeRoleRepository roleRepo;
-        private UnitOfWork unitOfWork;
-        private Mock<IMapper> mockMapper;
-
-        private Mock<IUserRepository> mockUserRepo;
-        private Mock<IChatRepository> mockChatRepo;
-        private Mock<ITextMessageRepository> mockTextRepo;
-        private Mock<IFileMessageRepository> mockFileRepo;
-        private Mock<IRoleRepository> mockRoleRepo;
-        private Mock<IUnitOfWork> mockUnitOfWork;
-        public UserServiceTest()
-        {
-            userRepo = new FakeUserRepository();
-            chatRepo = new FakeChatRepository();
-            textRepo = new FakeTextMessageRepository();
-            fileRepo = new FakeFileMessageRepository();
-            roleRepo = new FakeRoleRepository();
-            unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
-            mockMapper = new Mock<IMapper>();
-
-            mockUserRepo = new Mock<IUserRepository>();
-            mockChatRepo = new Mock<IChatRepository>();
-            mockTextRepo = new Mock<ITextMessageRepository>();
-            mockFileRepo = new Mock<IFileMessageRepository>();
-            mockRoleRepo = new Mock<IRoleRepository>();
-            mockUnitOfWork = new Mock<IUnitOfWork>();
-        }
+        private readonly FakeUserRepository _userRepo = new FakeUserRepository();
+        private readonly FakeChatRepository _chatRepo = new FakeChatRepository();
+        private readonly FakeTextMessageRepository _textRepo = new FakeTextMessageRepository();
+        private readonly FakeFileMessageRepository _fileRepo = new FakeFileMessageRepository();
+        private readonly FakeRoleRepository _roleRepo = new FakeRoleRepository();
+      
+        private readonly Mock<IUserRepository> _mockUserRepo = new Mock<IUserRepository>();
+        private readonly Mock<IChatRepository> _mockChatRepo = new Mock<IChatRepository>();
+        private readonly Mock<ITextMessageRepository> _mockTextRepo = new Mock<ITextMessageRepository>();
+        private readonly Mock<IFileMessageRepository> _mockFileRepo = new Mock<IFileMessageRepository>();
+        private readonly Mock<IRoleRepository> _mockRoleRepo = new Mock<IRoleRepository>();
+        private readonly Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+        private readonly Mock<IMapper> _mockMapper = new Mock<IMapper>();
 
         [Fact]
         public void GetUserChatsCountFake_ShouldReturnCount_WhenUserHasChats()
         {
-            var userService = new UserService(unitOfWork, mockMapper.Object);
+            // Arrange
+            var unitOfWork = new UnitOfWork(_chatRepo, _fileRepo, _textRepo, _userRepo, _roleRepo);
+            var userService = new UserService(unitOfWork, _mockMapper.Object);
 
-            var user = new User() { Id = 1, Email = "User1", UserChats = new List<UserChat>()};
-            var chat = new Chat() { Id = 1, Name = "Chat1" };
-            var chat2 = new Chat() { Id = 2, Name = "Chat2" };
+            var user = new User { Id = 1, Email = "User1", UserChats = new List<UserChat>()};
+            var chat = new Chat { Id = 1, Name = "Chat1" };
+            var chat2 = new Chat { Id = 2, Name = "Chat2" };
 
-            var userChat = new UserChat() { Chat = chat, User = user };
-            var userChat2 = new UserChat() { Chat = chat2, User = user };
+            var userChat = new UserChat { Chat = chat, User = user };
+            var userChat2 = new UserChat { Chat = chat2, User = user };
 
-            userRepo.CreateUser(user);
+            _userRepo.CreateUser(user);
             user.UserChats.Add(userChat);
             user.UserChats.Add(userChat2);
 
+            // Act
             var count = userService.GetUserChatsCount(user.Id);
 
+            // Assert
             Assert.Equal(2, count);
         }
 
         [Fact]
         public void GetUserFake_ShouldReturnUser_WhenUserExists()
         {
-            mockMapper.Setup(m => m.Map<UserDTO>(It.IsAny<User>()))
+            // Arrange
+            _mockMapper.Setup(m => m.Map<UserDTO>(It.IsAny<User>()))
                 .Returns<User>(u => new UserDTO { Id = u.Id, Email = u.Email });
 
-            var user = new User() { Id = 1, Email = "User1", UserChats = new List<UserChat>() };
-            var chat = new Chat() { Id = 1, Name = "Chat1" };
-            var userChat = new UserChat() { Chat = chat, User = user };
-            userRepo.CreateUser(user);
+            var user = new User { Id = 1, Email = "User1", UserChats = new List<UserChat>() };
+            var chat = new Chat { Id = 1, Name = "Chat1" };
+            var userChat = new UserChat { Chat = chat, User = user };
+            _userRepo.CreateUser(user);
             user.UserChats.Add(userChat);
 
-            var userService = new UserService(unitOfWork, mockMapper.Object);
+            var unitOfWork = new UnitOfWork(_chatRepo, _fileRepo, _textRepo, _userRepo, _roleRepo);
 
+            var userService = new UserService(unitOfWork, _mockMapper.Object);
+
+            // Act
             var userDto = userService.GetUser(1);
 
+            // Assert
             Assert.Equal("User1", userDto.Email);
         }
 
         [Fact]
         public void GetUserMoq_ShouldReturnUser_WhenUserExists()
         {
-            mockMapper.Setup(m => m.Map<UserDTO>(It.IsAny<User>()))
+            // Arrange
+            _mockMapper.Setup(m => m.Map<UserDTO>(It.IsAny<User>()))
                 .Returns<User>(u => new UserDTO { Id = u.Id, Email = u.Email });
-            mockUserRepo.Setup(repo => repo.GetById(1)).Returns(new User() { Id = 1, Email = "User1" });
+            _mockUserRepo.Setup(repo => repo.GetById(1)).Returns(new User { Id = 1, Email = "User1" });
 
-            var unitOfWork = new UnitOfWork(mockChatRepo.Object, mockFileRepo.Object, mockTextRepo.Object, mockUserRepo.Object, mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, mockMapper.Object);
+            var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object, _mockUserRepo.Object, _mockRoleRepo.Object);
+            var userService = new UserService(unitOfWork, _mockMapper.Object);
 
+            // Act + Assert
             Assert.Equal("User1", userService.GetUser(1).Email);
         }
 
         [Fact]
         public void GetUserChatsCountMoq_ShouldReturnCount_WhenUserHasChats()
         {
-            mockUserRepo.Setup(repo => repo.GetUserChatsCount(1)).Returns(2);
-            var unitOfWork = new UnitOfWork(mockChatRepo.Object, mockFileRepo.Object, mockTextRepo.Object, mockUserRepo.Object, mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, mockMapper.Object);
+            // Arrange
+            _mockUserRepo.Setup(repo => repo.GetUserChatsCount(1)).Returns(2);
+            var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object, _mockUserRepo.Object, _mockRoleRepo.Object);
+            var userService = new UserService(unitOfWork, _mockMapper.Object);
 
+            // Act + Assert
             Assert.Equal(2, userService.GetUserChatsCount(1));
-
         }
 
 
         [Fact]
         public void TGetUser_ShouldReturnUserDTOWithChatsCount_WhenUserExists()
         {
-            var _userService = new UserService(mockUnitOfWork.Object, mockMapper.Object);
-
             // Arrange
+            var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
             var user = new User { Id = 1, Username = "Test User" };
             var userDTO = new UserDTO { Id = 1, Username = "Test User", ChatsCount = 2 };
 
-            mockUnitOfWork.Setup(uow => uow.Users.GetById(user.Id)).Returns(user);
-            mockUnitOfWork.Setup(uow => uow.Users.GetUserChatsCount(user.Id)).Returns(2);
-            mockMapper.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
+            _mockUnitOfWork.Setup(uow => uow.Users.GetById(user.Id)).Returns(user);
+            _mockUnitOfWork.Setup(uow => uow.Users.GetUserChatsCount(user.Id)).Returns(2);
+            _mockMapper.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
 
             // Act
             var result = _userService.GetUser(user.Id);
@@ -141,25 +134,25 @@ namespace UnitTests.BLL
             Assert.Equal(userDTO.Username, result.Username);
             Assert.Equal(userDTO.ChatsCount, result.ChatsCount);
 
-            mockUnitOfWork.Verify(uow => uow.Users.GetById(user.Id), Times.Once);
-            mockUnitOfWork.Verify(uow => uow.Users.GetUserChatsCount(user.Id), Times.Once);
+            _mockUnitOfWork.Verify(uow => uow.Users.GetById(user.Id), Times.Once);
+            _mockUnitOfWork.Verify(uow => uow.Users.GetUserChatsCount(user.Id), Times.Once);
         }
 
         [Fact]
         public void TestGetUser_ShouldThrowNotFoundException_WhenUserDoesNotExist_()
         {
-            var _userService = new UserService(mockUnitOfWork.Object, mockMapper.Object);
-
             // Arrange
+            var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
+
             var userId = 1;
 
-            mockUnitOfWork.Setup(uow => uow.Users.GetById(userId)).Returns((User)null);
+            _mockUnitOfWork.Setup(uow => uow.Users.GetById(userId)).Returns((User)null);
 
             // Act + Assert
             Assert.Throws<NotFoundException>(() => _userService.GetUser(userId));
 
-            mockUnitOfWork.Verify(uow => uow.Users.GetById(userId), Times.Once);
-            mockUnitOfWork.Verify(uow => uow.Users.GetUserChatsCount(userId), Times.Never);
+            _mockUnitOfWork.Verify(uow => uow.Users.GetById(userId), Times.Once);
+            _mockUnitOfWork.Verify(uow => uow.Users.GetUserChatsCount(userId), Times.Never);
         }
 
     }
