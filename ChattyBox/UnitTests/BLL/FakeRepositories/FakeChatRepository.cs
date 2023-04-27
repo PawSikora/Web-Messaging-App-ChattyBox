@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Database.Entities;
 using DAL.Repositories.ChatRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace UnitTests.BLL.FakeRepositories
 {
@@ -29,23 +30,36 @@ namespace UnitTests.BLL.FakeRepositories
 
         public IEnumerable<UserChat>? GetChatUsersById(int chatId)
         {
-           // return _chats.SingleOrDefault(c => c.Id == chatId)?.UserChats;
-           throw new NotImplementedException();
+            return _userChats.Where(c=>c.ChatId==chatId);
+
         }
 
         public void RemoveUsersFromChat(IEnumerable<UserChat> chatUsers)
         {
-            throw new NotImplementedException();
+
+            foreach (var userChat in chatUsers)
+            {
+                var userChatToRemove = _userChats.FirstOrDefault(x => x.UserId == userChat.UserId && x.ChatId == userChat.ChatId);
+                if (userChatToRemove != null)
+                {
+                    _userChats.Remove(userChatToRemove);
+                }
+            }
         }
 
         public IEnumerable<User>? GetUsersInChat(int chatId)
         {
-            throw new NotImplementedException();
+            var users = _chats
+                .Where(c => c.Id == chatId)
+                .SelectMany(c => c.UserChats)
+                .Select(uc => uc.User).ToList();
+
+            return users;
         }
 
         public UserChat? GetUserChatById(int userId, int chatId)
         {
-            throw new NotImplementedException();
+            return _userChats.FirstOrDefault(uc => uc.UserId == userId && uc.ChatId == chatId);
         }
 
         public void AddUserToChat(UserChat userChat)
@@ -63,10 +77,14 @@ namespace UnitTests.BLL.FakeRepositories
             _chats.Add(chat);
             _userChats.Add(userChat);
         }
+        public void CreateChat(Chat chat)
+        {
+            _chats.Add(chat);
+        }
 
         public void DeleteChat(Chat chat)
         {
-            throw new NotImplementedException();
+            _chats.Remove(chat);
         }
 
         public Chat? GetChat(int id, int pageNumber, int messagesPerPage)
@@ -76,17 +94,22 @@ namespace UnitTests.BLL.FakeRepositories
 
         public int GetChatMessagesCount(int chatId)
         {
-            throw new NotImplementedException();
+            return _chats.Where(c => c.Id == chatId)
+                .SelectMany(c => c.Messages).Count();
         }
 
         public bool IsUserRole(int userId, int chatId, int roleId)
         {
-            throw new NotImplementedException();
+            return _userChats.Any(uc => uc.UserId == userId && uc.ChatId == chatId && uc.RoleId == roleId);
+
         }
 
         public Role? GetUserRole(int userId, int chatId)
         {
-            throw new NotImplementedException();
+            return _userChats
+                .Where(uc => uc.UserId == userId && uc.ChatId == chatId)
+                .Select(uc => uc.Role)
+                .FirstOrDefault();
         }
 
         public IEnumerable<Chat> GetChatsForUser(int userId, int pageNumber, int chatsPerPage)
@@ -96,12 +119,14 @@ namespace UnitTests.BLL.FakeRepositories
 
         public void Save()
         {
-            throw new NotImplementedException();
+            // Do nothing.
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // Do nothing.
         }
+
+
     }
 }

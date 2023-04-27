@@ -45,12 +45,12 @@ namespace UnitTests.BLL.FakeRepositories
 
         public void Save()
         {
-            throw new NotImplementedException();
+            //notImplemented
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //notImplemented
         }
     }
 }

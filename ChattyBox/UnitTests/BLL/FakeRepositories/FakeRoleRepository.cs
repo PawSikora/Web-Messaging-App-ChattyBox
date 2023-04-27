@@ -5,14 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using DAL.Database.Entities;
 using DAL.Repositories.RoleRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace UnitTests.BLL.FakeRepositories
 {
     public class FakeRoleRepository : IRoleRepository
     {
+        private List<Role> _roles = new List<Role>();
         public void CreateRole(Role role)
         {
-            throw new NotImplementedException();
+            _roles.Add(role);
         }
 
         public void DeleteRole(Role role)
@@ -22,12 +24,12 @@ namespace UnitTests.BLL.FakeRepositories
 
         public Role? GetById(int id)
         {
-            throw new NotImplementedException();
+            return _roles.FirstOrDefault(x => x.Id == id);
         }
 
         public Role? GetByName(string name)
         {
-            throw new NotImplementedException();
+            return _roles.FirstOrDefault(x => x.Name == name);
         }
 
         public bool RoleExists(string name)
@@ -37,12 +39,12 @@ namespace UnitTests.BLL.FakeRepositories
 
         public void Save()
         {
-            throw new NotImplementedException();
+            //notImplemented
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //notImplemented
         }
     }
 }

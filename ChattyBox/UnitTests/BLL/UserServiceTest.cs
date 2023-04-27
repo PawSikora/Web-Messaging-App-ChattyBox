@@ -23,11 +23,7 @@ namespace UnitTests.BLL
 {
     public class UserServiceTest
     {
-        private readonly FakeUserRepository _userRepo = new FakeUserRepository();
-        private readonly FakeChatRepository _chatRepo = new FakeChatRepository();
-        private readonly FakeTextMessageRepository _textRepo = new FakeTextMessageRepository();
-        private readonly FakeFileMessageRepository _fileRepo = new FakeFileMessageRepository();
-        private readonly FakeRoleRepository _roleRepo = new FakeRoleRepository();
+
       
         private readonly Mock<IUserRepository> _mockUserRepo = new Mock<IUserRepository>();
         private readonly Mock<IChatRepository> _mockChatRepo = new Mock<IChatRepository>();
@@ -40,8 +36,14 @@ namespace UnitTests.BLL
         [Fact]
         public void GetUserChatsCountFake_ShouldReturnCount_WhenUserHasChats()
         {
-            // Arrange
-            var unitOfWork = new UnitOfWork(_chatRepo, _fileRepo, _textRepo, _userRepo, _roleRepo);
+            // Arrang
+        FakeUserRepository userRepo = new FakeUserRepository();
+        FakeChatRepository chatRepo = new FakeChatRepository(); 
+        FakeTextMessageRepository textRepo = new FakeTextMessageRepository(); 
+        FakeFileMessageRepository fileRepo = new FakeFileMessageRepository();
+        FakeRoleRepository roleRepo = new FakeRoleRepository();
+        
+        var unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
             var userService = new UserService(unitOfWork, _mockMapper.Object);
 
             var user = new User { Id = 1, Email = "User1", UserChats = new List<UserChat>()};
@@ -51,7 +53,7 @@ namespace UnitTests.BLL
             var userChat = new UserChat { Chat = chat, User = user };
             var userChat2 = new UserChat { Chat = chat2, User = user };
 
-            _userRepo.CreateUser(user);
+            userRepo.CreateUser(user);
             user.UserChats.Add(userChat);
             user.UserChats.Add(userChat2);
 
@@ -66,16 +68,22 @@ namespace UnitTests.BLL
         public void GetUserFake_ShouldReturnUser_WhenUserExists()
         {
             // Arrange
+            FakeUserRepository userRepo = new FakeUserRepository();
+            FakeChatRepository chatRepo = new FakeChatRepository();
+            FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
+            FakeFileMessageRepository fileRepo = new FakeFileMessageRepository();
+            FakeRoleRepository roleRepo = new FakeRoleRepository();
+           
             _mockMapper.Setup(m => m.Map<UserDTO>(It.IsAny<User>()))
                 .Returns<User>(u => new UserDTO { Id = u.Id, Email = u.Email });
 
             var user = new User { Id = 1, Email = "User1", UserChats = new List<UserChat>() };
             var chat = new Chat { Id = 1, Name = "Chat1" };
             var userChat = new UserChat { Chat = chat, User = user };
-            _userRepo.CreateUser(user);
+            userRepo.CreateUser(user);
             user.UserChats.Add(userChat);
 
-            var unitOfWork = new UnitOfWork(_chatRepo, _fileRepo, _textRepo, _userRepo, _roleRepo);
+            var unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
 
             var userService = new UserService(unitOfWork, _mockMapper.Object);
 
