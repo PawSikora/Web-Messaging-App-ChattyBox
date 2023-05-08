@@ -24,7 +24,6 @@ namespace UnitTests.BLL
     public class UserServiceTest
     {
 
-      
         private readonly Mock<IUserRepository> _mockUserRepo = new Mock<IUserRepository>();
         private readonly Mock<IChatRepository> _mockChatRepo = new Mock<IChatRepository>();
         private readonly Mock<ITextMessageRepository> _mockTextRepo = new Mock<ITextMessageRepository>();
