@@ -27,7 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
-    <ProjectReference Include="..\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\MVCWebApp\MVCWebApp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
