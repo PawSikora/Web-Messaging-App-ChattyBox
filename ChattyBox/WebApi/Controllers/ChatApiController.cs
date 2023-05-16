@@ -27,24 +27,6 @@ namespace WebApi.Controllers
             _textMessageService = textMessageService;
         }
 
-        [HttpPost]
-        public ActionResult SendMessage(CreateFileMessageDTO fileMessage, CreateTextMessageDTO textMessage)
-        {
-            if (!textMessage.Content.IsEmpty())
-            {
-                _textMessageService.CreateTextMessage(textMessage);
-                return Ok();
-            }
-
-            if (fileMessage.File is not null)
-            {
-                fileMessage.Name = fileMessage.File.FileName;
-                _fileMessageService.CreateFileMessage(fileMessage);
-                return Ok();
-            }
-
-            return BadRequest("Błąd wysyłania wiadomości!");
-        }
 
         [HttpGet("{userId}/{chatId}/{pageNumber}")]
         public ActionResult<GetChatDTO> Get(int userId, int chatId, int pageNumber)
@@ -56,7 +38,7 @@ namespace WebApi.Controllers
                 AllMessages = chat.AllMessages, 
                 ChatId = chat.ChatId, 
                 Name = chat.Name,
-                Users = _chatService.GetUsersInChat(chatId)
+                Users = (ICollection<UserDTO>)_chatService.GetUsersInChat(chatId) 
             };
             return Ok(chatDto);
         }

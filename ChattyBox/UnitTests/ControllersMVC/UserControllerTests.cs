@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnitTests.BLL.MockServices;
 using WebApi.Controllers;
 using WebApi.ViewModels;
 
@@ -21,10 +22,10 @@ namespace UnitTests.ControllersMVC
         public void GetUser_ReturnsUserView()
         {
             // Arrange
-            var controller = new UserController(_mockUserService.Object);
+            var userBllMock= new UserServiceBllMock();
+            var controller = new UserController(userBllMock);
             var userId = 1;
-            var userDto = new UserDTO { Id = userId, Username = "TestUser" };
-            _mockUserService.Setup(service => service.GetUser(userId)).Returns(userDto);
+            var userDto = new UserDTO { Id = userId, Username = "Mock1" };
 
             // Act
             var result = controller.Get(userId);
@@ -36,7 +37,6 @@ namespace UnitTests.ControllersMVC
             Assert.Equal(userDto.Id, model.Id);
             Assert.Equal(userDto.Username, model.Username);
 
-            _mockUserService.Verify(service => service.GetUser(userId), Times.Once);
         }
 
         [Fact]

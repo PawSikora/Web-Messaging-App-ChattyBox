@@ -13,6 +13,7 @@ using DAL.Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using UnitTests.BLL.MockServices;
 using WebApi.Controllers;
 using WebApi.ViewModels;
 
@@ -20,26 +21,7 @@ namespace UnitTests.ControllersWebApi
 {
     public class ChatApiControllerTests
     {
-        [Fact]
-        public void SendMessage_WithTextMessage_ReturnsOkResult()
-        {
-            // Arrange
-            var textMessage = new CreateTextMessageDTO { Content = "Hello, world!" };
-
-            var mockChatService = new Mock<IChatService>();
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            mockTextMessageService.Setup(s => s.CreateTextMessage(textMessage));
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
-
-            // Act
-            var result = controller.SendMessage(null, textMessage);
-
-            // Assert
-            Assert.IsType<OkResult>(result);
-            mockTextMessageService.Verify(tm => tm.CreateTextMessage(textMessage), Times.Once);
-        }
-
+ 
         [Fact]
         public void Get_ReturnsOkResultWithGetChatDTO()
         {
@@ -134,15 +116,11 @@ namespace UnitTests.ControllersWebApi
         public void FindUser_ReturnsOkResultWithUser()
         {
             // Arrange
-            var expectedUser = new UserDTO { Id = 1, Username = "Test User", Email = "testUser@mail.com" };
-            var user = new AddUserToChatTest { Email = "testUser@mail.com" };
+            var expectedUser = new UserDTO { Id = 1, Username = "Mock1", Email = "testUser@mail1.com" };
+            var user = new AddUserToChatTest { Email = "testUser@mail1.com" };
+            var mockChatService = new ChatServiceMock();
 
-            var mockChatService = new Mock<IChatService>();
-            mockChatService.Setup(c => c.GetUserByEmail(It.IsAny<string>()))
-                .Returns(expectedUser);
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
+            var controller = new ChatApiController(mockChatService, null, null);
 
             // Act
             var result = controller.FindUser(user);
@@ -153,7 +131,6 @@ namespace UnitTests.ControllersWebApi
             Assert.Equal(expectedUser.Id, foundUser.Id);
             Assert.Equal(expectedUser.Username, foundUser.Username);
             Assert.Equal(expectedUser.Email, foundUser.Email);
-            mockChatService.Verify(service => service.GetUserByEmail(user.Email), Times.Once);
         }
 
         [Fact]
