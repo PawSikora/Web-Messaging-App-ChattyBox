@@ -33,6 +33,9 @@ namespace WebApi.Controllers
         {
             var messagesPerPage = 5;
             var chat = _chatService.GetChat(chatId, pageNumber, messagesPerPage);
+            if(chat is null)
+                return NotFound();
+
             var chatDto = new GetChatDTO()
             {
                 AllMessages = chat.AllMessages, 
@@ -50,6 +53,7 @@ namespace WebApi.Controllers
             {
                 return BadRequest("Błąd tworzenia chatu!");
             }
+
             _chatService.CreateChat(chat);
             return Ok();
         }
@@ -64,12 +68,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public ActionResult<UserDTO> FindUser(AddUserToChatTest user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var foundUser = _chatService.GetUserByEmail(user.Email);
+            if (foundUser is null)
+                return NotFound();
             return Ok(foundUser);
         }
 
@@ -92,6 +93,8 @@ namespace WebApi.Controllers
         {
             var usersPerPage = 5;
             var users = _chatService.GetUsersInChat(chatId);
+            if (users is null)
+                return NotFound();
 
             return Ok(users);
         }

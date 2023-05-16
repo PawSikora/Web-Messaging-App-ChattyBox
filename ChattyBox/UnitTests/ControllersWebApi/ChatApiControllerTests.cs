@@ -33,9 +33,9 @@ namespace UnitTests.ControllersWebApi
 
             var chatMessages = new List<MessageDTO>
             {
-                new TextMessageDTO() { Id = 1, Content = "Message 1" },
-                new TextMessageDTO() { Id = 2, Content = "Message 2" },
-                new TextMessageDTO() { Id = 3, Content = "Message 3" }
+                new TextMessageDTO { Id = 1, Content = "Message 1" },
+                new TextMessageDTO { Id = 2, Content = "Message 2" },
+                new TextMessageDTO { Id = 3, Content = "Message 3" }
             };
             var chat = new GetChatDTO
             {
