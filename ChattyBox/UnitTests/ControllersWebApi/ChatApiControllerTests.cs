@@ -44,12 +44,11 @@ namespace UnitTests.ControllersWebApi
             };
 
             var mockChatService = new Mock<IChatService>();
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
+           
             mockChatService.Setup(s => s.GetChat(chatId, pageNumber, messagesPerPage))
                 .Returns(chat);
            
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
+            var controller = new ChatApiController(mockChatService.Object);
 
             // Act
             var result = controller.Get(chatId, pageNumber);
@@ -68,10 +67,8 @@ namespace UnitTests.ControllersWebApi
         {
             // Arrange
             var mockChatService = new Mock<IChatService>();
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object,
-                               mockTextMessageService.Object);
+         
+            var controller = new ChatApiController(mockChatService.Object);
             var chat = new CreateChatDTO
             {
                 Name = "TestChat"
@@ -91,9 +88,8 @@ namespace UnitTests.ControllersWebApi
         {
             // Arrange
             var mockChatService = new Mock<IChatService>();
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
+          
+            var controller = new ChatApiController(mockChatService.Object);
             var chatId = 1;
             var userId = 1;
             var user = new User { Id = userId, Username = "Test user" };
@@ -112,13 +108,13 @@ namespace UnitTests.ControllersWebApi
         {
             // Arrange
             var expectedUser = new UserDTO { Id = 1, Username = "Mock1", Email = "testUser@mail1.com" };
-            var user = new AddUserToChatTest { Email = "testUser@mail1.com" };
+       
             var mockChatService = new ChatServiceMock();
 
-            var controller = new ChatApiController(mockChatService, null, null);
+            var controller = new ChatApiController(mockChatService);
 
             // Act
-            var result = controller.FindUser(user);
+            var result = controller.FindUser(expectedUser);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -133,16 +129,14 @@ namespace UnitTests.ControllersWebApi
         {
             // Arrange
             int id = 1;
-            int senderId = 2;
             int userId = 3;
 
             var mockChatService = new Mock<IChatService>();
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
+            
+            var controller = new ChatApiController(mockChatService.Object);
 
             // Act
-            var result = controller.DeleteUser(id, senderId, userId);
+            var result = controller.DeleteUser(id,userId);
 
             // Assert
             var okResult = Assert.IsType<OkResult>(result);
@@ -154,15 +148,13 @@ namespace UnitTests.ControllersWebApi
         {
             // Arrange
             int chatId = 1;
-            int senderId = 1;
 
             var mockChatService = new Mock<IChatService>();
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
+          
+            var controller = new ChatApiController(mockChatService.Object);
 
             // Act
-            var result = controller.DeleteChat(chatId, senderId);
+            var result = controller.DeleteChat(chatId);
 
             // Assert
             var okResult = Assert.IsType<OkResult>(result);
@@ -174,8 +166,7 @@ namespace UnitTests.ControllersWebApi
         {
             // Arrange
             int chatId = 1;
-            int userId = 2;
-            int pageNumber = 1;
+           
             var expectedUsers = new List<UserDTO>
             {
                 new UserDTO { Id = 1, Username = "User1" },
@@ -186,12 +177,11 @@ namespace UnitTests.ControllersWebApi
             var mockChatService = new Mock<IChatService>();
             mockChatService.Setup(c => c.GetUsersInChat(chatId))
                 .Returns(expectedUsers);
-            var mockFileMessageService = new Mock<IFileMessageService>();
-            var mockTextMessageService = new Mock<ITextMessageService>();
-            var controller = new ChatApiController(mockChatService.Object, mockFileMessageService.Object, mockTextMessageService.Object);
+          
+            var controller = new ChatApiController(mockChatService.Object);
 
             // Act
-            var result = controller.GetUsersInChat(chatId, userId, pageNumber);
+            var result = controller.GetUsersInChat(chatId);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);

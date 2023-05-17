@@ -5,6 +5,7 @@ using WebApi.ViewModels;
 using BLL.DataTransferObjects.MessageDtos;
 using BLL.Services.FileMessageService;
 using BLL.Services.TextMessageService;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebApi.Controllers
 {
@@ -24,7 +25,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult SendMessage(CreateFileMessageDTO fileMessage, CreateTextMessageDTO textMessage)
         {
-            if (!string.IsNullOrEmpty(textMessage.Content))
+            if (!textMessage.Content.IsNullOrEmpty())
             {
                 _textMessageService.CreateTextMessage(textMessage);
             }
