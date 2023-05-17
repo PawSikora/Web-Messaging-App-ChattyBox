@@ -1,14 +1,8 @@
 ﻿using BLL.DataTransferObjects.ChatDtos;
-using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.ChatService;
-using DAL.Database.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using Microsoft.AspNetCore.Authorization;
 using WebApi.ViewModels;
 using BLL.DataTransferObjects.MessageDtos;
-using System.Web.WebPages;
 using BLL.Services.FileMessageService;
 using BLL.Services.TextMessageService;
 
@@ -30,7 +24,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult SendMessage(CreateFileMessageDTO fileMessage, CreateTextMessageDTO textMessage)
         {
-            if (!textMessage.Content.IsEmpty())
+            if (!string.IsNullOrEmpty(textMessage.Content))
             {
                 _textMessageService.CreateTextMessage(textMessage);
             }
