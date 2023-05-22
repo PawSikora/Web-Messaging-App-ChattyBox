@@ -1,6 +1,5 @@
 ﻿using BLL.DataTransferObjects.MessageDtos;
 using BLL.DataTransferObjects.UserDtos;
-using DAL.Database.Entities;
 using System.ComponentModel.DataAnnotations;
 
 

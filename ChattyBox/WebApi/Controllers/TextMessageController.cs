@@ -7,11 +7,11 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TextMessageApiController : ControllerBase
+    public class TextMessageController : ControllerBase
     {
         private readonly ITextMessageService _textMessageService;
 
-        public TextMessageApiController(ITextMessageService textMessageService)
+        public TextMessageController(ITextMessageService textMessageService)
         {
             _textMessageService = textMessageService;
         }

@@ -9,17 +9,11 @@ using DAL.Repositories.FileMessageRepository;
 using DAL.Repositories.TextMessageRepository;
 using DAL.Repositories.UserRepository;
 using DAL.UnitOfWork;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using System.Text;
 using BLL.Services.RoleService;
-using DAL.Database.Entities;
 using DAL.Repositories.RoleRepository;
-using WebApi.Middleware;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
-using WebApi;
+using MVCWebApp.Middleware;
+using MVCWebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 

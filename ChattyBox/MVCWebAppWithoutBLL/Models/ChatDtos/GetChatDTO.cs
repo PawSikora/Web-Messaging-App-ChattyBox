@@ -1,9 +1,8 @@
-﻿using DAL.Database.Entities;
-using System.ComponentModel.DataAnnotations;
-using WebApiWithoutBLL.Models.MessagesDtos;
-using WebApiWithoutBLL.Models.UserDtos;
+﻿using System.ComponentModel.DataAnnotations;
+using MVCWebAppWithoutBLL.Models.MessagesDtos;
+using MVCWebAppWithoutBLL.Models.UserDtos;
 
-namespace WebApiWithoutBLL.Models.ChatDtos
+namespace MVCWebAppWithoutBLL.Models.ChatDtos
 {
     public class GetChatDTO
     {

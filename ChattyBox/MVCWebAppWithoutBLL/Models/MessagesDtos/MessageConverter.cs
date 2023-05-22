@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualBasic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace WebApiWithoutBLL.Models.MessagesDtos
+namespace MVCWebAppWithoutBLL.Models.MessagesDtos
 {
     public class MessageConverter : JsonConverter<MessageDTO>
     {

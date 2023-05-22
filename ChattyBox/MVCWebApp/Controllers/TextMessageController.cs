@@ -1,10 +1,9 @@
 ﻿using BLL.DataTransferObjects.MessageDtos;
 using BLL.Services.TextMessageService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.ViewModels;
+using MVCWebApp.ViewModels;
 
-namespace WebApi.Controllers
+namespace MVCWebApp.Controllers
 {
     public class TextMessageController : Controller
     {

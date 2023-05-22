@@ -3,12 +3,8 @@ using BLL.DataTransferObjects.UserDtos;
 using BLL.Exceptions;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services.UserService
 {
@@ -81,10 +77,7 @@ namespace BLL.Services.UserService
 
             if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
                 throw new LoginFailedException("Niepoprawny login lub hasło");
-
-            if (user is null)
-                throw new NotFoundException("Nie znaleziono uzytkownika");
-            
+  
             user.LastLog = DateTime.Now;
             _unitOfWork.Save();
 

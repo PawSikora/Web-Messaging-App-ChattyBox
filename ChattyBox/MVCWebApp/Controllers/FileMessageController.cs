@@ -1,10 +1,8 @@
 ﻿using BLL.DataTransferObjects.MessageDtos;
 using BLL.Services.FileMessageService;
-using DAL.Database.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace MVCWebApp.Controllers
 {
     public class FileMessageController : Controller
     {

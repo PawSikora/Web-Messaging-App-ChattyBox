@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using DAL.Database.Entities;
-using WebApiWithoutBLL.Models.ChatDtos;
-using WebApiWithoutBLL.Models.MessagesDtos;
-using WebApiWithoutBLL.Models.UserDtos;
+using MVCWebAppWithoutBLL.Models.ChatDtos;
+using MVCWebAppWithoutBLL.Models.MessagesDtos;
+using MVCWebAppWithoutBLL.Models.UserDtos;
 
-namespace WebApiWithoutBLL.Models
+namespace MVCWebAppWithoutBLL.Models
 {
     public class AutoMapperProfile : Profile
     {

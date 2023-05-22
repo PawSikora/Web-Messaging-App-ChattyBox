@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Database.Entities;
+﻿using DAL.Database.Entities;
 using DAL.Repositories.ChatRepository;
 
 namespace UnitTests.DAL.DummyRepositories

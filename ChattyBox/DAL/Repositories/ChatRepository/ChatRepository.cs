@@ -1,14 +1,6 @@
 ﻿using DAL.Database;
 using DAL.Database.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Runtime.CompilerServices;
 
 namespace DAL.Repositories.ChatRepository
 {

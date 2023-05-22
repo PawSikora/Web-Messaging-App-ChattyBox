@@ -1,7 +1,6 @@
-﻿
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace WebApiWithoutBLL.Models.MessagesDtos
+namespace MVCWebAppWithoutBLL.Models.MessagesDtos
 {
     [JsonConverter(typeof(MessageConverter))]
     public abstract class MessageDTO

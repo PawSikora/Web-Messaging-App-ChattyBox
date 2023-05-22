@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BLL.DataTransferObjects.ChatDtos;
+﻿using BLL.DataTransferObjects.ChatDtos;
 using BLL.DataTransferObjects.MessageDtos;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.ChatService;
-using BLL.Services.FileMessageService;
-using BLL.Services.TextMessageService;
 using DAL.Database.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using UnitTests.BLL.MockServices;
 using WebApi.Controllers;
-using WebApi.ViewModels;
 
 namespace UnitTests.ControllersWebApi
 {
@@ -48,7 +39,7 @@ namespace UnitTests.ControllersWebApi
             mockChatService.Setup(s => s.GetChat(chatId, pageNumber, messagesPerPage))
                 .Returns(chat);
            
-            var controller = new ChatApiController(mockChatService.Object);
+            var controller = new ChatController(mockChatService.Object);
 
             // Act
             var result = controller.Get(chatId, pageNumber);
@@ -68,7 +59,7 @@ namespace UnitTests.ControllersWebApi
             // Arrange
             var mockChatService = new Mock<IChatService>();
          
-            var controller = new ChatApiController(mockChatService.Object);
+            var controller = new ChatController(mockChatService.Object);
             var chat = new CreateChatDTO
             {
                 Name = "TestChat"
@@ -89,7 +80,7 @@ namespace UnitTests.ControllersWebApi
             // Arrange
             var mockChatService = new Mock<IChatService>();
           
-            var controller = new ChatApiController(mockChatService.Object);
+            var controller = new ChatController(mockChatService.Object);
             var chatId = 1;
             var userId = 1;
             var user = new User { Id = userId, Username = "Test user" };
@@ -111,7 +102,7 @@ namespace UnitTests.ControllersWebApi
        
             var mockChatService = new ChatServiceMock();
 
-            var controller = new ChatApiController(mockChatService);
+            var controller = new ChatController(mockChatService);
 
             // Act
             var result = controller.FindUser(expectedUser);
@@ -133,7 +124,7 @@ namespace UnitTests.ControllersWebApi
 
             var mockChatService = new Mock<IChatService>();
             
-            var controller = new ChatApiController(mockChatService.Object);
+            var controller = new ChatController(mockChatService.Object);
 
             // Act
             var result = controller.DeleteUser(id,userId);
@@ -151,7 +142,7 @@ namespace UnitTests.ControllersWebApi
 
             var mockChatService = new Mock<IChatService>();
           
-            var controller = new ChatApiController(mockChatService.Object);
+            var controller = new ChatController(mockChatService.Object);
 
             // Act
             var result = controller.DeleteChat(chatId);
@@ -178,7 +169,7 @@ namespace UnitTests.ControllersWebApi
             mockChatService.Setup(c => c.GetUsersInChat(chatId))
                 .Returns(expectedUsers);
           
-            var controller = new ChatApiController(mockChatService.Object);
+            var controller = new ChatController(mockChatService.Object);
 
             // Act
             var result = controller.GetUsersInChat(chatId);

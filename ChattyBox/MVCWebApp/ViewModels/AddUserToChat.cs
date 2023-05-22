@@ -1,6 +1,6 @@
 ﻿using BLL.DataTransferObjects.UserDtos;
 
-namespace WebApi.ViewModels
+namespace MVCWebApp.ViewModels
 {
     public class AddUserToChat
     {

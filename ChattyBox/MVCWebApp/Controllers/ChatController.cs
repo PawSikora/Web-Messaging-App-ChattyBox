@@ -1,13 +1,14 @@
 ﻿using BLL.DataTransferObjects.ChatDtos;
 using BLL.Services.ChatService;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.ViewModels;
+using MVCWebApp.ViewModels;
 using BLL.DataTransferObjects.MessageDtos;
 using BLL.Services.FileMessageService;
 using BLL.Services.TextMessageService;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebApi.Controllers
+
+namespace MVCWebApp.Controllers
 {
     public class ChatController : Controller
     {

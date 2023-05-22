@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApiWithoutBLL.Exceptions;
-using WebApiWithoutBLL.Models.MessagesDtos;
+using MVCWebAppWithoutBLL.Exceptions;
+using MVCWebAppWithoutBLL.Models.MessagesDtos;
 
-namespace WebApiWithoutBLL.Controllers
+namespace MVCWebAppWithoutBLL.Controllers
 {
     public class FileMessageController : Controller
     {

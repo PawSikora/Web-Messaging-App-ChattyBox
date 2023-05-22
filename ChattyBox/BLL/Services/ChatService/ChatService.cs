@@ -4,12 +4,6 @@ using BLL.DataTransferObjects.UserDtos;
 using BLL.Exceptions;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services.ChatService
 {

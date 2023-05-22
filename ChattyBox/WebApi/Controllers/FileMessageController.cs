@@ -7,11 +7,11 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FileMessageApiController : ControllerBase
+    public class FileMessageController : ControllerBase
     {
         private readonly IFileMessageService _fileMessageService;
 
-        public FileMessageApiController(IFileMessageService fileMessageService)
+        public FileMessageController(IFileMessageService fileMessageService)
         {
             _fileMessageService = fileMessageService;
         }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiWithoutBLL.Models.UserDtos
+namespace MVCWebAppWithoutBLL.Models.UserDtos
 {
     public class CreateUserDTO
     {

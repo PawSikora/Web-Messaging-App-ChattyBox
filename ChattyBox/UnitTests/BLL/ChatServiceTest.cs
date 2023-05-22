@@ -6,16 +6,10 @@ using DAL.Repositories.TextMessageRepository;
 using DAL.Repositories.UserRepository;
 using DAL.UnitOfWork;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnitTests.BLL.FakeRepositories;
 using BLL.DataTransferObjects.ChatDtos;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.ChatService;
-using BLL.Services.UserService;
 using DAL.Database.Entities;
 
 namespace UnitTests.BLL

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using BLL.DataTransferObjects.ChatDtos;
-using BLL.DataTransferObjects.MessageDtos;
+﻿using AutoMapper;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Exceptions;
 using BLL.Services.UserService;

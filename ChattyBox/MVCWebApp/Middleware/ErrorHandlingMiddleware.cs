@@ -1,7 +1,6 @@
-﻿using Azure;
-using BLL.Exceptions;
+﻿using BLL.Exceptions;
 
-namespace WebApi.Middleware
+namespace MVCWebApp.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {

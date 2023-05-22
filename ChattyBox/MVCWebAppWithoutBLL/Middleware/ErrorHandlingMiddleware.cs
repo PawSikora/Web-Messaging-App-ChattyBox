@@ -1,6 +1,6 @@
-﻿using WebApiWithoutBLL.Exceptions;
+﻿using MVCWebAppWithoutBLL.Exceptions;
 
-namespace WebApiWithouBLL.Middleware
+namespace MVCWebAppWithoutBLL.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {

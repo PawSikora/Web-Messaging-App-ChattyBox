@@ -5,8 +5,8 @@ using DAL.Repositories.TextMessageRepository;
 using DAL.Repositories.UserRepository;
 using DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using WebApiWithouBLL.Middleware;
-using WebApiWithoutBLL.Models;
+using MVCWebAppWithoutBLL.Middleware;
+using MVCWebAppWithoutBLL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,11 +1,8 @@
-﻿using DAL.Database.Entities;
-using DAL.UnitOfWork;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Http.Extensions;
 using BLL.Services.ChatService;
 
-namespace WebApi
+namespace MVCWebApp
 {
     public class RolesAuthorization : ActionFilterAttribute
     {

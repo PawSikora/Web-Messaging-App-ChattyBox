@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace WebApiWithoutBLL.Models.MessagesDtos
+namespace MVCWebAppWithoutBLL.Models.MessagesDtos
 {
     public class CreateTextMessageDTO : MessageDTO
     {

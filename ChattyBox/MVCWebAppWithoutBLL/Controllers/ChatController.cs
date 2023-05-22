@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApiWithoutBLL.Exceptions;
-using WebApiWithoutBLL.Models.ChatDtos;
-using WebApiWithoutBLL.Models.UserDtos;
+using MVCWebAppWithoutBLL.Exceptions;
+using MVCWebAppWithoutBLL.Models.ChatDtos;
+using MVCWebAppWithoutBLL.Models.UserDtos;
 
-namespace WebApiWithoutBLL.Controllers
+namespace MVCWebAppWithoutBLL.Controllers
 {
     public class ChatController : Controller
     {

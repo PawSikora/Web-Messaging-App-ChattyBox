@@ -1,6 +1,6 @@
 ﻿using BLL.DataTransferObjects.MessageDtos;
 
-namespace WebApi.ViewModels
+namespace MVCWebApp.ViewModels
 {
     public class SendMessage
     {

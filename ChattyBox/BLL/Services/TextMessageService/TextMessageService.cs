@@ -3,12 +3,6 @@ using BLL.DataTransferObjects.MessageDtos;
 using BLL.Exceptions;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services.TextMessageService
 {

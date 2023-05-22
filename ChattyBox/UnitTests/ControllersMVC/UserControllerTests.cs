@@ -3,14 +3,9 @@ using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnitTests.BLL.MockServices;
-using WebApi.Controllers;
-using WebApi.ViewModels;
+using MVCWebApp.Controllers;
+using MVCWebApp.ViewModels;
 
 namespace UnitTests.ControllersMVC
 {

@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
-using WebApiWithoutBLL.Exceptions;
-using WebApiWithoutBLL.Models.UserDtos;
+using MVCWebAppWithoutBLL.Exceptions;
+using MVCWebAppWithoutBLL.Models.UserDtos;
 
-namespace WebApiWithoutBLL.Controllers
+namespace MVCWebAppWithoutBLL.Controllers
 {
     public class UserController : Controller
     {

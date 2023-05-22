@@ -10,11 +10,11 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChatApiController : ControllerBase
+    public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
 
-        public ChatApiController(IChatService chatService)
+        public ChatController(IChatService chatService)
         {
             _chatService = chatService;
         }

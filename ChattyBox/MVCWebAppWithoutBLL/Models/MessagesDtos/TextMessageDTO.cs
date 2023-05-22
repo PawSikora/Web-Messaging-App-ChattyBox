@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebApiWithoutBLL.Models.MessagesDtos
+﻿namespace MVCWebAppWithoutBLL.Models.MessagesDtos
 {
     public class TextMessageDTO : MessageDTO
     {

@@ -1,9 +1,6 @@
-﻿using System.Security.Cryptography.Pkcs;
-using BLL.DataTransferObjects.ChatDtos;
-using BLL.DataTransferObjects.MessageDtos;
-using BLL.DataTransferObjects.UserDtos;
+﻿using BLL.DataTransferObjects.UserDtos;
 
-namespace WebApi.ViewModels
+namespace MVCWebApp.ViewModels
 {
     public class ChatsAndCount
     {

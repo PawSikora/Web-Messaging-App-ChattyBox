@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Database;
+﻿using DAL.Database;
 using DAL.Database.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.RoleRepository
 {

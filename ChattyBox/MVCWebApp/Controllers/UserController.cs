@@ -1,11 +1,9 @@
 ﻿using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.UserService;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.ViewModels;
+using MVCWebApp.ViewModels;
 
-namespace WebApi.Controllers
+namespace MVCWebApp.Controllers
 {
     public class UserController : Controller
     {

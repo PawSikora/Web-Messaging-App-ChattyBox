@@ -1,7 +1,4 @@
-﻿using DAL.Database.Entities;
-using System.ComponentModel.DataAnnotations;
-
-namespace WebApiWithoutBLL.Models.UserDtos
+﻿namespace MVCWebAppWithoutBLL.Models.UserDtos
 {
     public class UserDTO
     {

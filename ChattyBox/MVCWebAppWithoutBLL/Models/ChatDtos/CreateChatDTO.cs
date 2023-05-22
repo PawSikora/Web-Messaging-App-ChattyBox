@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiWithoutBLL.Models.ChatDtos
+namespace MVCWebAppWithoutBLL.Models.ChatDtos
 {
     public class CreateChatDTO
     {
