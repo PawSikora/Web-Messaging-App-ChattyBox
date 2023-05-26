@@ -1,9 +1,11 @@
-﻿using BLL.DataTransferObjects.UserDtos;
+﻿using BLL.DataTransferObjects;
+using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.UserService;
+using DAL.Database.Entities;
 
 namespace UnitTests.BLL.MockServices
 {
-    public class UserServiceBllMock:IUserService
+    public class UserServiceBllMock : IUserService
     {
         List<UserDTO> _users=new List<UserDTO>()
         {
@@ -11,7 +13,7 @@ namespace UnitTests.BLL.MockServices
             new UserDTO { Id = 2, Username = "Mock2" },
             new UserDTO { Id = 3, Username = "Mock3" },
         };
-        public UserDTO LoginUser(LoginUserDTO dto)
+        public TokenToReturn LoginUser(LoginUserDTO dto)
         {
             throw new NotImplementedException();
         }
@@ -38,6 +40,11 @@ namespace UnitTests.BLL.MockServices
         }
 
         public string GetRole(int userId, int chatId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateNewToken(User user)
         {
             throw new NotImplementedException();
         }

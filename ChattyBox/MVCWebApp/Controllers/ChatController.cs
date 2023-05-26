@@ -6,10 +6,11 @@ using BLL.DataTransferObjects.MessageDtos;
 using BLL.Services.FileMessageService;
 using BLL.Services.TextMessageService;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCWebApp.Controllers
 {
+    [Authorize]
     public class ChatController : Controller
     {
         private readonly IChatService _chatService;
@@ -24,7 +25,7 @@ namespace MVCWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendMessage(CreateFileMessageDTO fileMessage, CreateTextMessageDTO textMessage)
+        public ActionResult SendMessage([FromForm] CreateFileMessageDTO fileMessage, [FromForm] CreateTextMessageDTO textMessage)
         {
             if (!textMessage.Content.IsNullOrEmpty())
             {
@@ -37,12 +38,14 @@ namespace MVCWebApp.Controllers
                 _fileMessageService.CreateFileMessage(fileMessage);
             }
 
-            return RedirectToAction("Get", "Chat", new { userId = textMessage.SenderId, chatId = textMessage.ChatId, pageNumber = 1 });
+            return RedirectToAction("Get", "Chat", new { chatId = textMessage.ChatId, pageNumber = 1 });
         }
 
-        [HttpGet("chat/user/{userId}/Get/{chatId}/{pageNumber}")]
-        public ActionResult<GetChatDTO> Get([FromRoute]int userId,[FromRoute] int chatId, [FromRoute] int pageNumber)
+        [HttpGet("chat/Get/{chatId}/{pageNumber}")]
+        public ActionResult<GetChatDTO> Get([FromRoute] int chatId, [FromRoute] int pageNumber)
         {
+            var senderId = int.Parse(User.FindFirst("userId")?.Value);
+
             var messagesPerPage = 5;
             var count = _chatService.GetChatMessagesCount(chatId);
             var chat = new MessagesAndCount()
@@ -50,8 +53,8 @@ namespace MVCWebApp.Controllers
                 Chat = _chatService.GetChat(chatId, pageNumber,messagesPerPage),
                 Count = count,
                 MessagesPerPage = messagesPerPage,
-                UserId = userId,
-                UserRole = _chatService.GetUserRole(userId, chatId),
+                UserId = senderId,
+                UserRole = _chatService.GetUserRole(senderId, chatId),
             };
             return View("ChatMenu",chat);
         }
@@ -74,19 +77,21 @@ namespace MVCWebApp.Controllers
             return RedirectToAction("GetChats", "User", new { id = chat.UserId, pageNumber = 1 });
         }
 
-        [HttpPost("chat/{chatId}/addUser/{userId}/senderId/{senderId}")]
+        [HttpPost("chat/{chatId}/addUser/{userId}")]
         [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-        public ActionResult AddUser([FromRoute] int chatId, [FromRoute] int userId, [FromRoute] int senderId)
+		public ActionResult AddUser([FromRoute] int chatId, [FromRoute] int userId)
         {
             _chatService.AddUserById(userId, chatId);
-            return RedirectToAction("GetUsersInChat","Chat",new {chatId= chatId, userId=senderId,pageNumber=1});
+            return RedirectToAction("GetUsersInChat", "Chat",new { chatId, pageNumber = 1});
         }
 
-        [HttpGet("chat/{chatId}/GetAddUserToChat/adminId/{userId}")]
-        public ActionResult GetAddUserToChat([FromRoute]int chatId,[FromRoute] int userId)
+        [HttpGet("chat/{chatId}/GetAddUserToChat")]
+        public ActionResult GetAddUserToChat([FromRoute]int chatId)
         {
+            var senderId = int.Parse(User.FindFirst("userId")?.Value);
+
             ViewBag.chatId = chatId;
-            ViewBag.userId = userId;
+            ViewBag.userId = senderId;
 
             return View("ChatAddUser");
         }
@@ -101,11 +106,12 @@ namespace MVCWebApp.Controllers
             return View("ChatAddUser",user);
         }
 
-        [HttpPost("chat/{id}-{senderId}/deleteUser/{userId}")]
-        public ActionResult DeleteUser([FromRoute] int id, [FromRoute] int senderId, [FromRoute] int userId)
+        [HttpPost("chat/{chatId}/deleteUser/{userId}")]
+        [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
+        public ActionResult DeleteUser([FromRoute] int chatId, [FromRoute] int userId)
         {
-            _chatService.DeleteUserById(userId, id);
-            return RedirectToAction("GetUsersInChat", "Chat", new { chatId = id, userId = senderId, pageNumber = 1 });
+            _chatService.DeleteUserById(userId, chatId);
+            return RedirectToAction("GetUsersInChat", "Chat", new { chatId, pageNumber = 1 });
         }
 
         [HttpPost("chat/{chatId}-{senderId}")]
@@ -116,12 +122,14 @@ namespace MVCWebApp.Controllers
             return RedirectToAction("GetChats", "User", new { id = senderId, pageNumber = 1 });
         }
 
-        [HttpGet("chat/getUsers/{chatId}/{pageNumber}/{userId}")]
-        public ActionResult<ICollection<ChatAndUsers>> GetUsersInChat([FromRoute]int chatId, [FromRoute] int userId, [FromRoute] int pageNumber)
+        [HttpGet("chat/getUsers/{chatId}/{pageNumber}")]
+        public ActionResult<ICollection<ChatAndUsers>> GetUsersInChat([FromRoute] int chatId, [FromRoute] int pageNumber)
         {
+            var senderId = int.Parse(User.FindFirst("userId")?.Value);
+
             var usersPerPage = 5;
             var users = _chatService.GetUsersInChat(chatId);
-            var role = _chatService.GetUserRole(userId,chatId);
+            var role = _chatService.GetUserRole(senderId,chatId);
             var chatsAndUsers = new ChatAndUsers
             {
                 ChatId = chatId,
@@ -130,7 +138,7 @@ namespace MVCWebApp.Controllers
                 UsersPerPage = usersPerPage,
                 PageNumber = pageNumber,
                 UserRole = role,
-                UserId = userId
+                UserId = senderId
             };
             return View("ChatGetUsers",chatsAndUsers);
         }

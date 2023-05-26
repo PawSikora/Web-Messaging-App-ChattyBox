@@ -16,20 +16,19 @@ namespace MVCWebApp
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-	        var senderId = Convert.ToInt32(context.HttpContext.Request.RouteValues["senderId"]);
+            var senderId = int.Parse(context.HttpContext.User.FindFirst("userId")?.Value);
             var chatId = Convert.ToInt32(context.HttpContext.Request.RouteValues["chatId"]);
             var userRole = chatService.GetUserRole(senderId, chatId);
             if (userRole != "Admin")
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new
                 {
-	                controller = "User",
+                    controller = "User",
                     action = "Unauthorized"
-				}));
+                }));
             }
-
             base.OnActionExecuting(context);
-        } 
+        }
     }
 
 }

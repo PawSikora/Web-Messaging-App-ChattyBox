@@ -3,7 +3,6 @@
 
 <form method="get" asp-action="FindUser" asp-controller="Chat">
 <input type="hidden" asp-for="ChatId" value="@ViewBag.chatId" />
-<input type="hidden" asp-for="AdminId" value="@ViewBag.userId" />
 
     <div class="input-group mb-3">
 	    
@@ -34,7 +33,6 @@
 			        <small class="text-muted">@Model.userDto.LastLog</small>
 			        <form method="post" asp-controller="Chat" asp-action="AddUser"
 			              asp-route-userId="@Model.userDto.Id"
-			              asp-route-senderId="@Model.AdminId"
 			              asp-route-chatId="@Model.ChatId">
 				        <input type="submit" class="btn btn-primary" value="Dodaj"/>
 			        </form>
@@ -45,5 +43,6 @@
         </div>
     }
 
-	<a asp-controller="Chat" asp-action="ChatMenu" asp-route-userId="@ViewBag.userId" class="btn btn-primary">Wróc do głównego ekranu chatu</a>
-}
+	<a asp-controller="Chat" asp-action="GetUsersInChat" asp-route-chatId="@ViewBag.chatId" asp-route-pageNumber="1" class="btn btn-primary">Anuluj</a>
+	}
+	

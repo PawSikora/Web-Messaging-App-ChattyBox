@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -51,7 +52,10 @@ namespace DAL.Migrations
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     LastLog = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TokenCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TokenExpires = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,7 +154,7 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Chats",
                 columns: new[] { "Id", "Created", "Name", "Updated" },
-                values: new object[] { 1, new DateTime(2023, 4, 15, 17, 6, 35, 977, DateTimeKind.Local).AddTicks(2031), "Chat1", null });
+                values: new object[] { 1, new DateTime(2023, 5, 25, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(1013), "Chat1", null });
 
             migrationBuilder.InsertData(
                 table: "Roles",
@@ -163,11 +167,11 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Created", "Email", "LastLog", "PasswordHash", "PasswordSalt", "Username" },
+                columns: new[] { "Id", "Created", "Email", "LastLog", "PasswordHash", "PasswordSalt", "RefreshToken", "TokenCreated", "TokenExpires", "Username" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2023, 4, 15, 17, 6, 35, 977, DateTimeKind.Local).AddTicks(1877), "marcinq@gmail.com", null, new byte[] { 161, 38, 163, 193, 95, 29, 23, 231, 170, 230, 102, 65, 150, 108, 203, 85, 180, 45, 30, 26, 0, 190, 233, 1, 202, 5, 253, 61, 122, 44, 23, 30, 208, 237, 198, 134, 211, 247, 123, 99, 214, 149, 53, 78, 177, 149, 209, 149, 55, 248, 145, 228, 58, 63, 241, 153, 71, 231, 159, 128, 38, 203, 3, 107 }, new byte[] { 90, 31, 130, 201, 175, 147, 108, 45, 222, 114, 122, 250, 2, 234, 209, 136, 23, 181, 247, 120, 191, 47, 107, 232, 57, 69, 193, 214, 65, 155, 129, 163, 196, 252, 175, 73, 117, 34, 2, 173, 180, 205, 80, 83, 243, 96, 186, 111, 90, 11, 120, 24, 252, 30, 228, 200, 183, 41, 124, 97, 200, 172, 70, 101, 99, 167, 53, 176, 163, 181, 59, 173, 112, 232, 136, 121, 183, 52, 5, 178, 169, 59, 152, 216, 151, 134, 63, 8, 76, 47, 54, 84, 10, 79, 153, 24, 82, 157, 1, 192, 243, 159, 230, 174, 229, 154, 60, 176, 164, 24, 170, 235, 25, 160, 176, 191, 27, 27, 12, 161, 161, 0, 80, 232, 67, 34, 174, 45 }, "MarIwin" },
-                    { 2, new DateTime(2023, 4, 15, 17, 6, 35, 977, DateTimeKind.Local).AddTicks(1909), "tymonq@gmail.com", null, new byte[] { 124, 71, 27, 48, 8, 15, 70, 136, 23, 139, 223, 156, 113, 94, 174, 28, 144, 194, 2, 247, 68, 7, 116, 136, 15, 135, 35, 40, 57, 118, 164, 237, 97, 208, 214, 138, 21, 91, 17, 82, 54, 22, 215, 55, 50, 104, 104, 238, 42, 137, 212, 61, 61, 28, 174, 81, 88, 205, 7, 221, 246, 43, 250, 6 }, new byte[] { 163, 138, 69, 154, 123, 109, 156, 109, 45, 11, 245, 127, 133, 117, 124, 176, 77, 153, 73, 169, 249, 71, 157, 161, 247, 143, 230, 213, 21, 38, 241, 215, 199, 116, 196, 238, 219, 124, 52, 140, 101, 99, 202, 36, 134, 169, 162, 160, 233, 118, 126, 142, 105, 92, 145, 247, 210, 211, 209, 80, 102, 48, 137, 92, 43, 166, 255, 160, 79, 40, 51, 224, 123, 110, 60, 199, 12, 101, 8, 57, 109, 28, 39, 193, 125, 117, 130, 31, 8, 74, 202, 155, 7, 207, 94, 118, 7, 174, 109, 17, 220, 161, 248, 45, 228, 248, 127, 20, 17, 179, 89, 208, 95, 222, 250, 121, 82, 167, 152, 47, 92, 212, 116, 114, 207, 64, 41, 99 }, "TymonSme" }
+                    { 1, new DateTime(2023, 5, 25, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(681), "marcinq@gmail.com", null, new byte[] { 44, 188, 254, 200, 191, 65, 86, 220, 212, 29, 129, 115, 236, 58, 65, 110, 83, 18, 15, 51, 154, 102, 128, 191, 62, 106, 216, 2, 180, 58, 246, 75, 176, 158, 203, 193, 95, 63, 151, 38, 131, 59, 101, 156, 90, 178, 28, 194, 66, 4, 17, 214, 91, 129, 73, 235, 24, 51, 97, 3, 168, 117, 234, 221 }, new byte[] { 69, 76, 31, 68, 156, 11, 197, 132, 127, 235, 43, 234, 253, 82, 49, 100, 60, 42, 5, 164, 193, 99, 43, 43, 55, 206, 228, 121, 46, 27, 193, 89, 92, 42, 105, 140, 227, 251, 92, 112, 226, 78, 35, 177, 211, 108, 118, 209, 41, 43, 200, 204, 213, 220, 166, 186, 22, 183, 12, 167, 62, 118, 5, 167, 120, 190, 177, 112, 147, 83, 167, 225, 38, 229, 100, 4, 195, 176, 99, 192, 251, 32, 81, 138, 80, 182, 225, 45, 73, 3, 200, 21, 175, 25, 94, 201, 8, 9, 36, 12, 43, 24, 226, 82, 28, 175, 130, 173, 56, 224, 57, 235, 46, 52, 52, 93, 124, 125, 130, 141, 71, 0, 161, 229, 129, 36, 13, 35 }, "FL1RR9c+DTmRT20IyVPtFoIZYkzXxbPqN71oATGz4MVKBfBRCi+cEj4wg0IBt/0CCo6TyVOA4LzpGewzlZyPHA==", new DateTime(2023, 5, 25, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(724), new DateTime(2023, 5, 26, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(729), "MarIwin" },
+                    { 2, new DateTime(2023, 5, 25, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(752), "tymonq@gmail.com", null, new byte[] { 217, 120, 219, 130, 79, 199, 205, 222, 68, 156, 60, 56, 203, 199, 90, 157, 169, 168, 74, 65, 118, 232, 3, 42, 38, 236, 223, 52, 127, 171, 34, 84, 227, 10, 122, 32, 172, 88, 221, 250, 66, 136, 76, 7, 19, 248, 129, 17, 247, 159, 123, 226, 173, 23, 241, 244, 6, 42, 179, 196, 234, 126, 176, 250 }, new byte[] { 105, 149, 158, 90, 216, 239, 96, 5, 163, 88, 190, 102, 156, 148, 28, 189, 99, 69, 251, 195, 186, 125, 129, 86, 84, 93, 189, 189, 46, 136, 79, 96, 122, 135, 202, 141, 13, 88, 8, 184, 70, 76, 114, 183, 226, 27, 73, 235, 230, 218, 39, 205, 38, 134, 65, 246, 176, 48, 118, 18, 127, 82, 135, 157, 131, 92, 65, 49, 83, 203, 204, 35, 212, 51, 14, 138, 75, 212, 40, 153, 186, 61, 219, 159, 132, 112, 222, 174, 193, 246, 226, 83, 231, 217, 178, 213, 219, 240, 28, 2, 83, 81, 211, 231, 128, 169, 30, 143, 181, 24, 196, 177, 233, 48, 151, 31, 157, 67, 161, 16, 52, 120, 161, 245, 176, 179, 203, 65 }, "pnRvCXKg8Zz9xjTS/n2UBBO11MQB4OKpo27BVMYLKul4lL0h9GKrpcz4GiUDdT5iQS/x71KUjykQ/6O9C3j48w==", new DateTime(2023, 5, 25, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(754), new DateTime(2023, 5, 26, 19, 4, 41, 26, DateTimeKind.Local).AddTicks(756), "TymonSme" }
                 });
 
             migrationBuilder.InsertData(

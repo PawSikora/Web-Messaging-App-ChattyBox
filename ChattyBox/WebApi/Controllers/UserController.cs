@@ -1,5 +1,7 @@
-﻿using BLL.DataTransferObjects.UserDtos;
+﻿using BLL.DataTransferObjects;
+using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,13 +17,15 @@ namespace WebApi.Controllers
         {
             _userService = userService;
         }
-       
+
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<UserDTO> Get([FromRoute] int id)
         {
             return Ok(_userService.GetUser(id));
         }
 
+        [Authorize]
         [HttpGet("getChats/{id}/{pageNumber}")]
         public ActionResult<IEnumerable<GetUserChatDTO>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
         {
@@ -40,7 +44,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Login")]
-        public ActionResult<UserDTO> Login([FromBody] LoginUserDTO loginUser)
+        public ActionResult<TokenToReturn> Login([FromBody] LoginUserDTO loginUser)
         {
             return Ok(_userService.LoginUser(loginUser));
         }

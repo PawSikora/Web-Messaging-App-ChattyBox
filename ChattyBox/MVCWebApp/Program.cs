@@ -14,6 +14,9 @@ using BLL.Services.RoleService;
 using DAL.Repositories.RoleRepository;
 using MVCWebApp.Middleware;
 using MVCWebApp;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,12 +36,32 @@ builder.Services.AddScoped<ITextMessageService, TextMessageService>();
 builder.Services.AddScoped<IFileMessageService, FileMessageService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+builder.Services.AddScoped<TokenValidationMiddleware>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped(provider =>
 {
     var chatService = provider.GetRequiredService<IChatService>();
     return new RolesAuthorization(chatService, "role");
 });
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["TokenSettings:Issuer"],
+        ValidAudience = builder.Configuration["TokenSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenSettings:SecurityKey"]))
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,12 +70,23 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Cookies["userToken"];
 
+    if (!string.IsNullOrEmpty(token))
+    {
+        context.Request.Headers.Add("Authorization", $"Bearer {token}");
+    }
+
+    await next.Invoke();
+});
 
 app.UseStaticFiles();
+app.UseMiddleware<TokenValidationMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

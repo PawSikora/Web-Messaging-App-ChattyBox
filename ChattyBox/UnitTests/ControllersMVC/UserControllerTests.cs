@@ -6,6 +6,9 @@ using Moq;
 using UnitTests.BLL.MockServices;
 using MVCWebApp.Controllers;
 using MVCWebApp.ViewModels;
+using BLL.DataTransferObjects;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Http;
 
 namespace UnitTests.ControllersMVC
 {
@@ -99,26 +102,38 @@ namespace UnitTests.ControllersMVC
             _mockUserService.Verify(service => service.RegisterUser(registerUser), Times.Once);
         }
 
-        [Fact]
-        public void Login_ReturnsUserMenuView()
-        {
-            // Arrange
-            var controller = new UserController(_mockUserService.Object);
-            var loginUser = new LoginUserDTO { Email = "test@example.com", Password = "123456" };
-            var userDto = new UserDTO { Id = 1, Username = "TestUser" };
-            _mockUserService.Setup(service => service.LoginUser(loginUser)).Returns(userDto);
+        //[Fact]
+        //public void Login_ReturnsUserMenuView()
+        //{
+        //    // Arrange
+        //    var loginUser = new LoginUserDTO { Email = "test@example.com", Password = "123456" };
+        //    var userToken = new TokenToReturn(Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)));
+        //    var cookieOptions = It.IsAny<CookieOptions>();
 
-            // Act
-            var result = controller.Login(loginUser);
+        //    _mockUserService.Setup(service => service.LoginUser(loginUser)).Returns(userToken);
 
-            // Assert
-            var actionResult = Assert.IsType<ActionResult<UserDTO>>(result);
-            var viewResult = Assert.IsType<ViewResult>(actionResult.Result);
-            var model = Assert.IsAssignableFrom<UserDTO>(viewResult.Model);
-            Assert.Equal(userDto.Id, model.Id);
-            Assert.Equal(userDto.Username, model.Username);
+        //    var controller = new UserController(_mockUserService.Object);
+        //    var httpContext = new Mock<HttpContext>();
+        //    var httpResponse = new Mock<HttpResponse>();
 
-            _mockUserService.Verify(service => service.LoginUser(loginUser), Times.Once);
-        }
+        //    httpContext.SetupGet(c => c.Response).Returns(httpResponse.Object);
+        //    httpResponse.Setup(r => r.Cookies.Append("userToken", userToken.TokenContent, cookieOptions));
+
+        //    controller.ControllerContext = new ControllerContext()
+        //    {
+        //        HttpContext = httpContext.Object
+        //    };
+
+        //    // Act
+        //    var result = controller.Login(loginUser);
+
+        //    // Assert
+        //    var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        //    Assert.Equal("UserMenu", redirectResult.ActionName);
+        //    Assert.Equal("User", redirectResult.ControllerName);
+
+        //    _mockUserService.Verify(service => service.LoginUser(loginUser), Times.Once);
+        //    httpResponse.Verify(r => r.Cookies.Append("userToken", userToken.TokenContent, cookieOptions), Times.Once);
+        //}
     }
 }

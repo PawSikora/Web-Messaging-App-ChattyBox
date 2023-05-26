@@ -23,6 +23,10 @@ namespace DAL.Database.Entities
         
         public DateTime Created { get; set; }
 
+        public string? RefreshToken { get; set; }
+        public DateTime? TokenCreated { get; set; }
+        public DateTime? TokenExpires { get; set; }
+
         public virtual ICollection<UserChat>? UserChats { get; set; }
 
         public virtual ICollection<Message>? Messages { get; set; }

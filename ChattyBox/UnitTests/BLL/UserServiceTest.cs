@@ -9,6 +9,8 @@ using DAL.Repositories.RoleRepository;
 using DAL.Repositories.TextMessageRepository;
 using DAL.Repositories.UserRepository;
 using DAL.UnitOfWork;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using UnitTests.BLL.FakeRepositories;
 
@@ -24,6 +26,8 @@ namespace UnitTests.BLL
         private readonly Mock<IRoleRepository> _mockRoleRepo = new Mock<IRoleRepository>();
         private readonly Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
         private readonly Mock<IMapper> _mockMapper = new Mock<IMapper>();
+        private readonly Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
 
         [Fact]
         public void GetUserChatsCountFake_ShouldReturnCount_WhenUserHasChats()
@@ -36,7 +40,7 @@ namespace UnitTests.BLL
         FakeRoleRepository roleRepo = new FakeRoleRepository();
         
         var unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
-            var userService = new UserService(unitOfWork, _mockMapper.Object);
+            var userService = new UserService(unitOfWork, _mockMapper.Object,_mockConfiguration.Object, _mockHttpContextAccessor.Object);
 
             var user = new User { Id = 1, Email = "User1", UserChats = new List<UserChat>()};
             var chat = new Chat { Id = 1, Name = "Chat1" };
@@ -77,7 +81,7 @@ namespace UnitTests.BLL
 
             var unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
 
-            var userService = new UserService(unitOfWork, _mockMapper.Object);
+            var userService = new UserService(unitOfWork, _mockMapper.Object, _mockConfiguration.Object, _mockHttpContextAccessor.Object);
 
             // Act
             var userDto = userService.GetUser(1);
@@ -95,7 +99,7 @@ namespace UnitTests.BLL
             _mockUserRepo.Setup(repo => repo.GetById(1)).Returns(new User { Id = 1, Email = "User1" });
 
             var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object, _mockUserRepo.Object, _mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, _mockMapper.Object);
+            var userService = new UserService(unitOfWork, _mockMapper.Object, _mockConfiguration.Object, _mockHttpContextAccessor.Object);
 
             // Act + Assert
             Assert.Equal("User1", userService.GetUser(1).Email);
@@ -107,7 +111,7 @@ namespace UnitTests.BLL
             // Arrange
             _mockUserRepo.Setup(repo => repo.GetUserChatsCount(1)).Returns(2);
             var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object, _mockUserRepo.Object, _mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, _mockMapper.Object);
+            var userService = new UserService(unitOfWork, _mockMapper.Object, _mockConfiguration.Object, _mockHttpContextAccessor.Object);
 
             // Act + Assert
             Assert.Equal(2, userService.GetUserChatsCount(1));
@@ -118,7 +122,7 @@ namespace UnitTests.BLL
         public void TGetUser_ShouldReturnUserDTOWithChatsCount_WhenUserExists()
         {
             // Arrange
-            var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
+            var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object,_mockConfiguration.Object, _mockHttpContextAccessor.Object);
             var user = new User { Id = 1, Username = "Test User" };
             var userDTO = new UserDTO { Id = 1, Username = "Test User", ChatsCount = 2 };
 
@@ -142,7 +146,7 @@ namespace UnitTests.BLL
         public void TestGetUser_ShouldThrowNotFoundException_WhenUserDoesNotExist_()
         {
             // Arrange
-            var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object);
+            var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object, _mockHttpContextAccessor.Object);
 
             var userId = 1;
 

@@ -1,8 +1,16 @@
 ﻿using AutoMapper;
+using BLL.DataTransferObjects;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Exceptions;
 using DAL.Database.Entities;
 using DAL.UnitOfWork;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,11 +20,15 @@ namespace BLL.Services.UserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         private void createPasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -68,7 +80,7 @@ namespace BLL.Services.UserService
             return userDTO;
         }
 
-        public UserDTO LoginUser(LoginUserDTO dto)
+        public TokenToReturn LoginUser(LoginUserDTO dto)
         {
            var user = _unitOfWork.Users.GetUserByEmail(dto.Email);
 
@@ -78,13 +90,45 @@ namespace BLL.Services.UserService
             if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
                 throw new LoginFailedException("Niepoprawny login lub hasło");
   
+            string generatedToken = GenerateNewToken(user);
+
+            return new TokenToReturn(generatedToken);
+        }
+        public string GenerateNewToken(User user)
+        {
+            var refreshToken = new RefreshToken();
+            user.RefreshToken = refreshToken.Token;
+            user.TokenCreated = refreshToken.Created;
+            user.TokenExpires = refreshToken.Expires;
             user.LastLog = DateTime.Now;
+
             _unitOfWork.Save();
 
-            var userDTO = _mapper.Map<UserDTO>(user);
-            userDTO.ChatsCount = _unitOfWork.Users.GetUserChatsCount(user.Id);
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken.Token, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expires
+            });
 
-            return userDTO;
+            return CreateToken(user);
+        }
+
+        private string CreateToken(User user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenSettings:SecurityKey"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var tokenParams = new JwtSecurityToken
+                (
+                    issuer: _configuration["TokenSettings:Issuer"], audience: _configuration["TokenSettings:Audience"],
+                    claims: new List<Claim>
+                    {
+                            new (type:"userId",user.Id.ToString()),
+                    },
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: creds
+               );
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenParams);
         }
 
         public void RegisterUser(CreateUserDTO dto)

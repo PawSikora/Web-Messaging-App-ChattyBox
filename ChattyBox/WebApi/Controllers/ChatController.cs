@@ -4,12 +4,14 @@ using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.ChatService;
 using BLL.Services.FileMessageService;
 using BLL.Services.TextMessageService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
