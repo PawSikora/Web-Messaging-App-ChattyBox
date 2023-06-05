@@ -41,8 +41,8 @@ namespace MVCWebApp.Controllers
             return RedirectToAction("Get", "Chat", new { chatId = textMessage.ChatId, pageNumber = 1 });
         }
 
-        [HttpGet("chat/Get/{chatId}/{pageNumber}")]
-        public ActionResult<GetChatDTO> Get([FromRoute] int chatId, [FromRoute] int pageNumber)
+        [HttpGet]
+        public ActionResult<GetChatDTO> Get(int chatId, int pageNumber)
         {
             var senderId = int.Parse(User.FindFirst("userId")?.Value);
 
@@ -77,16 +77,16 @@ namespace MVCWebApp.Controllers
             return RedirectToAction("GetChats", "User", new { id = chat.UserId, pageNumber = 1 });
         }
 
-        [HttpPost("chat/{chatId}/addUser/{userId}")]
+        [HttpPost]
         [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-		public ActionResult AddUser([FromRoute] int chatId, [FromRoute] int userId)
+		public ActionResult AddUser(int chatId, int userId)
         {
             _chatService.AddUserById(userId, chatId);
             return RedirectToAction("GetUsersInChat", "Chat",new { chatId, pageNumber = 1});
         }
 
-        [HttpGet("chat/{chatId}/GetAddUserToChat")]
-        public ActionResult GetAddUserToChat([FromRoute]int chatId)
+        [HttpGet]
+        public ActionResult GetAddUserToChat(int chatId)
         {
             var senderId = int.Parse(User.FindFirst("userId")?.Value);
 
@@ -106,24 +106,24 @@ namespace MVCWebApp.Controllers
             return View("ChatAddUser",user);
         }
 
-        [HttpPost("chat/{chatId}/deleteUser/{userId}")]
+        [HttpPost]
         [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-        public ActionResult DeleteUser([FromRoute] int chatId, [FromRoute] int userId)
+        public ActionResult DeleteUser(int chatId, int userId)
         {
             _chatService.DeleteUserById(userId, chatId);
             return RedirectToAction("GetUsersInChat", "Chat", new { chatId, pageNumber = 1 });
         }
 
-        [HttpPost("chat/{chatId}-{senderId}")]
+        [HttpPost]
         [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-        public ActionResult DeleteChat([FromRoute] int chatId, [FromRoute] int senderId)
+        public ActionResult DeleteChat(int chatId, int senderId)
         {
             _chatService.DeleteChat(chatId);
             return RedirectToAction("GetChats", "User", new { id = senderId, pageNumber = 1 });
         }
 
-        [HttpGet("chat/getUsers/{chatId}/{pageNumber}")]
-        public ActionResult<ICollection<ChatAndUsers>> GetUsersInChat([FromRoute] int chatId, [FromRoute] int pageNumber)
+        [HttpGet]
+        public ActionResult<ICollection<ChatAndUsers>> GetUsersInChat(int chatId, int pageNumber)
         {
             var senderId = int.Parse(User.FindFirst("userId")?.Value);
 

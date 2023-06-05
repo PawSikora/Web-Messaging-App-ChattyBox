@@ -15,8 +15,8 @@ namespace MVCWebApp.Controllers
             _fileMessageService = fileMessageService;
         }
 
-        [HttpGet("fMsg/{id}")]
-        public ActionResult<FileMessageDTO> Get([FromRoute] int id)
+        [HttpGet]
+        public ActionResult<FileMessageDTO> Get(int id)
         {
             return View(_fileMessageService.GetFileMessage(id));
         }
@@ -33,16 +33,16 @@ namespace MVCWebApp.Controllers
             return RedirectToAction("Get", "Chat", new { chatId = createFile.ChatId, pageNumber = 1 });
         }
 
-		[HttpPost("FileMessage/Delete/{chatId}/{messageId}")]
+		[HttpPost]
 		[TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-		public ActionResult Delete([FromRoute] int chatId, [FromRoute] int messageId)
+		public ActionResult Delete(int chatId, int messageId)
 		{
             _fileMessageService.DeleteFileMessage(messageId);
             return RedirectToAction("Get", "Chat", new { chatId, pageNumber = 1 });
         }
 
-		[HttpGet("fMsg/GetNewest/{idChat}")]
-        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
+		[HttpGet]
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage(int idChat)
         {
             return View(_fileMessageService.GetLastFileMessage(idChat));
         }

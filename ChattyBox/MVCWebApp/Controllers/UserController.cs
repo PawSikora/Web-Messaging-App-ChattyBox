@@ -45,15 +45,15 @@ namespace MVCWebApp.Controllers
         }
 
         [Authorize]
-        [HttpGet("user/get/{id}")]
-        public ActionResult<UserDTO> Get([FromRoute] int id)
+        [HttpGet]
+        public ActionResult<UserDTO> Get(int id)
         {
             return View(_userService.GetUser(id));
         }
 
         [Authorize]
-        [HttpGet("user/getChats/{id}/{pageNumber}")]
-        public ActionResult<IEnumerable<ChatsAndCount>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
+        [HttpGet]
+        public ActionResult<IEnumerable<ChatsAndCount>> GetChats(int id, int pageNumber)
         {
             var count = _userService.GetUserChatsCount(id);
 
@@ -75,7 +75,7 @@ namespace MVCWebApp.Controllers
             return View("ChatBrowser", chats);
         }
 
-        [HttpGet("user/register")]
+        [HttpGet]
         public ActionResult Register()
         {
             return View();
@@ -106,7 +106,7 @@ namespace MVCWebApp.Controllers
         }
 
         [Authorize]
-        [HttpGet("user/createChat")]
+        [HttpGet]
         public ActionResult CreateChat(int id)
         {
             return RedirectToAction("Create", "Chat", new { id });
@@ -117,10 +117,5 @@ namespace MVCWebApp.Controllers
 			return View("AuthorizeFailed");
         }
 
-        [Authorize]
-        public ActionResult<UserDTO> GetUserMenu(int id)
-        {
-            return View("UserMenu", _userService.GetUser(id));
-        }
     }
 }

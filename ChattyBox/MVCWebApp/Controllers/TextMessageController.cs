@@ -16,7 +16,7 @@ namespace MVCWebApp.Controllers
         }
 
         [HttpGet("txtMsg/{id}")]
-        public ActionResult<TextMessageDTO> Get([FromRoute] int id)
+        public ActionResult<TextMessageDTO> Get(int id)
         {
             return View(_textMessageService.GetTextMessage(id));
         }
@@ -31,16 +31,16 @@ namespace MVCWebApp.Controllers
             return RedirectToAction("Get", "Chat", new { chatId = messageDTO.ChatId, pageNumber = 1 });
         }
 
-        [HttpPost("TextMessage/Delete/{chatId}/{messageId}")]
+        [HttpPost]
         [TypeFilter(typeof(RolesAuthorization), Arguments = new object[] { "Admin" })]
-		public ActionResult Delete([FromRoute] int chatId, [FromRoute] int messageId)
+		public ActionResult Delete(int chatId, int messageId)
         {
             _textMessageService.DeleteTextMessage(messageId);
             return RedirectToAction("Get", "Chat", new { chatId, pageNumber = 1 });
         }
 
-        [HttpGet("txtMsg/GetNewest/{idChat}")]
-        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
+        [HttpGet]
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage(int idChat)
         {
             return View(_textMessageService.GetLastTextMessage(idChat));
         }

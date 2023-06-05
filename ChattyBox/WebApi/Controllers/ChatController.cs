@@ -22,14 +22,14 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet("{chatId}/{pageNumber}")]
-        public ActionResult<GetChatDTO> Get([FromRoute] int chatId, [FromRoute] int pageNumber)
+        [HttpGet]
+        public ActionResult<GetChatDTO> Get([FromQuery] int chatId, [FromQuery] int pageNumber)
         {
             var messagesPerPage = 5;
             return Ok(_chatService.GetChat(chatId, pageNumber, messagesPerPage));
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public ActionResult Create([FromBody] CreateChatDTO chat)
         {
             if (!ModelState.IsValid)
@@ -41,15 +41,14 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpPost("{chatId}/{userId}")]
-        public ActionResult AddUser([FromRoute] int chatId, [FromRoute] int userId)
+        [HttpPost("AddUser")]
+        public ActionResult AddUser([FromQuery] int chatId, [FromQuery] int userId)
         {
             _chatService.AddUserById(userId, chatId);
             return Ok();
         }
 
-        [HttpGet("FindUser")]
-
+        [HttpGet("Find")]
         public ActionResult<UserDTO> FindUser([FromBody] UserDTO user)
         {
             var foundUser = _chatService.GetUserByEmail(user.Email);
@@ -59,8 +58,8 @@ namespace WebApi.Controllers
             return Ok(foundUser);
         }
 
-        [HttpDelete("{id}/deleteUser/{userId}")]
-        public ActionResult DeleteUser([FromRoute] int id,[FromRoute] int userId)
+        [HttpDelete]
+        public ActionResult DeleteUser([FromQuery] int id,[FromQuery] int userId)
         {
             _chatService.DeleteUserById(userId, id);
             return Ok();
@@ -73,7 +72,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpGet("getUsers/{chatId}")]
+        [HttpGet("{chatId}")]
         public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromRoute] int chatId)
         {
             var users = _chatService.GetUsersInChat(chatId);

@@ -17,7 +17,7 @@ namespace MVCWebApp
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var senderId = int.Parse(context.HttpContext.User.FindFirst("userId")?.Value);
-            var chatId = Convert.ToInt32(context.HttpContext.Request.RouteValues["chatId"]);
+            var chatId = Convert.ToInt32(context.HttpContext.Request.Query["chatId"]);
             var userRole = chatService.GetUserRole(senderId, chatId);
             if (userRole != "Admin")
             {

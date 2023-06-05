@@ -26,8 +26,8 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("getChats/{id}/{pageNumber}")]
-        public ActionResult<IEnumerable<GetUserChatDTO>> GetChats([FromRoute] int id, [FromRoute] int pageNumber)
+        [HttpGet]
+        public ActionResult<IEnumerable<GetUserChatDTO>> GetChats([FromQuery] int id, [FromQuery] int pageNumber)
         {
             var chatsPerPage = 5;
             return Ok(_userService.GetChats(id, pageNumber, chatsPerPage));
