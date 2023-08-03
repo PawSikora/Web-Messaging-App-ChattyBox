@@ -10,10 +10,10 @@ namespace WebApi.Controllers
     public class FileController : ControllerBase
     {
         [HttpGet]
-        public ActionResult GetFile([FromQuery] string fileName)
+        public ActionResult GetFile([FromQuery] string chatName, [FromQuery] string fileName)
         {
-            var rootPath = Directory.GetCurrentDirectory();
-            var path = $"{rootPath}\\chat1\\{fileName}";
+            var rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"); 
+            var path = $"{rootPath}\\files\\{chatName}\\{fileName}";
 
             if (!System.IO.File.Exists(path))
                 return NotFound();

@@ -82,8 +82,8 @@ export class FileService {
       return of();}))
   }
   
-  file(fileName:string):Observable<Blob>{
-    const url = `${environment.httpBackend}${Api.FILE}?fileName=${fileName}`;
+  file(chatname:string,fileName:string):Observable<Blob>{
+    const url = `${environment.httpBackend}${Api.FILE}?chatname=${chatname}&fileName=${fileName}`;
     const headers = new HttpHeaders().set('Accept', 'application/octet-stream');
     return this.httpClient.get(url, { responseType: 'blob', headers: headers }).pipe(
       catchError((err: HttpErrorResponse) => {

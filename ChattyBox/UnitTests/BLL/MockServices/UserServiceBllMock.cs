@@ -48,5 +48,10 @@ namespace UnitTests.BLL.MockServices
         {
             throw new NotImplementedException();
         }
+
+        public User GetUser(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

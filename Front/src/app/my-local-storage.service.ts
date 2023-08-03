@@ -15,16 +15,16 @@ export class MyLocalStorageService {
       if(this.jwtHelper.isTokenExpired(token)){
          let userId:number=Number(localStorage.getItem('userId'));
         if(userId!==null){
-          console.log("refresh token PRZED");
-        this.userService.refreshToken(userId).subscribe(
-          {next:(res)=>{
-          console.log("refresh token");
-          this.removeStorage();
-          this.setStorage(res);
-          return true;
-        },        
-        error:(err)=>{
-          return false;
+        
+          this.userService.refreshToken(userId).subscribe(
+            {next:(res)=>{
+           
+            this.removeStorage();
+            this.setStorage(res);
+            return true;
+            },        
+            error:(err)=>{
+            return false;
         }
       });
       }}

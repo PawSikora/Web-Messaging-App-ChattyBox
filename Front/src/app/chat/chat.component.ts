@@ -29,7 +29,7 @@ export class ChatComponent implements OnInit {
           this.chat!.allMessages!.forEach(element => {
             if(element.messageType=="file"){   
               this.fileService.getFile(element.id).subscribe((resFile)=>{
-                this.fileService.file(resFile.name).subscribe((fileData:Blob)=>{
+                this.fileService.file(this.chat!.name,resFile.name).subscribe((fileData:Blob)=>{
                   const fileUrl = URL.createObjectURL(fileData);
                   const fileType=fileData.type;
                   this.files.push({name:resFile.name,url:fileUrl,type:fileType});

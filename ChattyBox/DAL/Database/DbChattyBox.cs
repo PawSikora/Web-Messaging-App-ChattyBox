@@ -143,6 +143,7 @@ namespace DAL.Database
             modelBuilder.Entity<Chat>().HasData(initChats);
 
             var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
             string relativePath;
             string fullPath;
 

@@ -37,13 +37,11 @@ export class UserService {
     const options = {
       params: { 'userId': userId },withCredentials:true
     };
-    console.log("USER ID"+userId);
+    
     return this.httpClient
     .post<Token>(`${environment.httpBackend}${Api.REFRESH_TOKEN}`,null,options)
     .pipe(catchError((err:HttpErrorResponse)=>{
       const error = err.error as string[];
-      console.log("BŁad refresh token SERVICE");
-      console.log(error);
         this.toastMessageService.notifyOfError(error[0]);
       return of ();
     }));

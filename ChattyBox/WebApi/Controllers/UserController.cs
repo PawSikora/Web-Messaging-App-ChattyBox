@@ -59,10 +59,8 @@ namespace WebApi.Controllers
 
            if(user.TokenExpires<DateTime.Now)
                return Unauthorized("Token wygasł");
-           
 
-           return Ok(_userService.GenerateNewToken(user));
-
+           return Ok(new TokenToReturn(_userService.GenerateNewToken(user)));
         }
 
     }

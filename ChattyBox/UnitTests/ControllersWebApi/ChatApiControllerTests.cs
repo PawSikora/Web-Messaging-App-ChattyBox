@@ -105,7 +105,7 @@ namespace UnitTests.ControllersWebApi
             var controller = new ChatController(mockChatService);
 
             // Act
-            var result = controller.FindUser(expectedUser);
+            var result = controller.FindUser(expectedUser.Email);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
