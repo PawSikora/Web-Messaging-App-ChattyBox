@@ -48,10 +48,10 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpGet("Find")]
-        public ActionResult<UserDTO> FindUser([FromBody] UserDTO user)
+        [HttpGet("FindUser")]
+        public ActionResult<UserDTO> FindUser([FromQuery] string email)
         {
-            var foundUser = _chatService.GetUserByEmail(user.Email);
+            var foundUser = _chatService.GetUserByEmail(email);
             if (foundUser is null)
                 return NotFound();
 
@@ -65,17 +65,17 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("{chatId}")]
-        public ActionResult DeleteChat([FromRoute] int chatId)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteChat([FromRoute] int id)
         {
-            _chatService.DeleteChat(chatId);
+            _chatService.DeleteChat(id);
             return Ok();
         }
 
-        [HttpGet("{chatId}")]
-        public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromRoute] int chatId)
+        [HttpGet("{id}")]
+        public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromRoute] int id)
         {
-            var users = _chatService.GetUsersInChat(chatId);
+            var users = _chatService.GetUsersInChat(id);
             if (users is null)
                 return NotFound();
 

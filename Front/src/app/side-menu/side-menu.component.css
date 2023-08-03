@@ -1,0 +1,79 @@
+.sidebar-toggle-label {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 999;
+  }
+  
+  .sidebar-toggle-label span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background-color: #333;
+    margin-bottom: 5px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .sidebar-toggle:checked ~ .sidebar-toggle-label span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .sidebar-toggle:checked ~ .sidebar-toggle-label span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .sidebar-toggle:checked ~ .sidebar-toggle-label span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    z-index: 998;
+  }
+  
+  .sidebar-toggle:checked ~ .sidebar {
+    transform: translateX(0);
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 50px;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .sidebar a:hover {
+    background-color: #e9ecef;
+  }
+  
+  .content {
+    margin-left: 200px;
+    padding: 20px;
+    z-index: 999;
+  }
+  .custom-card-header {
+    background-color: #007bff;
+  }
+
+  .custom-card-footer {
+    background-color: #007bff;
+  }

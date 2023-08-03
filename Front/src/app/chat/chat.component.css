@@ -1,0 +1,27 @@
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Wysokość na całą wysokość widoku */
+}
+
+.center-card {
+  width: 75%; /* 3/4 szerokości strony */
+  margin: 0 auto; /* Wyśrodkowanie na stronie */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapped-content {
+  white-space: pre-wrap; /* Zawijanie tekstu */
+  font-size: 1.6rem; /* Rozmiar czcionki */
+}
+
+.square-image {
+  min-width: 10rem; /* Minimalna szerokość obrazka */
+  min-height: 10rem; /* Minimalna wysokość obrazka */
+  max-width: 15rem; /* Maksymalna szerokość obrazka */
+  max-height: 15rem; /* Maksymalna wysokość obrazka */
+  object-fit: cover; /* Dopasowanie obrazka do wymiarów */
+}

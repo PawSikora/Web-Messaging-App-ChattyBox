@@ -1,0 +1,75 @@
+ <body>
+    <div class="container" *ngIf="!registerMode">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="text-center">
+                <img class="responsive-image" src="https://cdn.discordapp.com/attachments/764147259092631562/1121181495902621867/chattybox-logo.png" alt="Logo">
+              </h4>
+              <h5 class="text-center" style="font-size: 1.8rem;">Logowanie</h5>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" class="form-control" type="email" id="email" formControlName="email" placeholder="Wprowadź email">
+                </div>
+                <div style="padding-bottom: 1rem;" class="form-group">
+                  <label for="password">Hasło</label>
+                  <input type="password"  class="form-control" id="password" formControlName="password"  placeholder="Wprowadź hasło">
+                </div>
+                <div style=" justify-content: center; display: flex;" >
+                  <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid" >Zaloguj</button>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer text-center" >
+              Nie masz jeszcze konta? <a style="cursor: pointer;"  (click)="change()"><u>Zarejestruj się</u></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" *ngIf="registerMode">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="text-center">
+                <img class="responsive-image" src="https://cdn.discordapp.com/attachments/764147259092631562/1121181495902621867/chattybox-logo.png" alt="Logo">
+              </h4>
+              <h5 class="text-center" style="font-size: 1.8rem;">Rejestracja</h5>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+                <div class="form-group">
+                  <label for="name">Nazwa użytkownika</label>
+                  <input type="text" class="form-control" id="name" formControlName="name" placeholder="Wprowadź nazwę użytkownika">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" class="form-control" type="email" id="email" formControlName="email" placeholder="Wprowadź email">
+                </div>
+                <div class="form-group">
+                  <label for="password">Hasło</label>
+                  <input type="password"  class="form-control" id="password" formControlName="password"  placeholder="Wprowadź hasło">
+                </div>
+                <div class="form-group">
+                  <label for="confirmedPassword">Powtórz hasło</label>
+                  <input type="password"  class="form-control" id="confirmedPassword" formControlName="confirmedPassword"  placeholder="Powtórz hasło">
+                </div>
+                <div style=" justify-content: center; display: flex;" >
+                  <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid" >Zarejestruj</button>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer text-center" >
+              Masz już konto? <a style="cursor: pointer;"  (click)="change()"><u>Zaloguj się</u></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>

@@ -4,6 +4,8 @@ using BLL.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 
 namespace WebApi.Controllers
 {
@@ -36,9 +38,6 @@ namespace WebApi.Controllers
         [HttpPost("Register")]
         public ActionResult Register([FromBody] CreateUserDTO registerUser)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Błąd tworzenia uzytkownika!");
-
             _userService.RegisterUser(registerUser);
             return Ok();
         }
@@ -47,6 +46,23 @@ namespace WebApi.Controllers
         public ActionResult<TokenToReturn> Login([FromBody] LoginUserDTO loginUser)
         {
             return Ok(_userService.LoginUser(loginUser));
+        }
+        [HttpPost("RefreshToken")]
+        public ActionResult<TokenToReturn> RefreshToken([FromQuery] int userId)
+        {
+            var userDTO= _userService.GetUser(userId);
+           var user= _userService.GetUser(userDTO.Email);
+           var refreshToken = Request.Cookies["refreshToken"];
+
+           if(!user.RefreshToken.Equals(refreshToken)) 
+               return Unauthorized("Niepoprawny token");
+
+           if(user.TokenExpires<DateTime.Now)
+               return Unauthorized("Token wygasł");
+           
+
+           return Ok(_userService.GenerateNewToken(user));
+
         }
 
     }

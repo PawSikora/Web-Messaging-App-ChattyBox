@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header custom-card-header">
+      Example Card
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Czaty</h5>
+    </div>
+    <div class="list-group list-group-flush">
+      <a style="cursor: pointer;" (click)="openChat(x.id)" class="list-group-item list-group-item-action" *ngFor="let x of chats">{{x.name}}</a>
+    </div>
+    <div class="card-footer custom-card-footer">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li [ngClass]="{'page-item disabled': this.pageNumber!-1<=0}">
+            <a style="cursor: pointer;" class="page-link" (click)="loadPage(this.pageNumber!-1,this.userId!)" tabindex="-1">Previous</a>
+          </li>
+          <li *ngFor="let x of pages" class="page-item"><a style="cursor: pointer;" class="page-link" (click)="loadPage(x,this.userId!)">{{x}}</a></li>
+          <li [ngClass]="{'page-item disabled': this.pageNumber!+1>this.pages?.length!}">
+            <a style="cursor: pointer;" class="page-link" (click)="loadPage(this.pageNumber!+1,this.userId!)" >Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

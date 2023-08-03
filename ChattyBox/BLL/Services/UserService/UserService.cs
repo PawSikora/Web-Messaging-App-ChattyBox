@@ -124,7 +124,7 @@ namespace BLL.Services.UserService
                     {
                             new (type:"userId",user.Id.ToString()),
                     },
-                    expires: DateTime.Now.AddDays(1),
+                    expires: DateTime.Now.AddMinutes(1),
                     signingCredentials: creds
                );
 
@@ -164,6 +164,16 @@ namespace BLL.Services.UserService
                 throw new NotFoundException("Nie znaleziono roli");
 
             return role.Name;
+        }
+
+        public User GetUser(string email)
+        {
+            var user= _unitOfWork.Users.GetUserByEmail(email);
+
+            if(user is null)
+                throw new NotFoundException("Nie znaleziono uzytkownika");
+
+            return user;
         }
 
     }

@@ -404,3 +404,5 @@ FodyWeavers.xsd
 ChattyBox/MVCWebApp/wwwroot/files/*
 !ChattyBox/MVCWebApp/wwwroot/files/Chat1
 ChattyBox/UnitTests/wwwroot/files/*
+ChattyBox/WebApi/wwwroot/files/*
+!ChattyBox/WebApi/wwwroot/files/Chat1

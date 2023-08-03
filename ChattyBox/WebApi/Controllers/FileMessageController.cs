@@ -35,17 +35,17 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("{messageId}")]
-        public ActionResult Delete([FromRoute] int messageId)
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
         {
-            _fileMessageService.DeleteFileMessage(messageId);
+            _fileMessageService.DeleteFileMessage(id);
            return Ok();
         }
 
-        [HttpGet("GetNewest/{idChat}")]
-        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int idChat)
+        [HttpGet("GetNewest/{id}")]
+        public ActionResult<GetNewestMessageDTO> GetNewestMessage([FromRoute] int id)
         {
-            return Ok(_fileMessageService.GetLastFileMessage(idChat));
+            return Ok(_fileMessageService.GetLastFileMessage(id));
         }
     }
 }
