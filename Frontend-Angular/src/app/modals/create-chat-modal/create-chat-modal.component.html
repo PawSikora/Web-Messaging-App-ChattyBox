@@ -1,0 +1,27 @@
+  <div class="modal" id="createChatModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <h2 class="modal-title">Kreator chatu</h2>
+        </div>
+
+        <div class="modal-body">
+          <form>
+            
+            <div class="mb-3">
+              <label for="chatName" class="form-label">Nazwa czatu:</label>
+              <input type="text" class="form-control" name="chatInput" [(ngModel)]="chatName" placeholder="Wpisz nazwę nowego chatu">
+            </div>
+
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeCreateChat()">Anuluj</button>
+          <button type="button" class="btn btn-primary" (click)="createChat()">Stwórz chat</button>
+        </div>
+
+      </div>
+    </div>
+  </div>

@@ -86,7 +86,8 @@ namespace UnitTests.ControllersWebApi
             var user = new User { Id = userId, Username = "Test user" };
 
             // Act
-            var result = controller.AddUser(chatId, userId) as OkResult;
+            //var result = controller.AddUser(chatId, userId) as OkResult;
+            var result = controller.AddUser(new ChatUserUpdateDTO { ChatId = chatId, UserId = userId }) as OkResult;
 
             // Assert
             Assert.NotNull(result);
@@ -127,7 +128,7 @@ namespace UnitTests.ControllersWebApi
             var controller = new ChatController(mockChatService.Object);
 
             // Act
-            var result = controller.DeleteUser(id,userId);
+            var result = controller.DeleteUser(new ChatUserUpdateDTO { ChatId = id, UserId = userId });
 
             // Assert
             var okResult = Assert.IsType<OkResult>(result);
@@ -166,19 +167,19 @@ namespace UnitTests.ControllersWebApi
             };
 
             var mockChatService = new Mock<IChatService>();
-            mockChatService.Setup(c => c.GetUsersInChat(chatId))
+            mockChatService.Setup(c => c.GetUsersInChat(chatId, 1, 5))
                 .Returns(expectedUsers);
           
             var controller = new ChatController(mockChatService.Object);
 
             // Act
-            var result = controller.GetUsersInChat(chatId);
+            var result = controller.GetUsersInChat(chatId, 1);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var users = Assert.IsAssignableFrom<ICollection<UserDTO>>(okResult.Value);
             Assert.Equal(expectedUsers.Count, users.Count);
-            mockChatService.Verify(service => service.GetUsersInChat(chatId), Times.Once);
+            mockChatService.Verify(service => service.GetUsersInChat(chatId, 1, 5), Times.Once);
         }
 
     }

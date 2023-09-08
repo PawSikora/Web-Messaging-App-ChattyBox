@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] CreateTextMessageDTO messageDTO)
+        public ActionResult Create([FromForm] CreateTextMessageDTO messageDTO)
         {
             if (!ModelState.IsValid)
                 BadRequest("Blad tworzenia wiadomosci tekstowej!");

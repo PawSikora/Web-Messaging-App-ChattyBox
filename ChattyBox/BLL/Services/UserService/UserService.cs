@@ -94,6 +94,7 @@ namespace BLL.Services.UserService
 
             return new TokenToReturn(generatedToken);
         }
+
         public string GenerateNewToken(User user)
         {
             var refreshToken = new RefreshToken();
@@ -153,6 +154,11 @@ namespace BLL.Services.UserService
 
         public int GetUserChatsCount(int id)
         {
+            var chatsCount = _unitOfWork.Users.GetUserChatsCount(id);
+
+            if (chatsCount == 0)
+                throw new NotFoundException("Nie znaleziono czatów");
+
             return _unitOfWork.Users.GetUserChatsCount(id);
         }
 

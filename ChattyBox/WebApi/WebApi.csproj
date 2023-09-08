@@ -5,18 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="files\Chat1\stockGif.gif" />
-    <None Remove="files\Chat1\stockImage.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="files\Chat1\stockGif.gif">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="files\Chat1\stockImage.jpg">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+    <Compile Remove="files\**" />
+    <Compile Remove="Nowy folder\**" />
+    <Content Remove="files\**" />
+    <Content Remove="Nowy folder\**" />
+    <EmbeddedResource Remove="files\**" />
+    <EmbeddedResource Remove="Nowy folder\**" />
+    <None Remove="files\**" />
+    <None Remove="Nowy folder\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
@@ -31,8 +27,5 @@
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Nowy folder\" />
   </ItemGroup>
 </Project>

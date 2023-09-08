@@ -102,7 +102,6 @@ namespace BLL.Services.ChatService
         public void DeleteUserById(int userId, int chatId)
         {
             var user = _unitOfWork.Users.GetById(userId);
-
             if (user is null)
                 throw new NotFoundException("Nie znaleziono użytkownika");
 
@@ -111,7 +110,6 @@ namespace BLL.Services.ChatService
                 throw new NotFoundException("Nie znaleziono chatu");
 
             var userChat = _unitOfWork.Chats.GetUserChatById(userId, chatId);
-
             if (userChat is null)
                 throw new NotFoundException("Nie znaleziono użytkownika w czacie");
 
@@ -143,15 +141,28 @@ namespace BLL.Services.ChatService
         {
             return _unitOfWork.Chats.GetChatMessagesCount(id);
         }
-
-        public IEnumerable<UserDTO> GetUsersInChat(int chatId)
+        public int GetChatUsersCount(int id)
         {
+            return _unitOfWork.Chats.GetChatUsersCount(id);
+        }
+
+        public IEnumerable<UserDTO> GetUsersInChat(int chatId, int pageNumber, int usersPerPage)
+        {
+            if (pageNumber < 1)
+                throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
+
+            var userCount = _unitOfWork.Chats.GetChatUsersCount(chatId);
+
+            int maxPageNumber = (int)Math.Ceiling((double)userCount / usersPerPage);
+
+            pageNumber = pageNumber > maxPageNumber ? maxPageNumber : pageNumber;
+
             var chat = _unitOfWork.Chats.GetById(chatId);
 
             if (chat is null)
                 throw new NotFoundException("Nie znaleziono chatu");
 
-            var users = _unitOfWork.Chats.GetUsersInChat(chatId);
+            var users = _unitOfWork.Chats.GetUsersInChat(chatId, pageNumber, usersPerPage);
 
             if (users is null)
                 throw new NotFoundException("Nie znaleziono użytkowników");

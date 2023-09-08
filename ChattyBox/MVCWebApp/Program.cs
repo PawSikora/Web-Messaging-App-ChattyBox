@@ -69,19 +69,6 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
-
-app.Use(async (context, next) =>
-{
-    var token = context.Request.Cookies["userToken"];
-
-    if (!string.IsNullOrEmpty(token))
-    {
-        context.Request.Headers.Add("Authorization", $"Bearer {token}");
-    }
-
-    await next.Invoke();
-});
-
 app.UseStaticFiles();
 app.UseMiddleware<TokenValidationMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();

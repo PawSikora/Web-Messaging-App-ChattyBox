@@ -1,0 +1,35 @@
+<div class="modal" id="searchUserModal" role="dialog" aria-labelledby="searchUserModalLabel" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+        <div class="modal-content">
+          
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                      <h3>Wyszukiwarka użytkowników</h3>
+                        <input type="text" class="form-control" name="searchInput" [(ngModel)]="searchText" placeholder="Wyszukaj użytkownika" (click)="clearSearch()"> 
+                    </div>
+                </form>
+
+                <div class="search-result" *ngIf="searchedUser">
+                    <h4>Wyniki wyszukiwania:</h4>
+                    <div class="add-user">
+                      <p>{{searchedUser.username}}</p>
+                      <button class="btn btn-success" type="button" (click)="addUserToChat(searchedUser.id, this.chatId!)" data-bs-dismiss="modal" [disabled]="isUserInChat(searchedUser.id)">Dodaj użytkownika</button>
+                    </div>
+                </div>
+
+                <div class="search-result" *ngIf="searchedUser == undefined">
+                  <h4>Brak wyników wyszukiwania</h4>
+                </div>
+              
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="close()">Anuluj</button>
+                <button type="button" class="btn btn-primary" (click)="searchUsers(searchText)">Szukaj</button>
+            </div>
+            
+        </div>
+    </div>
+</div>

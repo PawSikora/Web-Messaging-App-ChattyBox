@@ -30,7 +30,7 @@ namespace UnitTests.DAL.DummyRepositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User>? GetUsersInChat(int chatId)
+        public IEnumerable<User>? GetUsersInChat(int chatId, int pageNumber, int usersPerPage)
         {
             throw new NotImplementedException();
         }
@@ -66,6 +66,11 @@ namespace UnitTests.DAL.DummyRepositories
         }
 
         public int GetChatMessagesCount(int chatId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetChatUsersCount(int chatId)
         {
             throw new NotImplementedException();
         }

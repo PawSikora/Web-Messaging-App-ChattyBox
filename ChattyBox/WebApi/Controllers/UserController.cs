@@ -47,6 +47,7 @@ namespace WebApi.Controllers
         {
             return Ok(_userService.LoginUser(loginUser));
         }
+
         [HttpPost("RefreshToken")]
         public ActionResult<TokenToReturn> RefreshToken([FromQuery] int userId)
         {

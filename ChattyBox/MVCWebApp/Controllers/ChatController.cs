@@ -128,7 +128,7 @@ namespace MVCWebApp.Controllers
             var senderId = int.Parse(User.FindFirst("userId")?.Value);
 
             var usersPerPage = 5;
-            var users = _chatService.GetUsersInChat(chatId);
+            var users = _chatService.GetUsersInChat(chatId, pageNumber, usersPerPage);
             var role = _chatService.GetUserRole(senderId,chatId);
             var chatsAndUsers = new ChatAndUsers
             {
@@ -140,7 +140,7 @@ namespace MVCWebApp.Controllers
                 UserRole = role,
                 UserId = senderId
             };
-            return View("ChatGetUsers",chatsAndUsers);
+            return View("ChatGetUsers", chatsAndUsers);
         }
 
     }

@@ -6,9 +6,10 @@ using System.Text;
 
 namespace MVCWebApp.Middleware
 {
-    public class TokenValidationMiddleware  :IMiddleware
+    public class TokenValidationMiddleware : IMiddleware
     {
         private readonly IConfiguration _configuration;
+
         public TokenValidationMiddleware(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -16,40 +17,33 @@ namespace MVCWebApp.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var controllerName = context.Request.RouteValues["controller"]?.ToString();
-            var actionName = context.Request.RouteValues["action"]?.ToString();
+            var token = context.Request.Cookies["userToken"];
 
-            if (actionName == "Login" || actionName == "Register" && controllerName == "User")
+            if (!string.IsNullOrEmpty(token))
             {
-                await next(context);
-                return;
+                int? userId = ValidateToken(token);
+
+                if (userId is null)
+                {
+                    context.Request.Path = "/User/Logout";
+                }
+                else
+                {
+                    context.Request.Headers.Add("Authorization", $"Bearer {token}");
+                    context.Items["userId"] = userId;
+                }
             }
 
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            var userId = ValidateToken(token);
-            if (userId is not null)
-            {
-                context.Items["userId"] = userId;
-                await next(context);
-                return;
-            }
             await next(context);
-            return;
         }
-
 
         private int? ValidateToken(string token)
         {
-            if (token is null)
-                return null;
-
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenSettings:SecurityKey"]));
 
             try
             {
-
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuer = true,

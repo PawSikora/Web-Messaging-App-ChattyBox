@@ -1,0 +1,90 @@
+<div class="container">
+  <br/>
+  <div class="card">
+
+    <div class="card-header custom-card-header">
+      <p style="font-size: 2rem;">Lista czatów</p> 
+    </div>
+
+    <div class="list-group list-group-flush">
+      <div *ngFor="let chat of chats" class="list-group-item d-flex justify-content-between align-items-center">
+        <a style="cursor: pointer;" (click)="openChat(chat.id)">{{chat.name}}</a>
+        <button class="btn btn-success" type="button" (click)="loadChatUsers(chat.id,1)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [attr.data-chat-id]="chat.id">Wyświetl użytkowników</button>
+      </div>
+    </div>
+
+    <div class="card-footer custom-card-footer">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li [ngClass]="{'page-item disabled': this.chatsPageNumber!-1<=0}">
+            <a style="cursor: pointer;" class="page-link" (click)="loadPage(this.userId!, this.chatsPageNumber!-1)" tabindex="-1">Poprzednia</a>
+          </li>
+
+          <li *ngFor="let page of chatPages" class="page-item">
+            <a style="cursor: pointer;" class="page-link" (click)="loadPage(this.userId!, page)">{{page}}</a>
+          </li>
+
+          <li [ngClass]="{'page-item disabled': this.chatsPageNumber!+1>this.chatPages.length!}">
+            <a style="cursor: pointer;" class="page-link" (click)="loadPage(this.userId!, this.chatsPageNumber!+1)" >Nastepna</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+
+  <div class="offcanvas-header">
+    <h3 id="offcanvasRightLabel">Użytkownicy czatu:</h3>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <ul class="list-group">
+
+      <li class="list-group-item" *ngFor="let user of chatUsers">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>{{user.username}}</div>
+          <button class="btn btn-danger ms-2" type="button" [disabled]="this.userId == user.id || isAdmin(user.id)" (click)="removeUserFromChat(user.id)">Usuń użytkownika</button> 
+        </div>
+      </li>
+
+    </ul>
+
+    <br>
+
+    <div class="card-footer custom-card-footer">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li [ngClass]="{'page-item disabled': this.usersPageNumber!-1<=0}">
+            <a style="cursor: pointer;" class="page-link" (click)="loadChatUsers(this.chatId!, this.usersPageNumber!-1)" tabindex="-1">Poprzednia</a>
+          </li>
+
+          <li *ngFor="let page of userPages" class="page-item">
+            <a style="cursor: pointer;" class="page-link" (click)="loadChatUsers(this.chatId!, page)">{{page}}</a>
+          </li>
+
+          <li [ngClass]="{'page-item disabled': this.usersPageNumber!+1>this.userPages.length!}">
+            <a style="cursor: pointer;" class="page-link" (click)="loadChatUsers(this.chatId!, this.usersPageNumber!+1)" >Nastepna</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+  
+  <div class="offcanvas-header">
+    <button type="button" class="btn btn-primary" (click)="openSearchModal()">Wyszukaj</button>
+  </div>
+
+  <app-search-user-modal *ngIf="showSearchModal" [chatId]="this.chatId" [chatUsers]="this.chatUsers" (closeSearchModal)="closeSearchModal()"></app-search-user-modal>
+
+</div>
+
+<div class="container">
+  <button type="button" class="btn btn-primary mt-3" (click)="openCreateChatModal()">Stwórz chat</button>
+</div>
+
+<app-create-chat-modal *ngIf="showCreateChatModal" [userId]="this.userId!" (closeCreateChatModal)="closeCreateChatModal()"></app-create-chat-modal>

@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] CreateFileMessageDTO createFile)
+        public ActionResult Create([FromForm] CreateFileMessageDTO createFile)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Błąd dodawania pliku!");

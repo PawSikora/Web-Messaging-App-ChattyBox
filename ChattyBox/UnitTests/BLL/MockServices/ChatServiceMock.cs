@@ -4,7 +4,7 @@ using BLL.Services.ChatService;
 
 namespace UnitTests.BLL.MockServices
 {
-    public class ChatServiceMock :IChatService
+    public class ChatServiceMock : IChatService
     {
         List<UserDTO> _users = new List<UserDTO>()
         {
@@ -14,7 +14,7 @@ namespace UnitTests.BLL.MockServices
             new UserDTO { Id = 4, Username = "Mock4",Email ="testUser@mail4.com" },
 
         };
-        public IEnumerable<UserDTO> GetUsersInChat(int chatId)
+        public IEnumerable<UserDTO> GetUsersInChat(int chatId, int pageNumber, int usersPerPage)
         {
             throw new NotImplementedException();
         }
@@ -45,6 +45,10 @@ namespace UnitTests.BLL.MockServices
         }
 
         public int GetChatMessagesCount(int id)
+        {
+            throw new NotImplementedException();
+        }
+        public int GetChatUsersCount(int id)
         {
             throw new NotImplementedException();
         }

@@ -22,14 +22,14 @@ namespace DAL.Repositories.ChatRepository
             _context.UserChats.Remove(userChat);
         }
 
-        public IEnumerable<User>? GetUsersInChat(int chatId)
+        public IEnumerable<User>? GetUsersInChat(int chatId, int pageNumber, int usersPerPage)
         {
-            var users = _context.Chats
-              .Where(c=> c.Id == chatId)
-              .SelectMany(c => c.UserChats)
-              .Select(uc=> uc.User).ToList();
-
-            return users;
+            return _context.Chats.Where(c => c.Id == chatId)
+                .SelectMany(c => c.UserChats)
+                .Select(uc => uc.User)
+                .OrderByDescending(uc => uc.Username)
+                .Skip((pageNumber - 1) * usersPerPage)
+                .Take(usersPerPage).ToList();
         }
 
         public void CreateChat(Chat chat, UserChat userChat)
@@ -59,6 +59,12 @@ namespace DAL.Repositories.ChatRepository
         {
             return _context.Chats.Where(c => c.Id == chatId)
                 .SelectMany(c => c.Messages).Count();
+        }
+
+        public int GetChatUsersCount(int chatId)
+        {
+            return _context.Chats.Where(c => c.Id == chatId)
+                .SelectMany(c => c.UserChats).Count();
         }
 
         public Role? GetUserRole(int userId, int chatId)

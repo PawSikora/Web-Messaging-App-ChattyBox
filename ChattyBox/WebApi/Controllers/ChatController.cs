@@ -30,7 +30,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] CreateChatDTO chat)
+        public ActionResult Create([FromForm] CreateChatDTO chat)
         {
             if (!ModelState.IsValid)
             {
@@ -41,10 +41,10 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpPost("AddUser")]
-        public ActionResult AddUser([FromQuery] int chatId, [FromQuery] int userId)
+        [HttpPut("AddUser")]
+        public ActionResult AddUser([FromBody] ChatUserUpdateDTO chatUser)
         {
-            _chatService.AddUserById(userId, chatId);
+            _chatService.AddUserById(chatUser.UserId, chatUser.ChatId);
             return Ok();
         }
 
@@ -58,10 +58,10 @@ namespace WebApi.Controllers
             return Ok(foundUser);
         }
 
-        [HttpDelete]
-        public ActionResult DeleteUser([FromQuery] int id,[FromQuery] int userId)
+        [HttpPut("DeleteUser")]
+        public ActionResult DeleteUser([FromBody] ChatUserUpdateDTO chatUser)
         {
-            _chatService.DeleteUserById(userId, id);
+            _chatService.DeleteUserById(chatUser.UserId, chatUser.ChatId);
             return Ok();
         }
 
@@ -72,15 +72,33 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromRoute] int id)
+        [HttpGet("GetUsers")]
+        //public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromRoute] int id, [FromRoute] int pageNumber)
+        public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromQuery] int id, [FromQuery] int pageNumber)
         {
-            var users = _chatService.GetUsersInChat(id);
+            var usersPerPage = 5;
+            var users = _chatService.GetUsersInChat(id, pageNumber, usersPerPage);
             if (users is null)
                 return NotFound();
 
             return Ok(users);
         }
 
+        [HttpGet("GetUserRole")]
+        public ActionResult<string> GetUserRole([FromQuery] int chatId, [FromQuery] int userId)
+        {
+            var role = _chatService.GetUserRole(userId, chatId);
+            if (role is null)
+                return NotFound();
+            return Ok(role);
+        }
+
+        [HttpGet("GetMessagesCount")]
+        public ActionResult<int> GetMessagesCount([FromQuery] int id)
+        {
+            var count = _chatService.GetChatMessagesCount(id);
+            return Ok(count);
+        }
+        
     }
 }

@@ -1,0 +1,15 @@
+<div class="media-modal" (click)="close()">
+  <div class="media-modal-contentt">
+
+    <ng-container *ngIf="mediaType === 'image'">
+      <img [src]="mediaUrl" [alt]="mediaName" (click)="$event.stopPropagation()">
+    </ng-container>
+
+    <ng-container *ngIf="mediaType === 'video'">
+      <video [src]="mediaUrl"  (click)="$event.stopPropagation()" controls>
+        <p>Film niedostęppny!</p>
+      </video>
+    </ng-container>
+
+  </div>
+</div>

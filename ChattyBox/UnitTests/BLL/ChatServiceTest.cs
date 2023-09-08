@@ -52,7 +52,7 @@ namespace UnitTests.BLL
             chatService.AddUserById(user.Id, chat.Id);
 
             //Assert
-            Assert.Equal(1,unitOfWork.Chats.GetUsersInChat(1).Count());
+            Assert.Equal(1,unitOfWork.Chats.GetUsersInChat(1, 1, 5).Count());
         }
 
         [Fact]
@@ -171,6 +171,53 @@ namespace UnitTests.BLL
         }
 
         [Fact]
+        public void GetChatUsersCount_ShouldReturnTrue_WhenUsersCountIsCorrect()
+        {
+                // Arrange
+                FakeUserRepository userRepo = new FakeUserRepository();
+                FakeChatRepository chatRepo = new FakeChatRepository();
+                FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
+                FakeFileMessageRepository fileRepo = new FakeFileMessageRepository();
+                FakeRoleRepository roleRepo = new FakeRoleRepository();
+    
+                var unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
+                var chatService = new ChatService(unitOfWork, _mockMapper.Object);
+                var user = new User { Id = 1, Username = "User1" };
+                userRepo.CreateUser(user);
+                var chat = new Chat { Id = 1, Name = "Chat1", UserChats = new List<UserChat> { new UserChat { User = user } } };
+                chatRepo.CreateChat(chat);
+    
+                //Act
+                var count = chatService.GetChatUsersCount(chat.Id);
+    
+                //Assert
+                Assert.Equal(1, count);
+        }
+
+        [Fact]
+        public void GetChatUsersCount_ShouldReturnFalse_WhenChatDoesNotExist()
+        {
+            // Arrange
+            FakeUserRepository userRepo = new FakeUserRepository();
+            FakeChatRepository chatRepo = new FakeChatRepository();
+            FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
+            FakeFileMessageRepository fileRepo = new FakeFileMessageRepository();
+            FakeRoleRepository roleRepo = new FakeRoleRepository();
+            var unitOfWork = new UnitOfWork(chatRepo, fileRepo, textRepo, userRepo, roleRepo);
+            var chatService = new ChatService(unitOfWork, _mockMapper.Object);
+            var user = new User { Id = 1, Username = "User1" };
+            userRepo.CreateUser(user);
+            var chat = new Chat { Id = 1, Name = "Chat1", UserChats = new List<UserChat> { new UserChat { User = user } } };
+            chatRepo.CreateChat(chat);
+
+            //Act
+            var count = chatService.GetChatUsersCount(2);
+
+            //Assert
+            Assert.Equal(0, count);
+        }
+
+        [Fact]
         public void GetUsersInChat_ShouldReturnTrue_WhenChatHasUsers()
         {
 
@@ -196,7 +243,7 @@ namespace UnitTests.BLL
 
 
             //Act
-             var users = chatService.GetUsersInChat(chat.Id);
+             var users = chatService.GetUsersInChat(chat.Id, 1, 5);
             
             //Assert
              Assert.NotNull(users);

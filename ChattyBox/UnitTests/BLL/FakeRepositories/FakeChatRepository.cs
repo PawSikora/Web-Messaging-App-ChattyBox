@@ -41,12 +41,15 @@ namespace UnitTests.BLL.FakeRepositories
             }
         }
 
-        public IEnumerable<User>? GetUsersInChat(int chatId)
+        public IEnumerable<User>? GetUsersInChat(int chatId, int pageNumber, int usersPerPage)
         {
             var users = _chats
                 .Where(c => c.Id == chatId)
                 .SelectMany(c => c.UserChats)
-                .Select(uc => uc.User).ToList();
+                .Select(uc => uc.User)
+                .OrderByDescending(u => u.Username)
+                .Skip((pageNumber - 1) * usersPerPage)
+                .Take(usersPerPage).ToList();
 
             return users;
         }
@@ -90,6 +93,12 @@ namespace UnitTests.BLL.FakeRepositories
         {
             return _chats.Where(c => c.Id == chatId)
                 .SelectMany(c => c.Messages).Count();
+        }
+
+        public int GetChatUsersCount(int chatId)
+        { 
+            return _chats.Where(c => c.Id == chatId)
+                .SelectMany(c => c.UserChats).Count();
         }
 
         public bool IsUserRole(int userId, int chatId, int roleId)
