@@ -141,13 +141,13 @@ export class ChatComponent implements OnInit {
         else if(message.messageType == 'file')
         {
           this.messageService.getFile(message.id).subscribe((resFile) => {
-
             this.messageService.file(this.chat!.name, resFile.name).subscribe((fileData:Blob) => {
               const fileUrl = URL.createObjectURL(fileData);
               const fileMessage: FileMessage = {path: fileUrl, name: resFile.name, fileType: fileData.type, id: message.id, chatId: message.chatId, senderId: message.senderId, timeStamp: message.timeStamp, messageType: message.messageType};
               this.messages.push(fileMessage);
               this.messages.sort((a, b) => new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime());
             });
+            
           });
         }
       });

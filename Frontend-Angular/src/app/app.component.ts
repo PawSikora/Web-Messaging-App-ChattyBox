@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +7,15 @@ import { Router } from '@angular/router';
   styleUrls: ['app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent{
   title = 'Angular';
   showHeader=true;
+
+
   constructor(private router:Router){
     router.events.subscribe((val) => {
       this.showHeader = !(this.router.url === '/login');
     });
   }
+
 }

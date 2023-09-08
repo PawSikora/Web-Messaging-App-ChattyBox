@@ -17,26 +17,29 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using UnitTests.BLL.FakeRepositories;
-
+//private readonly Mock<IUserRepository> _mockUserRepo = new Mock<IUserRepository>();
+//private readonly Mock<IChatRepository> _mockChatRepo = new Mock<IChatRepository>();
+//private readonly Mock<ITextMessageRepository> _mockTextRepo = new Mock<ITextMessageRepository>();
+//private readonly Mock<IFileMessageRepository> _mockFileRepo = new Mock<IFileMessageRepository>();
+//private readonly Mock<IRoleRepository> _mockRoleRepo = new Mock<IRoleRepository>();
+//private readonly Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+//private readonly Mock<IMapper> _mockMapper = new Mock<IMapper>();
+//private readonly Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+//private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
 namespace UnitTests.BLL
 {
     public class UserServiceTest
     {
 
-        private readonly Mock<IUserRepository> _mockUserRepo = new Mock<IUserRepository>();
-        private readonly Mock<IChatRepository> _mockChatRepo = new Mock<IChatRepository>();
-        private readonly Mock<ITextMessageRepository> _mockTextRepo = new Mock<ITextMessageRepository>();
-        private readonly Mock<IFileMessageRepository> _mockFileRepo = new Mock<IFileMessageRepository>();
-        private readonly Mock<IRoleRepository> _mockRoleRepo = new Mock<IRoleRepository>();
-        private readonly Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
-        private readonly Mock<IMapper> _mockMapper = new Mock<IMapper>();
-        private readonly Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
-        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+
 
         [Fact]
         public void GetUserChatsCountFake_ShouldReturnCount_WhenUserHasChats()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -69,6 +72,9 @@ namespace UnitTests.BLL
         public void GetUserFake_ShouldReturnUser_WhenUserExists()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -100,13 +106,15 @@ namespace UnitTests.BLL
         public void GetUserMoq_ShouldReturnUser_WhenUserExists()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+
             _mockMapper.Setup(m => m.Map<UserDTO>(It.IsAny<User>()))
                 .Returns<User>(u => new UserDTO { Id = u.Id, Email = u.Email });
-            _mockUserRepo.Setup(repo => repo.GetById(1)).Returns(new User { Id = 1, Email = "User1" });
-
-            var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object,
-                _mockUserRepo.Object, _mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, _mockMapper.Object, _mockConfiguration.Object,
+            _mockUnitOfWork.Setup(uow => uow.Users.GetById(1)).Returns(new User { Id = 1, Email = "User1" });
+            var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
                 _mockHttpContextAccessor.Object);
 
             // Act + Assert
@@ -117,11 +125,13 @@ namespace UnitTests.BLL
         public void GetUser_Throws_NotFoundException_WhenUserNotFound()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var userId = 1;
-            _mockUserRepo.Setup(repo => repo.GetById(userId)).Returns((User)null);
-            var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object,
-                _mockUserRepo.Object, _mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, _mockMapper.Object, _mockConfiguration.Object,
+            _mockUnitOfWork.Setup(uow => uow.Users.GetById(userId)).Returns((User)null);
+            var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
                 _mockHttpContextAccessor.Object);
 
             // Act + Assert
@@ -132,10 +142,12 @@ namespace UnitTests.BLL
         public void GetUserChatsCountMoq_ShouldReturnCount_WhenUserHasChats()
         {
             // Arrange
-            _mockUserRepo.Setup(repo => repo.GetUserChatsCount(1)).Returns(2);
-            var unitOfWork = new UnitOfWork(_mockChatRepo.Object, _mockFileRepo.Object, _mockTextRepo.Object,
-                _mockUserRepo.Object, _mockRoleRepo.Object);
-            var userService = new UserService(unitOfWork, _mockMapper.Object, _mockConfiguration.Object,
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+            _mockUnitOfWork.Setup(uow => uow.Users.GetUserChatsCount(1)).Returns(2);
+            var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
                 _mockHttpContextAccessor.Object);
 
             // Act + Assert
@@ -146,6 +158,10 @@ namespace UnitTests.BLL
         public void TGetUser_ShouldReturnUserDTOWithChatsCount_WhenUserExists()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
                 _mockHttpContextAccessor.Object);
             var user = new User { Id = 1, Username = "Test User" };
@@ -171,6 +187,10 @@ namespace UnitTests.BLL
         public void TestGetUser_ShouldThrowNotFoundException_WhenUserDoesNotExist_()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var _userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
                 _mockHttpContextAccessor.Object);
 
@@ -189,6 +209,10 @@ namespace UnitTests.BLL
         public void GetChats_ShouldReturnChatList_WhenChatListIsNotNull()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var userId = 1;
             var pageNumber = 1;
             var chatsPerPage = 5;
@@ -217,6 +241,10 @@ namespace UnitTests.BLL
         public void GetChats_Throws_IllegalOperationException_WhenPageNumberIsLessThanOne()
         {
             //Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
                 _mockHttpContextAccessor.Object);
             var userId = 1;
@@ -231,6 +259,10 @@ namespace UnitTests.BLL
         public void GetChats_Throws_NotFoundException_WhenUserHasNoChats()
         {
             //Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var userId = 1;
             var pageNumber = 1;
             var chatsPerPage = 5;
@@ -248,6 +280,10 @@ namespace UnitTests.BLL
         public void LoginUser_ShouldReturnToken_WhenLoginSuccessful()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var expectedPassword = "1234";
             byte[] passwordHash;
             byte[] passwordHashSalt;
@@ -278,6 +314,10 @@ namespace UnitTests.BLL
         public void LoginUser_Throws_NotFoundException_WhenUserNotFound()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var loginUser = new LoginUserDTO { Email = "test@test.com", Password = "1234" };
             _mockUnitOfWork.Setup(uow => uow.Users.GetUserByEmail(loginUser.Email)).Returns((User)null);
             var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,
@@ -291,6 +331,10 @@ namespace UnitTests.BLL
         public void LoginUser_Throws_LoginFailedException_WhenPasswordIncorrect()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var expectedPassword = "1234";
             byte[] passwordHash;
             byte[] passwordHashSalt;
@@ -315,6 +359,10 @@ namespace UnitTests.BLL
         public void RegisterUser_Throws_EmailAlreadyUsedException_WhenEmailAlreadyTaken()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var createUser = new CreateUserDTO { Email = "test@test.com", Password = "1234" };
 
             _mockUnitOfWork.Setup(uow => uow.Users.IsEmailTaken(createUser.Email)).Returns(true);
@@ -330,6 +378,10 @@ namespace UnitTests.BLL
         public void RegisterUser_ShouldCreateUser_WhenEmailNotTaken()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var createUser = new CreateUserDTO { Email = "new@test.com", Password = "1234", Name = "test"};
 
             _mockUnitOfWork.Setup(uow => uow.Users.IsEmailTaken(createUser.Email)).Returns(false);
@@ -348,6 +400,10 @@ namespace UnitTests.BLL
         public void GetUserChatsCount_ReturnUserChatsCount()
         {
             // Arrange
+            Mock<IConfiguration> _mockConfiguration = new Mock<IConfiguration>();
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IHttpContextAccessor> _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
             var userId = 1;
 
             _mockUnitOfWork.Setup(uow => uow.Users.GetUserChatsCount(userId)).Returns(2);

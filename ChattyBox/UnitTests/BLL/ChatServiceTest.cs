@@ -17,19 +17,14 @@ namespace UnitTests.BLL
     public class ChatServiceTest
     {
 
-        private readonly Mock<IUserRepository> _mockUserRepo = new Mock<IUserRepository>();
-        private readonly Mock<IChatRepository> _mockChatRepo = new Mock<IChatRepository>();
-        private readonly Mock<ITextMessageRepository> _mockTextRepo = new Mock<ITextMessageRepository>();
-        private readonly Mock<IFileMessageRepository> _mockFileRepo = new Mock<IFileMessageRepository>();
-        private readonly Mock<IRoleRepository> _mockRoleRepo = new Mock<IRoleRepository>();
-        private readonly Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
-        private readonly Mock<IMapper> _mockMapper = new Mock<IMapper>();
+
 
         [Fact]
         public void AddUserById_ShouldReturnTrue_WhenUserIsInChat()
         {
 
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>(); 
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -59,6 +54,7 @@ namespace UnitTests.BLL
         public void CrateChat_ShouldReturnTrue_WhenChatExist()
         {
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -86,8 +82,9 @@ namespace UnitTests.BLL
         }
         [Fact]
         public void DeleteChat_ShouldReturnTrue_WhenChatDoesentExist()
-        {           
+        {
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -114,6 +111,7 @@ namespace UnitTests.BLL
         public void DeleteUserById_ShouldReturnTrue_WhenUserIsNotInChat()
         {
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -149,6 +147,7 @@ namespace UnitTests.BLL
         {
 
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -173,7 +172,8 @@ namespace UnitTests.BLL
         [Fact]
         public void GetChatUsersCount_ShouldReturnTrue_WhenUsersCountIsCorrect()
         {
-                // Arrange
+            // Arrange
+                Mock<IMapper> _mockMapper = new Mock<IMapper>();
                 FakeUserRepository userRepo = new FakeUserRepository();
                 FakeChatRepository chatRepo = new FakeChatRepository();
                 FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -198,6 +198,7 @@ namespace UnitTests.BLL
         public void GetChatUsersCount_ShouldReturnFalse_WhenChatDoesNotExist()
         {
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -222,6 +223,7 @@ namespace UnitTests.BLL
         {
 
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -255,6 +257,7 @@ namespace UnitTests.BLL
         {
 
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -298,6 +301,7 @@ namespace UnitTests.BLL
         public void RevokeRole_ShouldReturnTrue_WhenUserHasNoRole()
         {
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -342,6 +346,7 @@ namespace UnitTests.BLL
         {
 
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();
@@ -386,6 +391,7 @@ namespace UnitTests.BLL
         public void GetUserRole_ShouldReturnTrue_WhenUserEmailIsCorrect()
         {
             // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
             FakeUserRepository userRepo = new FakeUserRepository();
             FakeChatRepository chatRepo = new FakeChatRepository();
             FakeTextMessageRepository textRepo = new FakeTextMessageRepository();

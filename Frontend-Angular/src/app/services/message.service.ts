@@ -49,11 +49,10 @@ export class MessageService {
   file(chatname:string, fileName:string):Observable<Blob> {
     const url = `${environment.httpBackend}${Api.FILE}?chatname=${chatname}&fileName=${fileName}`;
     const headers = new HttpHeaders().set('Accept', 'application/octet-stream');
-
+   
     return this.httpClient.get(url, { responseType: 'blob', headers: headers }).pipe(
       catchError((err: HttpErrorResponse) => {
-        this.toastMessageService.notifyOfError(err.error);
-        console.log('Wystąpił błąd podczas pobierania pliku:', err);
+        this.toastMessageService.notifyOfError('Wystąpił błąd podczas pobierania pliku:');
         return of();
       }));
   }
@@ -64,7 +63,9 @@ export class MessageService {
     get<FileMessage>(`${environment.httpBackend}${Api.FILEMESSAGE}`
     .replace(':id', id.toString()))
     .pipe(catchError((err:HttpErrorResponse) => {
+  
       this.toastMessageService.notifyOfError(err.error);
+
       return of();
     }));
   }

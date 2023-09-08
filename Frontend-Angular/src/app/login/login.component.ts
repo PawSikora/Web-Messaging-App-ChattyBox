@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit,OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
@@ -6,7 +6,8 @@ import { Token } from '../interfaces/users-interfaces';
 import { MyLocalStorageService } from '../my-local-storage.service';
 import { EMAIL_PATTERN} from '../constants/validation-patterns.const';
 import { ToastMessageService } from '../services/toast-message.service';
-
+import { NgcCookieConsentService, } from 'ngx-cookieconsent';
+import { Subscription }   from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,13 +15,16 @@ import { ToastMessageService } from '../services/toast-message.service';
 })
 export class LoginComponent implements  OnInit {
   registerMode=false;
+
   constructor(private myLocalStorage:MyLocalStorageService,private formBuilder: FormBuilder,
       private router: Router,private form:FormBuilder,private userService:UserService,
-      private toastMessageService:ToastMessageService) {}
+      private toastMessageService:ToastMessageService,
+      private cookieService: NgcCookieConsentService) {}
   loginForm!: FormGroup;
   registerForm!: FormGroup;
 
   ngOnInit(): void {
+  
     this.loginForm= this.formBuilder.group({
       email: [null,Validators.compose([Validators.required,Validators.pattern(EMAIL_PATTERN)])],
       password: [null,Validators.compose([Validators.required])]
@@ -59,5 +63,6 @@ export class LoginComponent implements  OnInit {
   this.registerForm.reset();
   this.loginForm.reset();
  }
+
 }
 

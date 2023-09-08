@@ -24,7 +24,36 @@ import { MediaViewerModalComponent } from './modals/media-viewer-modal/media-vie
 import { SearchUserModalComponent } from './modals/search-user-modal/search-user-modal.component';
 import { ToastMessageComponent } from './toast-message/toast-message.component';
 import { CreateChatModalComponent } from './modals/create-chat-modal/create-chat-modal.component';
-
+import {NgcCookieConsentModule, NgcCookieConsentConfig} from 'ngx-cookieconsent';
+import { environment } from 'src/environments/environment';
+const cookieConfig:NgcCookieConsentConfig = {
+  cookie: {
+    domain: environment.httpBackend 
+  },
+  "position": "bottom",
+  "theme": "classic",
+  palette: {
+    popup: {
+      "background": "#68a8e8",
+      "text": "#ffffff",
+      "link": "#ffffff"
+    },
+    button: {
+      "background": "#ffffff",
+      "text": "#000000",
+      "border": "transparent"
+    }
+  },
+  "type": "info",
+  "content": {
+    "message": "Ta strona korzysta z ciasteczek, aby zapewnić najlepszą jakość korzystania z naszej witryny.",
+    "dismiss": "Rozumiem",
+    "deny": "Refuse cookies",
+    "link": "Dowiedz sie więcej",
+    "href": "https://cookiesandyou.com",
+    "policy": "Cookie Policy"
+  }
+};
 
 @NgModule({
   declarations: [
@@ -41,6 +70,7 @@ import { CreateChatModalComponent } from './modals/create-chat-modal/create-chat
     CreateChatModalComponent,
   ],
   imports: [
+    NgcCookieConsentModule.forRoot(cookieConfig),
     BrowserModule,
     AppRoutingModule,
     FormsModule,

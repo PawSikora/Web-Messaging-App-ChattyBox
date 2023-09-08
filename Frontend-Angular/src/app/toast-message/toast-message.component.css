@@ -1,0 +1,19 @@
+
+.mat-simple-snackbar {
+    font-size: 14px;
+  }
+
+  .mat-simple-snackbar span {
+    color: white; 
+  }
+
+
+  .mat-simple-snackbar-action button {
+    color: white; 
+    font-weight: bold; 
+  }
+
+  .mat-simple-snackbar {
+    padding: 12px 24px; 
+    border-radius: 4px; 
+  }
