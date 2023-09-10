@@ -4,6 +4,10 @@ namespace WebApi.Middleware
 {
     public class ErrorHandlingMiddleware :IMiddleware
     {
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+
+        public ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger)=>_logger = logger;
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -46,8 +50,9 @@ namespace WebApi.Middleware
                 await context.Response.WriteAsync(ex.Message);
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogCritical(ex, "Wystąpił błąd: {ErrorMessage}", ex.Message);
                 context.Response.ContentType = "text/plain; charset=utf-8";
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Coś poszło nie tak");

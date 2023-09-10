@@ -32,7 +32,7 @@ namespace UnitTests.ControllersMVC
             };
 
             // Act
-            var result = userController.Login() as ViewResult;
+            var result = userController.CheckUserSession() as ViewResult;
 
             // Assert
             Assert.Equal(expectedViewName, result.ViewName);
@@ -60,7 +60,7 @@ namespace UnitTests.ControllersMVC
             };
 
             // Act
-            var result = userController.Login() as RedirectToActionResult;
+            var result = userController.CheckUserSession() as RedirectToActionResult;
 
             // Assert
             Assert.Equal(expectedActionName, result.ActionName);

@@ -56,7 +56,7 @@
               <span class="chat-message-sender">{{ getSenderName(message.senderId) }}</span>
 
               <div>
-                <span class="chat-message-time">{{ message.timeStamp | date }}</span>
+                <span class="chat-message-time">{{ message.timeStamp | date: 'medium' }}</span>
                 <button class="btn btn-danger btn-sm" *ngIf="isAdmin(this.userId!)" (click)="removeMessage(message.id, message.messageType)">Usuń wiadomość</button>   
               </div>
               

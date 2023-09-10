@@ -125,7 +125,7 @@ namespace BLL.Services.UserService
                     {
                             new (type:"userId",user.Id.ToString()),
                     },
-                    expires: DateTime.Now.AddMinutes(1),
+                    expires: DateTime.Now.AddMinutes(15),
                     signingCredentials: creds
                );
 

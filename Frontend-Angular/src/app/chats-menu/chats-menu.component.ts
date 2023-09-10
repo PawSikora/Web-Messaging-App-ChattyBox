@@ -39,7 +39,6 @@ export class ChatsMenuComponent implements OnInit{
       this.chatsPageNumber = 1;
       this.usersPageNumber = 1;
       this.setNumberOfChatPages();
-      this.setNumberOfUserPages(1);
       this.loadPage(this.userId, this.chatsPageNumber!);
     }
 
@@ -48,6 +47,7 @@ export class ChatsMenuComponent implements OnInit{
       this.userService.get(this.userId).subscribe((res) => {
         let numberOfChats = res.chatsCount;
         let howManyPages = Math.ceil(numberOfChats / 5);
+        this.chatPages = [];
         for (let i = 1; i <= howManyPages; i++) {
           this.chatPages?.push(i);
         }
@@ -58,6 +58,7 @@ export class ChatsMenuComponent implements OnInit{
       this.chatService.getFullChat(chatId, 1).subscribe((res) => {
         let numberOfUsers = res.users.length;
         let howManyPages = Math.ceil(numberOfUsers / 5);
+        this.userPages = [];
         for (let i = 1; i <= howManyPages; i++) {
           this.userPages?.push(i);
         }
@@ -68,6 +69,7 @@ export class ChatsMenuComponent implements OnInit{
       this.chatsPageNumber = pageNumber;
       this.userService.getUserChats(userId, pageNumber).subscribe((res) => {
         this.chats = res;
+        this.setNumberOfChatPages();
       });
     }
 
@@ -75,7 +77,8 @@ export class ChatsMenuComponent implements OnInit{
       this.chatId = chatId;
       this.chatService.getUsersInChat(chatId, pageNumber).subscribe((res) => {
         this.chatUsers = res;
-
+        this.setNumberOfUserPages(chatId);
+        this.usersRoles = [];
         this.chatUsers.forEach((user) => {
           this.chatService.getUserRole(chatId, user.id).subscribe((res) => {
             this.usersRoles.push({id: user.id, role: res});

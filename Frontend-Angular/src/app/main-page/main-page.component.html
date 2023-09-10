@@ -1,19 +1,19 @@
-<div class="container">
+<div *ngIf="user != null" class="container">
     <div class="card">
       <div class="card-body">
-        <h1>Witaj {{user?.username}} <span id="imie"></span></h1>
+        <h1>Witaj {{user.username}} <span id="imie"></span></h1>
         <p>Dane konta</p>
         <div>
-          <p>Adres email: {{user?.email}} <span id="email"></span></p>
+          <p>Adres email: {{user.email}} <span id="email"></span></p>
         </div>
         <div>
-          <p>Ostatnie logowanie: {{user?.lastLog|date}} <span id="lastLog"></span></p>
+          <p>Ostatnie logowanie: {{user.lastLog|date}} <span id="lastLog"></span></p>
         </div>
         <div>
-          <p>Jesteś z nami od: {{user?.created|date}} <span id="created"></span></p>
+          <p>Jesteś z nami od: {{user.created|date}} <span id="created"></span></p>
         </div>
         <div>
-          <p>Ilość chatów: {{user?.chatsCount}} <span id="chatsCounts"></span></p>
+          <p>Ilość chatów: {{user.chatsCount}} <span id="chatsCounts"></span></p>
         </div>
       </div>
     </div>

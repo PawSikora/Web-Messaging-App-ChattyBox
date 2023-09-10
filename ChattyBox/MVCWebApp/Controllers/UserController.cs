@@ -17,7 +17,7 @@ namespace MVCWebApp.Controllers
             _userService = userService;
         }
 
-        public IActionResult Login()
+        public IActionResult CheckUserSession()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
@@ -35,7 +35,7 @@ namespace MVCWebApp.Controllers
             Response.Cookies.Append("userToken", tokenToReturn.TokenContent, new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.Now.AddDays(1)
+                Expires = DateTime.Now.AddMinutes(14)
             });
 
             return RedirectToAction("UserMenu", "User");
@@ -48,7 +48,7 @@ namespace MVCWebApp.Controllers
             if (!string.IsNullOrEmpty(token))
                 Response.Cookies.Delete("userToken");
 
-            return RedirectToAction("Login");
+            return View("LoginForm");
         }
 
         [Authorize]
@@ -100,9 +100,9 @@ namespace MVCWebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult Register()
+        public ActionResult ShowRegistrationForm()
         {
-            return View();
+            return View("Register");
         }
 
         [HttpPost]

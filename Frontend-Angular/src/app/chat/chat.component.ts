@@ -163,6 +163,7 @@ export class ChatComponent implements OnInit {
   setNumberOfMessagesPages(): void {
     this.chatService.getChatMessagesCount(this.chatId!).subscribe((resCount) => {
       let howManyPages = Math.ceil(resCount / 5);
+      this.messagesPages = [];
       for (let i = 1; i <= howManyPages; i++) {
         this.messagesPages?.push(i);
       }
@@ -171,6 +172,7 @@ export class ChatComponent implements OnInit {
 
   setNumberOfUsersPages(): void {
     let howManyPages = Math.ceil(this.chatMembers!.length / 5);
+    this.userPages = [];
     for (let i = 1; i <= howManyPages; i++) {
       this.userPages?.push(i);
     }
@@ -210,6 +212,7 @@ export class ChatComponent implements OnInit {
       forkJoin(observables).subscribe(() => {
         console.log('Messages sent successfully');
         this.loadMessages(1);
+        this.setNumberOfMessagesPages();
       });
     }
   
@@ -242,12 +245,14 @@ export class ChatComponent implements OnInit {
         this.messageService.deleteText(messageId).subscribe(() => {
           console.log("Wiadomość została usunięta");
           this.loadMessages(this.messagesPageNumber);
+          this.setNumberOfMessagesPages();
         });
       }
       else if (messageType == 'file') {
         this.messageService.deleteFile(messageId).subscribe(() => {
           console.log("Plik został usunięty");
           this.loadMessages(this.messagesPageNumber);
+          this.setNumberOfMessagesPages();
         });
       }
     }

@@ -179,23 +179,23 @@
 
             @for (int i = 0; i < Model.Count / Model.MessagesPerPage; i++)
             {
-            index = i + 1;
+                index = i + 1;
 	            <a asp-controller="Chat" 
 	               asp-action="Get"
 	               asp-route-chatId="@Model.Chat.ChatId" 
-	               asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	               asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
             }
         }
         else if (Model.MessagesPerPage > 1)
         {
-        int index = 0;
+            int index = 0;
             @for (int i = 0; i < Model.Count / Model.MessagesPerPage + 1; i++)
             {
                 index = i + 1;
 	            <a asp-controller="Chat" 
 	               asp-action="Get" 
 	               asp-route-chatId="@Model.Chat.ChatId"
-	               asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	               asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
 
             }
         }
