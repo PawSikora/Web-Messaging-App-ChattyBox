@@ -1,4 +1,5 @@
-﻿using BLL.DataTransferObjects.UserDtos;
+﻿using System.Security.Claims;
+using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,30 +19,53 @@ namespace MVCWebApp.Controllers
 
         public IActionResult Login()
         {
-            var userId = User.FindFirst("userId")?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (!string.IsNullOrEmpty(userId))
+            if (userIdClaim is not null)
                 return RedirectToAction("UserMenu");
-            
+
             return View("LoginForm");
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginUserDTO loginUser)
+        {
+            var tokenToReturn = _userService.LoginUser(loginUser);
+
+            Response.Cookies.Append("userToken", tokenToReturn.TokenContent, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.Now.AddDays(1)
+            });
+
+            return RedirectToAction("UserMenu", "User");
         }
 
         public IActionResult Logout()
         {
             var token = Request.Cookies["userToken"];
+
             if (!string.IsNullOrEmpty(token))
-            {
                 Response.Cookies.Delete("userToken");
-            }
+
             return RedirectToAction("Login");
         }
 
         [Authorize]
         public ActionResult<UserDTO> UserMenu()
         {
-            int userId = int.Parse(User.FindFirst("userId")?.Value);
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            var userId = int.Parse(userIdClaim.Value);
 
             return View(_userService.GetUser(userId));
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult CreateChat(int id)
+        {
+            return RedirectToAction("Create", "Chat", new { id });
         }
 
         [Authorize]
@@ -91,31 +115,9 @@ namespace MVCWebApp.Controllers
             return View("Login");
         }
 
-        [HttpPost]
-        public ActionResult Login(LoginUserDTO loginUser)
-        {
-            var tokenToReturn = _userService.LoginUser(loginUser);
-
-            Response.Cookies.Append("userToken", tokenToReturn.TokenContent, new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.Now.AddDays(1)
-            }); ; 
-
-            return RedirectToAction("UserMenu","User");
-        }
-
-        [Authorize]
-        [HttpGet]
-        public ActionResult CreateChat(int id)
-        {
-            return RedirectToAction("Create", "Chat", new { id });
-        }
-
         public ActionResult Unauthorized()
         {
 			return View("AuthorizeFailed");
         }
-
     }
 }

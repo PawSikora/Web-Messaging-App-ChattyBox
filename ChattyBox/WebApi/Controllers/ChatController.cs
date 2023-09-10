@@ -21,7 +21,6 @@ namespace WebApi.Controllers
             _chatService = chatService;
         }
 
-
         [HttpGet]
         public ActionResult<GetChatDTO> Get([FromQuery] int chatId, [FromQuery] int pageNumber)
         {
@@ -73,7 +72,6 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("GetUsers")]
-        //public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromRoute] int id, [FromRoute] int pageNumber)
         public ActionResult<ICollection<UserDTO>> GetUsersInChat([FromQuery] int id, [FromQuery] int pageNumber)
         {
             var usersPerPage = 5;

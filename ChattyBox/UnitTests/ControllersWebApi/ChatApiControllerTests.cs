@@ -3,6 +3,7 @@ using BLL.DataTransferObjects.MessageDtos;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.ChatService;
 using DAL.Database.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using UnitTests.BLL.MockServices;
@@ -54,7 +55,7 @@ namespace UnitTests.ControllersWebApi
         }
 
         [Fact]
-        public void Create_ReturnsOkResult()
+        public void Create_ReturnsOkResult_WhenModelStateValid()
         {
             // Arrange
             var mockChatService = new Mock<IChatService>();
@@ -75,6 +76,26 @@ namespace UnitTests.ControllersWebApi
         }
 
         [Fact]
+        public void Create_ReturnsBadRequest_WhenInvalidModelState()
+        {
+            //Arrange
+            var mockChatService = new Mock<IChatService>();
+            var mockFormFile = new Mock<IFormFile>();
+
+            var chat = new CreateChatDTO { Name = "TestChat" };
+            var _chatController = new ChatController(mockChatService.Object);
+            _chatController.ModelState.AddModelError("Error", "Error message");
+
+            //Act
+            var result = _chatController.Create(chat) as BadRequestObjectResult;
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
+            Assert.Equal("Błąd tworzenia chatu!", result.Value);
+        }
+
+        [Fact]
         public void AddUser_ReturnsOkResult()
         {
             // Arrange
@@ -86,7 +107,6 @@ namespace UnitTests.ControllersWebApi
             var user = new User { Id = userId, Username = "Test user" };
 
             // Act
-            //var result = controller.AddUser(chatId, userId) as OkResult;
             var result = controller.AddUser(new ChatUserUpdateDTO { ChatId = chatId, UserId = userId }) as OkResult;
 
             // Assert
@@ -114,6 +134,25 @@ namespace UnitTests.ControllersWebApi
             Assert.Equal(expectedUser.Id, foundUser.Id);
             Assert.Equal(expectedUser.Username, foundUser.Username);
             Assert.Equal(expectedUser.Email, foundUser.Email);
+        }
+
+        [Fact]
+        public void FindUser_ReturnsNotFound_WhenUserNotFound()
+        {
+            // Arrange
+            Mock<IChatService> _mockChatService = new Mock<IChatService>();
+
+            var email = "test@email.com";
+
+            _mockChatService.Setup(s => s.GetUserByEmail(email)).Returns(() => null);
+
+            var chatController = new ChatController(_mockChatService.Object);
+
+            // Act
+            var result = chatController.FindUser(email);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result.Result);
         }
 
         [Fact]
@@ -180,6 +219,93 @@ namespace UnitTests.ControllersWebApi
             var users = Assert.IsAssignableFrom<ICollection<UserDTO>>(okResult.Value);
             Assert.Equal(expectedUsers.Count, users.Count);
             mockChatService.Verify(service => service.GetUsersInChat(chatId, 1, 5), Times.Once);
+        }
+
+        [Fact]
+        public void GetUsersInChat_ReturnsNotFound_WhenNoUsersInChat()
+        {
+            // Arrange
+            Mock<IChatService> _mockChatService = new Mock<IChatService>();
+
+            var chatId = 1;
+            var pageNumber = 1;
+            int usersPerPage = 5;
+
+            _mockChatService.Setup(s => s.GetUsersInChat(chatId, pageNumber, usersPerPage)).Returns(() => null);
+
+            var userController = new ChatController(_mockChatService.Object);
+
+            // Act
+            var result = userController.GetUsersInChat(chatId, pageNumber);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public void GetUserRole_ReturnsOkResultWithRole()
+        {
+            // Arrange
+            Mock<IChatService> _mockChatService = new Mock<IChatService>();
+
+            var chatId = 1;
+            var userId = 1;
+            var expectedRole = "Admin";
+
+            _mockChatService.Setup(s => s.GetUserRole(userId, chatId)).Returns(expectedRole);
+
+            var chatController = new ChatController(_mockChatService.Object);
+
+            // Act
+            var result = chatController.GetUserRole(userId, chatId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var role = Assert.IsAssignableFrom<string>(okResult.Value);
+            Assert.Equal(expectedRole, role);
+        }
+
+        [Fact]
+        public void GetUserRole_ReturnsNotFound_WhenRoleNotFound()
+        {
+            // Arrange
+            Mock<IChatService> _mockChatService = new Mock<IChatService>();
+
+            var chatId = 1;
+            var userId = 1;
+
+            _mockChatService.Setup(s => s.GetUserRole(userId, chatId)).Returns(() => null);
+
+            var chatController = new ChatController(_mockChatService.Object);
+
+            // Act
+            var result = chatController.GetUserRole(userId, chatId);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public void GetMessagesCount_ReturnsOkResultWithMessagesCount()
+        {
+            // Arrange
+            Mock<IChatService> _mockChatService = new Mock<IChatService>();
+
+            var chatId = 1;
+            var expectedCount = 10;
+
+            _mockChatService.Setup(s => s.GetChatMessagesCount(chatId)).Returns(expectedCount);
+
+            var chatController = new ChatController(_mockChatService.Object);
+
+            // Act
+            var result = chatController.GetMessagesCount(chatId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var count = Assert.IsAssignableFrom<int>(okResult.Value);
+
+            Assert.Equal(expectedCount, count);
         }
 
     }

@@ -141,6 +141,7 @@ namespace BLL.Services.ChatService
         {
             return _unitOfWork.Chats.GetChatMessagesCount(id);
         }
+
         public int GetChatUsersCount(int id)
         {
             return _unitOfWork.Chats.GetChatUsersCount(id);
@@ -151,20 +152,20 @@ namespace BLL.Services.ChatService
             if (pageNumber < 1)
                 throw new IllegalOperationException("Numer strony nie może być mniejszy od 1");
 
+            var chat = _unitOfWork.Chats.GetById(chatId);
+
+            if (chat is null)
+                throw new NotFoundException("Nie znaleziono chatu");
+
             var userCount = _unitOfWork.Chats.GetChatUsersCount(chatId);
 
             int maxPageNumber = (int)Math.Ceiling((double)userCount / usersPerPage);
 
             pageNumber = pageNumber > maxPageNumber ? maxPageNumber : pageNumber;
 
-            var chat = _unitOfWork.Chats.GetById(chatId);
-
-            if (chat is null)
-                throw new NotFoundException("Nie znaleziono chatu");
-
             var users = _unitOfWork.Chats.GetUsersInChat(chatId, pageNumber, usersPerPage);
 
-            if (users is null)
+            if (users.Count() == 0)
                 throw new NotFoundException("Nie znaleziono użytkowników");
 
             return _mapper.Map<IEnumerable<UserDTO>>(users);
@@ -182,6 +183,11 @@ namespace BLL.Services.ChatService
             if (chat is null)
                 throw new NotFoundException("Nie znaleziono chatu");
 
+            var userChat = _unitOfWork.Chats.GetUserChatById(userId, chatId);
+
+            if (userChat is null)
+                throw new NotFoundException("Nie znaleziono użytkownika w czacie");
+
             var role = _unitOfWork.Roles.GetById(roleId);
 
             if (role is null)
@@ -189,11 +195,6 @@ namespace BLL.Services.ChatService
 
             if(_unitOfWork.Chats.IsUserRole(userId,chatId,roleId))
                 throw new IllegalOperationException("Użytkownik ma już tą rolę");
-
-            var userChat = _unitOfWork.Chats.GetUserChatById(userId, chatId);
-
-            if (userChat is null)
-                throw new NotFoundException("Nie znaleziono użytkownika w czacie");
 
             userChat.RoleId = roleId;
             _unitOfWork.Save();
@@ -211,18 +212,18 @@ namespace BLL.Services.ChatService
             if (chat is null)
                 throw new NotFoundException("Nie znaleziono chatu");
 
+            var userChat = _unitOfWork.Chats.GetUserChatById(userId, chatId);
+
+            if (userChat is null)
+                throw new NotFoundException("Nie znaleziono użytkownika w czacie");
+
             var role = _unitOfWork.Roles.GetByName("User");
 
             if (role is null)
                 throw new NotFoundException("Nie znaleziono roli");
 
-            if(_unitOfWork.Chats.IsUserRole(userId,chatId,role.Id))
+            if(_unitOfWork.Chats.IsUserRole(userId, chatId, role.Id))
                 throw new IllegalOperationException("Użytkownik ma już tą rolę");
-
-            var userChat = _unitOfWork.Chats.GetUserChatById(userId, chatId);
-
-            if (userChat is null)
-                throw new NotFoundException("Nie znaleziono użytkownika w czacie");
 
             userChat.RoleId = role.Id;
             _unitOfWork.Save();

@@ -29,6 +29,7 @@ export class LoginComponent implements  OnInit {
       email: [null,Validators.compose([Validators.required,Validators.pattern(EMAIL_PATTERN)])],
       password: [null,Validators.compose([Validators.required])]
       });
+      
     this.registerForm= this.formBuilder.group({ 
     email: [null,Validators.compose([Validators.required,Validators.pattern(EMAIL_PATTERN)])],
     password: [null,Validators.compose([Validators.required])],

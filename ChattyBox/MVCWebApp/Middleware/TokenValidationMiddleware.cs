@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace MVCWebApp.Middleware
@@ -21,16 +22,24 @@ namespace MVCWebApp.Middleware
 
             if (!string.IsNullOrEmpty(token))
             {
-                int? userId = ValidateToken(token);
+                var userId = ValidateToken(token);
 
-                if (userId is null)
+                if (userId.HasValue)
                 {
-                    context.Request.Path = "/User/Logout";
+                    var claims = new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userId.Value.ToString()),
+                    };
+
+                    var identity = new ClaimsIdentity(claims, "cookie");
+
+                    var principal = new ClaimsPrincipal(identity);
+
+                    context.User = principal;
                 }
                 else
                 {
-                    context.Request.Headers.Add("Authorization", $"Bearer {token}");
-                    context.Items["userId"] = userId;
+                    context.Request.Path = "/User/Logout";
                 }
             }
 

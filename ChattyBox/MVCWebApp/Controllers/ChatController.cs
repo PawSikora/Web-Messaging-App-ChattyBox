@@ -7,6 +7,7 @@ using BLL.Services.FileMessageService;
 using BLL.Services.TextMessageService;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace MVCWebApp.Controllers
 {
@@ -44,7 +45,9 @@ namespace MVCWebApp.Controllers
         [HttpGet]
         public ActionResult<GetChatDTO> Get(int chatId, int pageNumber)
         {
-            var senderId = int.Parse(User.FindFirst("userId")?.Value);
+            var senderIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            var senderId = int.Parse(senderIdClaim.Value);
 
             var messagesPerPage = 5;
             var count = _chatService.GetChatMessagesCount(chatId);
@@ -88,7 +91,9 @@ namespace MVCWebApp.Controllers
         [HttpGet]
         public ActionResult GetAddUserToChat(int chatId)
         {
-            var senderId = int.Parse(User.FindFirst("userId")?.Value);
+            var senderIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            var senderId = int.Parse(senderIdClaim.Value);
 
             ViewBag.chatId = chatId;
             ViewBag.userId = senderId;
@@ -125,7 +130,9 @@ namespace MVCWebApp.Controllers
         [HttpGet]
         public ActionResult<ICollection<ChatAndUsers>> GetUsersInChat(int chatId, int pageNumber)
         {
-            var senderId = int.Parse(User.FindFirst("userId")?.Value);
+            var senderIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            var senderId = int.Parse(senderIdClaim.Value);
 
             var usersPerPage = 5;
             var users = _chatService.GetUsersInChat(chatId, pageNumber, usersPerPage);
