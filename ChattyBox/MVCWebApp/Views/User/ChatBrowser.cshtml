@@ -13,12 +13,7 @@
 	
 	@{
         int x = 0;
-
-        if (Model.Count % 2 == 0)
-        {
-            Model.Count--;
-        }
-        foreach (var chat in Model.Chats)
+	    foreach (var chat in Model.Chats)
         {
             x++;
             if (x > Model.ChatsPerPage) break;
@@ -50,8 +45,8 @@
             index = i + 1;
 	        <a asp-controller="User" 
 	           asp-action="GetChats" 
-	           asp-route-id="@Model.UserId" 
-	           asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	           asp-route-id="@Model.UserId"
+   asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
         }
     }
     else if (Model.ChatsPerPage > 1)
@@ -63,7 +58,7 @@
 	        <a asp-controller="User" 
 	           asp-action="GetChats" 
 	           asp-route-id="@Model.UserId" 
-	           asp-route-pageNumber="@index" class="btn btn-primary">@(i + 1)</a>
+	           asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
         }
     }
     else throw new Exception("Ilosc czatow na strone nie moze byc mniejsza badz rowna 0");

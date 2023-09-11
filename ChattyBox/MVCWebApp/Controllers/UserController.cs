@@ -112,7 +112,7 @@ namespace MVCWebApp.Controllers
                 return View("Register", registerUser);
 
             _userService.RegisterUser(registerUser);
-            return View("Login");
+            return View("LoginForm");
         }
 
         public ActionResult Unauthorized()

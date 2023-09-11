@@ -1,4 +1,5 @@
-﻿using DAL.Database;
+﻿using System.Security.Cryptography.X509Certificates;
+using DAL.Database;
 using DAL.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -120,7 +121,13 @@ namespace DAL.Repositories.ChatRepository
                 .Take(chatsPerPage);
         }
 
-        public void Save()
+        public IEnumerable<User>? GetAllUsers(int chatId)
+        {
+	        return _context.Users.Where(x => x.UserChats.Any(uc => uc.ChatId == chatId)).ToList();
+
+        }
+
+		public void Save()
         {
            _context.SaveChanges();
         }

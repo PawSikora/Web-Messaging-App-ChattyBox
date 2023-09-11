@@ -120,6 +120,11 @@ namespace UnitTests.BLL.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public IEnumerable<User>? GetAllUsers(int chatId)
+        {
+	        throw new NotImplementedException();
+        }
+
         public void Save()
         {
             // Do nothing.

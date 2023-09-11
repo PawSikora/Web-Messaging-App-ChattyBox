@@ -168,7 +168,7 @@ namespace UnitTests.ControllersMVC
         }
 
         [Fact]
-        public void Logout_ReturnsRedirectToLoginAndDeletesToken_WhenTokenValid()
+        public void Logout_ReturnsLoginViewAndDeletesToken_WhenTokenValid()
         {
             // Arrange
             var _mockUserService = new Mock<IUserService>();
@@ -178,7 +178,7 @@ namespace UnitTests.ControllersMVC
             var userController = new UserController(_mockUserService.Object);
 
             var token = "validToken";
-            var expectedActionName = "Login";
+            var expectedViewName = "LoginForm";
 
             _mockHttpResponse.SetupGet(x => x.Cookies).Returns(new Mock<IResponseCookies>().Object);
             _mockHttpContext.SetupGet(s => s.Request.Cookies["userToken"]).Returns(token);
@@ -190,15 +190,15 @@ namespace UnitTests.ControllersMVC
             };
 
             // Act
-            var result = userController.Logout() as RedirectToActionResult;
+            var result = userController.Logout() as ViewResult;
 
             // Assert
-            Assert.Equal(expectedActionName, result.ActionName);
+            Assert.Equal(expectedViewName, result.ViewName);
             _mockHttpResponse.Verify(r => r.Cookies.Delete("userToken"), Times.Once);
         }
 
         [Fact]
-        public void Logout_ReturnsRedirectToLogin_WhenNoValidToken()
+        public void Logout_ReturnsLoginForm_WhenNoValidToken()
         {
             // Arrange
             var _mockUserService = new Mock<IUserService>();
@@ -207,7 +207,7 @@ namespace UnitTests.ControllersMVC
 
             var userController = new UserController(_mockUserService.Object);
 
-            var expectedActionName = "Login";
+            var expectedViewName = "LoginForm";
 
             _mockHttpContext.SetupGet(s => s.Request.Cookies["userToken"]).Returns(() => null);
             _mockHttpContext.SetupGet(s => s.Response).Returns(_mockHttpResponse.Object);
@@ -218,10 +218,10 @@ namespace UnitTests.ControllersMVC
             };
 
             // Act
-            var result = userController.Logout() as RedirectToActionResult;
+            var result = userController.Logout() as ViewResult;
 
             // Assert
-            Assert.Equal(expectedActionName, result.ActionName);
+            Assert.Equal(expectedViewName, result.ViewName);
             _mockHttpResponse.Verify(r => r.Cookies.Delete("userToken"), Times.Never);
         }
 
@@ -423,7 +423,7 @@ namespace UnitTests.ControllersMVC
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Login", viewResult.ViewName);
+            Assert.Equal("LoginForm", viewResult.ViewName);
 
             _mockUserService.Verify(service => service.RegisterUser(registerUser), Times.Once);
         }

@@ -17,5 +17,6 @@ namespace BLL.Services.ChatService
         void RevokeRole(int userId, int chatId);
         string GetUserRole(int userId, int chatId);
         UserDTO GetUserByEmail(string email);
+        IEnumerable<UserDTO>? GetAllUsers(int chatId);
     }
 }

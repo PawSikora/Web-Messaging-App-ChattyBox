@@ -3,8 +3,7 @@
 
 <form method="get" asp-action="FindUser" asp-controller="Chat">
 <input type="hidden" asp-for="ChatId" value="@ViewBag.chatId" />
-
-    <div class="input-group mb-3">
+<div class="input-group mb-3">
 	    
 	    <div class="input-group-prepend">
 		    <span class="input-group-text" id="basic-addon1">@@</span>
@@ -19,6 +18,7 @@
 
     if (Model!=null && Model.userDto != null)
     {
+
         <div class="list-group">
 	        <div class="list-group-item list-group-item flex-column align-items-start ">
 		        <div class="d-flex w-100 justify-content-between">
@@ -31,10 +31,24 @@
 			        <h5 class="mb-1">@Model.userDto.Email</h5>
 			        <h5 class="mb-1">@Model.userDto.Username</h5>
 			        <small class="text-muted">@Model.userDto.LastLog</small>
-			        <form method="post" asp-controller="Chat" asp-action="AddUser"
+                    <form method="post" asp-controller="Chat" asp-action="AddUser"
+	
+                          
 			              asp-route-userId="@Model.userDto.Id"
 			              asp-route-chatId="@Model.ChatId">
-				        <input type="submit" class="btn btn-primary" value="Dodaj"/>
+                        <input type="submit" class="btn btn-primary" value="Dodaj"
+                               @{
+                                   foreach (var user in Model.UsersInChat)
+                                   {
+                                       if (user.Id == Model.userDto.Id)
+                                       {
+                                           <text>disabled</text>
+                                       }
+                                   }
+	
+							   
+							} />
+
 			        </form>
 		        </div>
 	        </div>

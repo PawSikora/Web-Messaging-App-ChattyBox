@@ -254,7 +254,14 @@ namespace BLL.Services.ChatService
             return role.Name;
 		}
 
-        public UserDTO GetUserByEmail(string email)
+        public IEnumerable<UserDTO>? GetAllUsers(int chatId)
+        {
+	        var users = _unitOfWork.Chats.GetAllUsers(chatId);
+	        return _mapper.Map<IEnumerable<UserDTO>>(users);
+
+        }
+
+		public UserDTO GetUserByEmail(string email)
         {
             var user = _unitOfWork.Users.GetUserByEmail(email);
 

@@ -73,5 +73,10 @@ namespace UnitTests.BLL.MockServices
             var user = _users.FirstOrDefault(x => x.Email == email);
             return user;
         }
+
+        public IEnumerable<UserDTO>? GetAllUsers(int chatId)
+        {
+	        throw new NotImplementedException();
+        }
     }
 }

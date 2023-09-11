@@ -8,5 +8,6 @@ namespace MVCWebApp.ViewModels
         public int ChatId { get; set; }
         public string Email { get; set; }
         public UserDTO? userDto { get; set; }
+        public IEnumerable<UserDTO>? UsersInChat { get; set; }
     }
 }
