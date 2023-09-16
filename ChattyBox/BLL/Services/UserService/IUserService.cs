@@ -13,7 +13,6 @@ namespace BLL.Services.UserService
         IEnumerable<GetUserChatDTO> GetChats(int id, int pageNumber,int chatsPerPage);
         int GetUserChatsCount(int id);
         string GetRole(int userId, int chatId);
-        
         string GenerateNewToken(User user);
     }
 }

@@ -1,9 +1,6 @@
 ﻿using BLL.DataTransferObjects.ChatDtos;
-using BLL.DataTransferObjects.MessageDtos;
 using BLL.DataTransferObjects.UserDtos;
 using BLL.Services.ChatService;
-using BLL.Services.FileMessageService;
-using BLL.Services.TextMessageService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -91,10 +88,25 @@ namespace WebApi.Controllers
             return Ok(role);
         }
 
+        [HttpPut("AssignAdminRole")]
+        public ActionResult AssignAdminRole([FromQuery] int chatId, [FromQuery] int userId)
+        {
+            var adminRoleId = 1;
+            _chatService.AssignRole(userId, chatId, adminRoleId);
+            return Ok();
+        }
+
         [HttpGet("GetMessagesCount")]
         public ActionResult<int> GetMessagesCount([FromQuery] int id)
         {
             var count = _chatService.GetChatMessagesCount(id);
+            return Ok(count);
+        }
+
+        [HttpGet("GetUsersCount")]
+        public ActionResult<int> GetUsersCount([FromQuery] int id)
+        {
+            var count = _chatService.GetChatUsersCount(id);
             return Ok(count);
         }
         

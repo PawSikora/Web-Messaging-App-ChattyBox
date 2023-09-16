@@ -266,6 +266,28 @@ namespace UnitTests.ControllersWebApi
         }
 
         [Fact]
+        public void AssignAdminRole_ReturnsOkResult()
+        {
+            // Arrange
+            Mock<IChatService> _mockChatService = new Mock<IChatService>();
+
+            var chatId = 1;
+            var userId = 1;
+            var adminRoleId = 1;
+
+            _mockChatService.Setup(s => s.AssignRole(userId, chatId, adminRoleId));
+            
+            var chatController = new ChatController(_mockChatService.Object);
+
+            // Act
+            var result = chatController.AssignAdminRole(chatId, userId);
+
+            // Assert
+            Assert.IsType<OkResult>(result);
+            _mockChatService.Verify(service => service.AssignRole(userId, chatId, adminRoleId), Times.Once);
+        }
+
+        [Fact]
         public void GetUserRole_ReturnsNotFound_WhenRoleNotFound()
         {
             // Arrange

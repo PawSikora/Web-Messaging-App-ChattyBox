@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Czy chcesz wyznaczyć nowego administratora?</h2>
+
+<div mat-dialog-content>
+  <p>Obecny administrator opuszcza czat. Wybierz nowego administratora:</p>
+
+  <mat-list>
+
+    <mat-list-item *ngFor="let user of displayedUsers">
+      {{ user.username }}
+      
+      <button mat-icon-button color="primary" (click)="onYesClick(user)">
+        <mat-icon>check</mat-icon>
+      </button>
+
+    </mat-list-item>
+
+  </mat-list>
+
+  <div class="page-buttons">
+    <button mat-button *ngFor="let page of pages" (click)="onPageChange(page)" [disabled]="page === usersPageNumber">{{ page }}</button>
+  </div>
+
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Nie</button>
+</div>

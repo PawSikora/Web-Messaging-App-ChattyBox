@@ -257,7 +257,11 @@ namespace BLL.Services.ChatService
         public IEnumerable<UserDTO>? GetAllUsers(int chatId)
         {
 	        var users = _unitOfWork.Chats.GetAllUsers(chatId);
-	        return _mapper.Map<IEnumerable<UserDTO>>(users);
+
+            if (users is null)
+                throw new NotFoundException("Nie znaleziono użytkowników");
+
+            return _mapper.Map<IEnumerable<UserDTO>>(users);
 
         }
 

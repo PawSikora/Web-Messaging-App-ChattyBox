@@ -75,15 +75,26 @@ export class ChatsMenuComponent implements OnInit{
 
     loadChatUsers(chatId:number, pageNumber:number): void {
       this.chatId = chatId;
+      this.usersPageNumber = pageNumber;
       this.chatService.getUsersInChat(chatId, pageNumber).subscribe((res) => {
+        
         this.chatUsers = res;
         this.setNumberOfUserPages(chatId);
         this.usersRoles = [];
-        this.chatUsers.forEach((user) => {
-          this.chatService.getUserRole(chatId, user.id).subscribe((res) => {
-            this.usersRoles.push({id: user.id, role: res});
+
+        this.chatService.getFullChat(chatId, 1).subscribe((res) => {
+
+          
+          res.users.forEach((user) => {
+            this.chatService.getUserRole(chatId, user.id).subscribe((res) => {
+              this.usersRoles.push({id: user.id, role: res});
+            });
           });
+
         });
+
+
+        
       });
     }
 

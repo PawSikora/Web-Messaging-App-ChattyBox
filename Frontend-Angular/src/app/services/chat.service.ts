@@ -106,6 +106,31 @@ export class ChatService {
     }));
   }
 
+  getChatUsersCount(chatId:number):Observable<number> {
+    const params = new HttpParams()
+    .set('id', chatId.toString());
+
+    return this.httpClient
+    .get<number>(`${environment.httpBackend}${Api.CHAT_GET_USERS_COUNT}`,{params})
+    .pipe(catchError((err:HttpErrorResponse) => {
+      this.toastMessageService.notifyOfError(err.error);
+      return of();
+    }));
+  }
+
+  assignAdmin(chatId: number, userId: number): Observable<any> {
+    const params = new HttpParams()
+      .set('chatId', chatId.toString())
+      .set('userId', userId.toString());
+  
+    return this.httpClient
+      .put<any>(`${environment.httpBackend}${Api.CHAT_ASSIGN_ADMIN}`, null, { params })
+      .pipe(catchError((err: HttpErrorResponse) => {
+        this.toastMessageService.notifyOfError(err.error);
+        return of();
+      }));
+  }
+
   getUserRole(chatId:number, userId:number):Observable<string> {
     const params = new HttpParams()
     .set('chatId', chatId.toString())

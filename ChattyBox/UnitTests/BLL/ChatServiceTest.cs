@@ -1038,6 +1038,58 @@ namespace UnitTests.BLL
         }
 
         [Fact]
+        public void GetAllUsers_ShouldReturnTrue_WhenUsersFound()
+        {
+            // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            int chatId = 1;
+            var usersList = new List<User>
+            {
+                new User { Id = 1, Username = "User1" },
+                new User { Id = 2, Username = "User2" },
+                new User { Id = 3, Username = "User3" }
+            };
+
+            var expectedDtoList = new List<UserDTO>
+            {
+                new UserDTO { Id = 1, Username = "User1" },
+                new UserDTO { Id = 2, Username = "User2" },
+                new UserDTO { Id = 3, Username = "User3" }
+            };
+
+            _mockUnitOfWork.Setup(uow => uow.Chats.GetAllUsers(chatId)).Returns(usersList);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<UserDTO>>(usersList)).Returns(expectedDtoList);
+            
+            var chatService = new ChatService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act
+            var result = chatService.GetAllUsers(chatId);
+
+            // Assert
+            Assert.True(result.Count() == 3);
+            Assert.Equal(expectedDtoList, result);
+        }
+
+        [Fact]
+        public void GetAllUsers_Throws_NotFoundException_WhenUsersNotFound()
+        {
+            // Arrange
+            Mock<IMapper> _mockMapper = new Mock<IMapper>();
+            Mock<IUnitOfWork> _mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            int chatId = 1;
+
+            _mockUnitOfWork.Setup(uow => uow.Chats.GetAllUsers(chatId)).Returns(() => null);
+
+            var chatService = new ChatService(_mockUnitOfWork.Object, _mockMapper.Object);
+
+            // Act + Assert
+            Assert.Throws<NotFoundException>(() => chatService.GetAllUsers(chatId));
+        }
+
+        [Fact]
         public void GetUserByEmail_ShouldReturnTrue_WhenUserEmailIsCorrect()
         {
             // Arrange

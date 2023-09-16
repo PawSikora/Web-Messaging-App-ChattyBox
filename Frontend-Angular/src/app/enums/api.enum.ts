@@ -12,6 +12,8 @@ export enum Api{
     CHAT_GET_USERS='/api/Chat/GetUsers/',
     CHAT_FIND_USER='/api/Chat/FindUser',
     CHAT_GET_MESSAGES_COUNT='/api/Chat/GetMessagesCount',
+    CHAT_GET_USERS_COUNT='/api/Chat/GetUsersCount',
+    CHAT_ASSIGN_ADMIN='/api/Chat/AssignAdminRole',
     CHAT_GET_USER_ROLE='/api/Chat/GetUserRole',
     FILEMESSAGE='/api/FileMessage/:id',
     FILEMESSAGE_POST='/api/FileMessage',

@@ -8,8 +8,6 @@ using BLL.Services.TextMessageService;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using BLL.DataTransferObjects.UserDtos;
-using NuGet.Protocol.Plugins;
 
 namespace MVCWebApp.Controllers
 {
@@ -99,9 +97,6 @@ namespace MVCWebApp.Controllers
 
             ViewBag.chatId = chatId;
             ViewBag.userId = senderId;
-
-
-
 
             return View("ChatAddUser");
         }

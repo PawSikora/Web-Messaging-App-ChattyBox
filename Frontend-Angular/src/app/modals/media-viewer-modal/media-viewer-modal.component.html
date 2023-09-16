@@ -1,9 +1,10 @@
 <div class="media-modal" (click)="close()">
-  <div class="media-modal-contentt">
+  <div class="media-modal-content">
 
     <ng-container *ngIf="mediaType === 'image'">
       <img [src]="mediaUrl" [alt]="mediaName" (click)="$event.stopPropagation()">
     </ng-container>
+    
 
     <ng-container *ngIf="mediaType === 'video'">
       <video [src]="mediaUrl"  (click)="$event.stopPropagation()" controls>

@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../services/user.service';
 import { User, UserRole } from '../interfaces/users-interfaces';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ChooseAdminModalComponent } from '../modals/choose-admin-modal/choose-admin-modal.component';
 
 @Component({
   selector: 'app-chat',
@@ -18,7 +20,7 @@ import { forkJoin } from 'rxjs';
 export class ChatComponent implements OnInit {
   
   constructor(private route:ActivatedRoute, private chatService:ChatService, private userService:UserService,
-              private messageService:MessageService, private http:HttpClient, private router:Router) 
+              private messageService:MessageService, private router:Router, private dialog: MatDialog) 
   { }
 
   chatId?: number;
@@ -27,6 +29,7 @@ export class ChatComponent implements OnInit {
   chatMembers?: User[] = [];
 
   userId?: number;
+  userRole?: UserRole;
   userRoles: UserRole[] = [];
 
   messagesPageNumber: number = 1;
@@ -39,7 +42,6 @@ export class ChatComponent implements OnInit {
   textMessages?: TextMessage[] = [];
   fileMesssages: FileMessage[] = [];
   messages: Message[] = [];
-  messages2: Message[] = [];
 
   showSearchModal = false;
   showImageModal = false;
@@ -61,7 +63,6 @@ export class ChatComponent implements OnInit {
 
     this.setNumberOfMessagesPages();
     this.setNumberOfUsersPages();
-    this.getListOfMembers();
   }
 
   getFileType(fileName: string): string {
@@ -99,20 +100,7 @@ export class ChatComponent implements OnInit {
     return this.chatSenders?.find(user => user.id === senderId)?.username!;
   }
 
-  getListOfMembers(): void {
-    this.chatService.getUsersInChat(this.chatId!, this.usersPageNumber).subscribe((resUsers) => {
-      this.chatMembers = resUsers;
-
-      this.chatMembers?.forEach(member => {
-        this.chatService.getUserRole(this.chatId!, member.id).subscribe((resRole) => {
-          this.userRoles.push({id: member.id, role: resRole});
-        });
-      }
-      );
-    });
-  }
-
-  isAdmin(userId: number): boolean {
+  isAdmin(userId : number): boolean {
     return this.userRoles.find(user => user.id === userId)?.role === 'Admin';
   }
 
@@ -124,6 +112,7 @@ export class ChatComponent implements OnInit {
       this.messages = [];
       this.chatSenders = [];
 
+      this.loadChatUsers(this.usersPageNumber);
       this.chat?.allMessages?.forEach(message => {
         
         this.userService.get(message.senderId).subscribe((resUser) => {
@@ -147,7 +136,6 @@ export class ChatComponent implements OnInit {
               this.messages.push(fileMessage);
               this.messages.sort((a, b) => new Date(b.timeStamp).getTime() - new Date(a.timeStamp).getTime());
             });
-            
           });
         }
       });
@@ -155,8 +143,16 @@ export class ChatComponent implements OnInit {
   }
 
   loadChatUsers(pageNumber:number): void {
-    this.chatService.getUsersInChat(this.chatId!, pageNumber).subscribe((resUsers)=>{
+    this.usersPageNumber = pageNumber;
+    this.chatService.getUsersInChat(this.chatId!, this.usersPageNumber).subscribe((resUsers) => {
       this.chatMembers = resUsers;
+      this.userRoles = [];
+
+      this.chat?.users?.forEach(user => {
+        this.chatService.getUserRole(this.chatId!, user.id).subscribe((resRole) => {
+          this.userRoles.push({id: user.id, role: resRole});
+        });
+      });
     });
   }
 
@@ -171,11 +167,13 @@ export class ChatComponent implements OnInit {
   }
 
   setNumberOfUsersPages(): void {
-    let howManyPages = Math.ceil(this.chatMembers!.length / 5);
-    this.userPages = [];
-    for (let i = 1; i <= howManyPages; i++) {
-      this.userPages?.push(i);
-    }
+    this.chatService.getChatUsersCount(this.chatId!).subscribe((resCount) => {
+      let howManyPages = Math.ceil(resCount / 5);
+      this.userPages = [];
+      for (let i = 1; i <= howManyPages; i++) {
+        this.userPages?.push(i);
+      }
+    });
   }
 
   onSubmitMessage(event: Event): void {
@@ -265,7 +263,11 @@ export class ChatComponent implements OnInit {
   closeSearchModal(addedUser: boolean): void {
     this.showSearchModal = false;
     if (addedUser)
-    this.loadChatUsers(1);
+    {
+      this.loadChatUsers(1);
+      this.setNumberOfUsersPages();
+    }
+    
   }
 
   openMediaViewerModal(url: string, name: string, type: string) {
@@ -283,11 +285,38 @@ export class ChatComponent implements OnInit {
   }
 
   leaveChat(): void {
-    if(window.confirm('Czy na pewno chcesz opuścić czat?'))
-    {
+    // if(window.confirm('Czy na pewno chcesz opuścić czat?'))
+    // {
+    //   this.chatService.deleteUser(this.chatId!, this.userId!).subscribe(()=>{
+    //     console.log("Użytkownik został usunięty z czatu");
+        
+    //     this.router.navigateByUrl('/chats');
+    //   });
+    // }
+
+    if (this.isAdmin(this.userId!) && this.chat?.users?.length! > 1) {
+      const dialogRef = this.dialog.open(ChooseAdminModalComponent, {
+        width: '400px',
+        data: { chatId: this.chatId, currentAdminId: this.userId, users: this.chat?.users }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.chatService.assignAdmin(this.chatId!, result.id).subscribe(() => {
+
+            console.log("Admin został zmieniony");
+
+            this.chatService.deleteUser(this.chatId!, this.userId!).subscribe(()=>{
+              console.log("Opuszczono czat");
+              this.router.navigateByUrl('/chats');
+            });
+          });
+        }
+      });
+    }
+    else {
       this.chatService.deleteUser(this.chatId!, this.userId!).subscribe(()=>{
         console.log("Użytkownik został usunięty z czatu");
-        
         this.router.navigateByUrl('/chats');
       });
     }
@@ -303,5 +332,6 @@ export class ChatComponent implements OnInit {
       });
     }
   }
+
 }
 

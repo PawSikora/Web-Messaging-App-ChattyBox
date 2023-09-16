@@ -30,14 +30,12 @@ namespace UnitTests.BLL
             var pageNumber = 1;
             var chatsPerPage = 5;
             var chatCount = 5;
-
-            _mockUnitOfWork.Setup(u => u.Users.GetUserChatsCount(userId)).Returns(chatCount);
-
             var chatList = new List<Chat> { new Chat { Id = 1, Name = "Chat1" }, new Chat { Id = 2, Name = "Chat2" } };
-            _mockUnitOfWork.Setup(uow => uow.Chats.GetChatsForUser(userId, pageNumber, chatsPerPage)).Returns(chatList);
-
             var expectedDtoList = new List<GetUserChatDTO>
                 { new GetUserChatDTO { Id = 1, Name = "Chat1" }, new GetUserChatDTO { Id = 2, Name = "Chat2" } };
+
+            _mockUnitOfWork.Setup(u => u.Users.GetUserChatsCount(userId)).Returns(chatCount);
+            _mockUnitOfWork.Setup(uow => uow.Chats.GetChatsForUser(userId, pageNumber, chatsPerPage)).Returns(chatList);
             _mockMapper.Setup(m => m.Map<IEnumerable<GetUserChatDTO>>(chatList)).Returns(expectedDtoList);
 
             var userService = new UserService(_mockUnitOfWork.Object, _mockMapper.Object, _mockConfiguration.Object,

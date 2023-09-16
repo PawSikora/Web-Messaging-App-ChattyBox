@@ -26,6 +26,8 @@ import { ToastMessageComponent } from './toast-message/toast-message.component';
 import { CreateChatModalComponent } from './modals/create-chat-modal/create-chat-modal.component';
 import {NgcCookieConsentModule, NgcCookieConsentConfig} from 'ngx-cookieconsent';
 import { environment } from 'src/environments/environment';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ChooseAdminModalComponent } from './modals/choose-admin-modal/choose-admin-modal.component';
 const cookieConfig:NgcCookieConsentConfig = {
   cookie: {
     domain: environment.httpBackend 
@@ -68,6 +70,7 @@ const cookieConfig:NgcCookieConsentConfig = {
     SearchUserModalComponent,
     ToastMessageComponent,
     CreateChatModalComponent,
+    ChooseAdminModalComponent,
   ],
   imports: [
     NgcCookieConsentModule.forRoot(cookieConfig),
@@ -91,7 +94,7 @@ const cookieConfig:NgcCookieConsentConfig = {
     MatCardModule,
     MatFormFieldModule,
     MatGridListModule,
-
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -33,7 +33,7 @@ export class SearchUserModalComponent {
 
   addUserToChat(userId:number, chatId:number):void{
     if(this.chatId)
-    this.chatService.addUser(this.chatId, userId).subscribe((res)=>{
+    this.chatService.addUser(this.chatId, userId).subscribe(()=>{
       console.log("Dodano użytkownika do czatu");
       this.addedUser = true;
       this.close();

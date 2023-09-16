@@ -28,7 +28,7 @@
         <div class="card-footer custom-card-footer">
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-              <li [ngClass]="{'page-item disabled': this.usersPageNumber!-1<=0}">
+              <li [ngClass]="{'page-item disabled': this.usersPageNumber!-1 <= 0}">
                 <a style="cursor: pointer;" class="page-link" (click)="loadChatUsers(this.usersPageNumber!-1)" tabindex="-1">Poprzednia</a>
               </li>
     
@@ -36,7 +36,7 @@
                 <a style="cursor: pointer;" class="page-link" (click)="loadChatUsers(page)">{{page}}</a>
               </li>
     
-              <li [ngClass]="{'page-item disabled': this.usersPageNumber!+1>this.userPages.length!}">
+              <li [ngClass]="{'page-item disabled': this.usersPageNumber!+1> this.userPages.length!}">
                 <a style="cursor: pointer;" class="page-link" (click)="loadChatUsers(this.usersPageNumber!+1)" >Nastepna</a>
               </li>
             </ul>
@@ -110,10 +110,10 @@
           </div>
         </div>
 
-        <div class="card-footer custom-card-footer">
+        <div class="card-footer custom-card-footer" *ngIf="this.messages.length > 0">
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-              <li [ngClass]="{'page-item disabled': this.messagesPageNumber!-1<=0}">
+              <li [ngClass]="{'page-item disabled': this.messagesPageNumber!-1 <= 0}">
                 <a style="cursor: pointer;" class="page-link" (click)="loadMessages(this.messagesPageNumber!-1)" tabindex="-1">Poprzednia</a>
               </li>
     
@@ -121,11 +121,15 @@
                 <a style="cursor: pointer;" class="page-link" (click)="loadMessages(page)">{{page}}</a>
               </li>
     
-              <li [ngClass]="{'page-item disabled': this.messagesPageNumber!+1>this.messagesPages.length!}">
+              <li [ngClass]="{'page-item disabled': this.messagesPageNumber! + 1 > this.messagesPages.length!}">
                 <a style="cursor: pointer;" class="page-link" (click)="loadMessages(this.messagesPageNumber!+1)" >Nastepna</a>
               </li>
             </ul>
           </nav>
+        </div>
+
+        <div class="card-footer custom-card-footer" *ngIf="this.messages.length == 0">
+          <p>Brak wiadomości</p>
         </div>
 
         <form style="padding-bottom: 0.5rem;" (submit)="onSubmitMessage($event)">

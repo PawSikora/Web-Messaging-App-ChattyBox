@@ -66,42 +66,6 @@ namespace UnitTests.ControllersMVC
             Assert.Equal(expectedActionName, result.ActionName);
         }
 
-        /*
-        [Fact]
-        public void Login_ReturnsUserMenuView()
-        {
-            // Arrange
-            var loginUser = new LoginUserDTO { Email = "test@example.com", Password = "123456" };
-            var userToken = new TokenToReturn(Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)));
-            var cookieOptions = It.IsAny<CookieOptions>();
-
-            _mockUserService.Setup(service => service.LoginUser(loginUser)).Returns(userToken);
-
-            var controller = new UserController(_mockUserService.Object);
-            var httpContext = new Mock<HttpContext>();
-            var httpResponse = new Mock<HttpResponse>();
-
-            httpContext.SetupGet(c => c.Response).Returns(httpResponse.Object);
-            httpResponse.Setup(r => r.Cookies.Append("userToken", userToken.TokenContent, cookieOptions));
-
-            controller.ControllerContext = new ControllerContext()
-            {
-                HttpContext = httpContext.Object
-            };
-
-            // Act
-            var result = controller.Login(loginUser);
-
-            // Assert
-            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("UserMenu", redirectResult.ActionName);
-            Assert.Equal("User", redirectResult.ControllerName);
-
-            _mockUserService.Verify(service => service.LoginUser(loginUser), Times.Once);
-            httpResponse.Verify(r => r.Cookies.Append("userToken", userToken.TokenContent, cookieOptions), Times.Once);
-        }
-        */
-
         [Fact]
         public void Login_ReturnsRedirectToUserMenu()
         {
@@ -389,6 +353,25 @@ namespace UnitTests.ControllersMVC
             //Assert
             Assert.Equal(expectedView, viewResult.ViewName);
             Assert.Equal(userDto, viewResult.Model);
+        }
+
+        [Fact]
+        public void ShowRegistrationForm_ReturnsViewResult()
+        {
+            // Arrange
+            var _mockUserService = new Mock<IUserService>();
+
+            var expectedView = "Register";
+
+            var userController = new UserController(_mockUserService.Object);
+
+            // Act
+            var result = userController.ShowRegistrationForm();
+            var viewResult = Assert.IsType<ViewResult>(result);
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(expectedView, viewResult.ViewName);
         }
 
         [Fact]

@@ -42,29 +42,19 @@
     }
 </div >
 @{
-    if (Model.UsersPerPage == 1 || Model.UsersPerPage == Model.Count)
-    {
-        int index = 0;
-	    for (int i = 0; i < Model.Count / Model.UsersPerPage; i++)
-	    {
-	        index = 1 + i;
-	        <a asp-controller="Chat" 
-               asp-action="GetUsersInChat" 
-               asp-route-chatId="@Model.ChatId"
-       asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
-            
-	    }
-    }
-    else if (Model.UsersPerPage > 1)
-    {
-	    int index = 0;
-	    for (int i = 0; i < Model.Count / Model.UsersPerPage + 1; i++)
+	if (Model.UsersPerPage > 1)
+	{
+		int index = 0;
+		double count = Model.Count;
+		double UserPerPage = Model.UsersPerPage;
+        var howManyPages = Math.Ceiling(count / UserPerPage + 1);
+	    for (int i = 0; i < howManyPages; i++)
         {
-                index = 1 + i;
+	        index = 1 + i;
 	        <a asp-controller="Chat" 
 	           asp-action="GetUsersInChat" 
 	           asp-route-chatId="@Model.ChatId"
-       asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
+	           asp-route-pageNumber="@index" class="btn btn-primary">@(index)</a>
         }
     }
     else throw new Exception("Ilosc użytkowników na strone nie moze byc mniejsza badz rowna 0");
